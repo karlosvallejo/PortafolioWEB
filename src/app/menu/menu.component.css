@@ -1,0 +1,68 @@
+header{
+  position: fixed;
+  width: 100%;
+  background-color: rgba(0,253,114,1);
+}
+
+header h3 {
+  display: inline-block;
+  margin: 0.5% 0 0.5% 7%;
+  padding: 0;
+}
+
+nav {
+  position: fixed;
+  top: 90%;
+  width: 100%;
+  background-color: rgba(255,255,255,0.0);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  display: inline-block;
+  width: 18.75%;
+
+}
+
+
+.menuItem {
+   margin: 0;
+   background-color: rgba(200,100,40,0.0);
+   color: white;
+   padding: 5% 0 5% 10%;
+ }
+
+.activeMenu {
+  color: black;
+  background-color: rgba(255,255,255,1);
+}
+
+.menuItem:hover {
+  color: black;
+  background-color: rgba(255,255,255,1);
+  cursor: pointer;
+}
+
+
+
+#espacioLI {
+  margin: 0;
+  width: 6.125%;
+  border: none;
+}
+
+#lastItemDiv {
+  background: url("/assets/generalImages/correinIMG.svg") no-repeat center;
+}
+
+.barraBlanca {
+  position: absolute;
+  width: 0.25%;
+  height: 100%;
+  top: 0;
+  background-color: white;
+}
