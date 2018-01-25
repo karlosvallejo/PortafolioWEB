@@ -1,0 +1,34 @@
+.textContainer {
+  position: absolute;
+  top: 8%;
+  left: 31.25%;
+  width: 43.5%;
+  color: white;
+  background: rgba(255, 255, 255, 0.03);
+}
+.textBasic {
+  margin: 0;
+  display: inline-block;
+}
+.blockOfText {
+  margin: 2% 0;
+  font-size: 1.4vw;
+}
+
+.cursorin {
+  font-size: 1.2vw;
+}
+
+#p5Canvas {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  top: 35%;
+  left: 6.25%;
+  width: 87.5%;
+  height: 45%;
+}
+.cursorBlock {
+  height: 100%;
+  width: 10%;
+  background: white;
+}

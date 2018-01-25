@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import {AngularFittextModule} from 'angular-fittext';
 
 import { AppComponent } from './app.component';
 import { BackgroundComponent } from './background/background.component';
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
     ),
-    BrowserModule
+    BrowserModule,
+    AngularFittextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

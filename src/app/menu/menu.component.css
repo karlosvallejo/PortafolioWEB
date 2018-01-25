@@ -2,13 +2,16 @@ header{
   position: fixed;
   width: 100%;
   background-color: rgba(0,253,114,1);
+  font-family: 'VT323', monospace;
 }
 
 header h3 {
   display: inline-block;
-  margin: 0.5% 0 0.5% 7%;
+  margin: 0 6.4%;
   padding: 0;
+  font-size: 3vw;
 }
+
 
 nav {
   position: fixed;
@@ -34,6 +37,8 @@ ul li {
    background-color: rgba(200,100,40,0.0);
    color: white;
    padding: 5% 0 5% 10%;
+   font-family: 'Press Start 2P', monospace;
+  font-size: 1vw;
  }
 
 .activeMenu {
@@ -58,7 +63,7 @@ ul li {
 #lastItemDiv {
   position: absolute;
   top: 0;
-  width: 18%;
+  width: 12.5%;
   height: 100%;
   background: url("/assets/generalImages/correin-blanco.svg") no-repeat center;
 }
