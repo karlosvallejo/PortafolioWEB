@@ -26,9 +26,15 @@
   left: 6.25%;
   width: 87.5%;
   height: 45%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  border: solid white;
 }
 .cursorBlock {
   height: 100%;
   width: 10%;
   background: white;
 }
+
+
