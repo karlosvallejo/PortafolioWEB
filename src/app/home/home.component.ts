@@ -1,5 +1,7 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import * as p5 from 'p5';
+
 
 
 
@@ -28,7 +30,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   typewriter_displayTwo = '';
 
 
-  constructor() {
+  constructor(public router: Router) {
 
   //  window.onresize = this.onWindowResize;
   }
@@ -52,14 +54,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.typingOne();
-
+    this.createCanvas();
   }
-
+  /*
   private onWindowResize (e) {
     setTimeout(() => {
       this.p5.resizeCanvas( ((this.p5.windowWidth / 16) * 14), ((this.p5.windowHeight / 100) * 44) );
     }, 200);
   }
+  */
 
   private createCanvas () {
     console.log('creating canvas');
@@ -71,15 +74,30 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.p5.noCanvas();
   }
 
-  private sketch = function (p: any) {
+  private sketch = (p: any) => {
     p.nodes = [];
+    p.instanceNodes = [];
     p.nodeCount = 15;
     p.maxDistance = 200;
+    p.loading = false;
+    p.loadingGraphic = null;
+    p.backgrounOpacity = 255;
+    p.textFillOpacity = 255;
+    p.textLoading = 'LOADING';
+    p.displayText =  '';
+    p.intervalLoading = null;
+    p.instanceAboutNode = null;
+
 
     p.setup = () => {
       p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 45));
+      p.loadingGraphic = p.createGraphics(p.width, p.height);
+      p.loadingGraphic.textAlign(p.LEFT);
+      p.frameRate(24);
       p.rectMode(p.CENTER);
+      p.textAlign(p.CENTER, p.CENTER);
 
+      p.startLoading();
 
       // Create nodes
       for (let i = 0; i < p.nodeCount; i++) {
@@ -87,16 +105,83 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.nodes.push(b);
       }
 
+      p.instanceAboutNode = new p.NavigationNode(p.random(51, p.width - 51), p.random(51, p.height - 51), 'ABOUT');
+
+      p.instanceNodes.push(p.instanceAboutNode);
+      p.nodes.push(p.instanceAboutNode);
     };
 
     p.draw = () => {
-       p.clear();
+      // p.clear();
+      // p.fill('rgba(255,255,255, 0.8)');
+      p.background(0);
+
       for (let i = 0; i < p.nodes.length; i++) {
+        p.drawConnection(i);
         p.nodes[i].display();
         p.nodes[i].update();
-        p.drawConnection(i);
       }
 
+      for (let i = p.nodes.length - 1; i < p.nodes.length; i++) {
+        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 55) {
+          p.nodes[i].size = 150;
+
+        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 80) {
+          p.nodes[i].size = 100;
+        }
+        if (p.nodes[i].size > 100 && p.mouseIsPressed) {
+          this.router.navigate(['about']);
+        }
+      }
+
+
+/*
+      for (let i = 0; i < p.instanceNodes.length; i++) {
+        p.instanceNodes[i].display();
+        p.instanceNodes[i].update();
+        p.drawConnection(i);
+      }
+*/
+
+
+      if (p.loading) {
+        p.drawLoading();
+      }
+    };
+
+    p.startLoading = () => {
+      p.loading = true;
+      p.displayText = p.textLoading;
+      p.intervalLoading = setInterval(() => {
+          p.displayText += '.';
+       //   console.log ('entro');
+          if (p.displayText.length === p.textLoading.length + 5) {
+            p.displayText = p.textLoading;
+          }
+      }, 1000);
+    };
+
+    p.drawLoading = () => {
+      p.loadingGraphic.clear();
+      p.loadingGraphic.background(0, p.backgrounOpacity);
+      p.loadingGraphic.textSize(p.width / 40);
+      p.loadingGraphic.noStroke();
+      p.loadingGraphic.fill(255, p.textFillOpacity);
+      p.loadingGraphic.text(p.displayText, p.width / 2.35, p.height / 2);
+      p.image(p.loadingGraphic, 0, 0);
+    };
+
+    p.endOfLoading = () => {
+     //
+    const intervalino =  setInterval(() => {
+        p.backgrounOpacity -= 5;
+        p.textFillOpacity -= 17;
+        if (p.backgrounOpacity <= 0) {
+          p.loading = false;
+          clearInterval(intervalino);
+          clearInterval(p.intervalLoading);
+        }
+      }, 30);
     };
 
     p.windowResized = () => {
@@ -105,7 +190,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     p.drawConnection = (theNode) => {
       p.node1 = p.nodes[theNode];
-      p.stroke(p.node1.color);
+
 
       for (let j = theNode; j < p.nodes.length; j++) {
 
@@ -113,7 +198,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.distance = p.dist(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
         if (p.distance < p.maxDistance) {
           if (j !== theNode) {
-            p.strokeWeight(20 - (p.distance / p.maxDistance) * 20); // Distance/ max creates line thickness
+            p.stroke(p.node2.color);
+            p.strokeWeight(25 - (p.distance / p.maxDistance) * 25); // Distance/ max creates line thickness
             p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
           }
         }
@@ -152,7 +238,42 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     };
 
-  };
+    p.NavigationNode = function (x, y, textito) {
+      this.size = 100;
+      this.x = x;
+      this.y = y;
+      this.texti = textito;
+      this.speed = 1;
+      this.xSpeed = this.speed * p.random(-1, 1);
+      this.ySpeed = this.speed * p.random(-1, 1);
+      // this.color = p.color(p.random(255), p.random(255), p.random(255));
+      this.color = p.color(50, 255, 50);
+
+      this.display = function () {
+        p.noStroke();
+        p.fill(this.color);
+        p.ellipse(this.x, this.y, this.size , this.size );
+        p.fill(0);
+        p.textSize(this.size / 4);
+        p.text(this.texti, this.x, this.y);
+      };
+
+      this.update = function() {
+        if (this.x + this.xSpeed + (this.size / 2) > p.width || this.x + this.xSpeed - (this.size / 2) < 0) {
+          this.xSpeed *= -1;
+        } else {
+          this.x += this.xSpeed;
+        }
+        if (this.y + this.ySpeed + (this.size / 2) > p.height || this.y + this.ySpeed - (this.size / 2) < 0) {
+          this.ySpeed *= -1;
+        } else {
+          this.y += this.ySpeed;
+        }
+      };
+
+    };
+
+  }
 
 
 
@@ -196,8 +317,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.writing = false;
           clearInterval(intervalito);
           setTimeout(() => {
-            this.createCanvas();
-          }, 200);
+             this.p5.endOfLoading();
+          }, 100);
 
         }
       }, 120);
