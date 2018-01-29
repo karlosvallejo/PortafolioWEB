@@ -77,13 +77,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private sketch = (p: any) => {
     p.nodes = [];
     p.instanceNodes = [];
-    p.nodeCount = 15;
+    p.nodeCount = 20;
     p.maxDistance = 200;
     p.loading = false;
     p.loadingGraphic = null;
     p.backgrounOpacity = 255;
     p.textFillOpacity = 255;
-    p.textLoading = 'LOADING';
+    p.textLoading = 'LOADING.';
     p.displayText =  '';
     p.intervalLoading = null;
     p.instanceAboutNode = null;
@@ -93,9 +93,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 45));
       p.loadingGraphic = p.createGraphics(p.width, p.height);
       p.loadingGraphic.textAlign(p.LEFT);
+      p.loadingGraphic.textFont('VT323');
       p.frameRate(24);
       p.rectMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
+      p.textFont('VT323');
+
+
 
       p.startLoading();
 
@@ -105,7 +109,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.nodes.push(b);
       }
 
-      p.instanceAboutNode = new p.NavigationNode(p.random(51, p.width - 51), p.random(51, p.height - 51), 'ABOUT');
+      p.instanceAboutNode = new p.NavigationNode(p.random(51, p.width - 51), p.random(51, p.height - 51), 'WHO\nARE\nYOU?');
 
       p.instanceNodes.push(p.instanceAboutNode);
       p.nodes.push(p.instanceAboutNode);
@@ -123,11 +127,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       for (let i = p.nodes.length - 1; i < p.nodes.length; i++) {
-        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 55) {
-          p.nodes[i].size = 150;
+        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 100) {
+          p.nodes[i].size = 110;
 
-        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 80) {
-          p.nodes[i].size = 100;
+        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 110) {
+          p.nodes[i].size = 90;
         }
         if (p.nodes[i].size > 100 && p.mouseIsPressed) {
           this.router.navigate(['about']);
@@ -155,16 +159,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.intervalLoading = setInterval(() => {
           p.displayText += '.';
        //   console.log ('entro');
-          if (p.displayText.length === p.textLoading.length + 5) {
+          if (p.displayText.length === p.textLoading.length + 4) {
             p.displayText = p.textLoading;
           }
-      }, 1000);
+      }, 500);
     };
 
     p.drawLoading = () => {
       p.loadingGraphic.clear();
       p.loadingGraphic.background(0, p.backgrounOpacity);
-      p.loadingGraphic.textSize(p.width / 40);
+      p.loadingGraphic.textSize(p.width / 30);
       p.loadingGraphic.noStroke();
       p.loadingGraphic.fill(255, p.textFillOpacity);
       p.loadingGraphic.text(p.displayText, p.width / 2.35, p.height / 2);
@@ -199,7 +203,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (p.distance < p.maxDistance) {
           if (j !== theNode) {
             p.stroke(p.node2.color);
-            p.strokeWeight(25 - (p.distance / p.maxDistance) * 25); // Distance/ max creates line thickness
+            p.strokeWeight(30 - (p.distance / p.maxDistance) * 30); // Distance/ max creates line thickness
             p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
           }
         }
@@ -239,7 +243,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     p.NavigationNode = function (x, y, textito) {
-      this.size = 100;
+      this.size = 50;
+      this.sizeTwo = 120;
       this.x = x;
       this.y = y;
       this.texti = textito;
@@ -247,14 +252,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.xSpeed = this.speed * p.random(-1, 1);
       this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      this.color = p.color(50, 255, 50);
+      this.color = p.color(0, 253, 114, 255);
+      this.colorTwo = p.color(0, 253, 114, 100);
 
       this.display = function () {
         p.noStroke();
         p.fill(this.color);
         p.ellipse(this.x, this.y, this.size , this.size );
+        p.fill(this.colorTwo);
+        p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
         p.fill(0);
-        p.textSize(this.size / 4);
+        p.textSize(this.size / 3.5);
+        p.textLeading(this.size / 4);
         p.text(this.texti, this.x, this.y);
       };
 
@@ -318,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           clearInterval(intervalito);
           setTimeout(() => {
              this.p5.endOfLoading();
-          }, 100);
+          }, 1000);
 
         }
       }, 120);
