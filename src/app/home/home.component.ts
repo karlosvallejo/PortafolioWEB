@@ -23,10 +23,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   writing = false;
   showCursor = true;
 
-  typewriter_textOne = 'HI, MY NAME IS CARLOS AND I’AM A WEB DEVELOPER';
+  typewriter_textOne = 'HI, MY NAME IS CARLOS AND I’AM A INTERACTIVE MEDIA DESIGNER';
   typewriter_displayOne = '';
 
-  typewriter_textTwo = 'WRITE YOUR REQUEST OR QUESTION';
+  typewriter_textTwo = 'WRITE A REQUEST OR QUESTION';
   typewriter_displayTwo = '';
 
 
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private sketch = (p: any) => {
     p.nodes = [];
     p.instanceNodes = [];
-    p.nodeCount = 20;
+    p.nodeCount = 30;
     p.maxDistance = 200;
     p.loading = false;
     p.loadingGraphic = null;
@@ -96,6 +96,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.loadingGraphic.textFont('VT323');
       p.frameRate(24);
       p.rectMode(p.CENTER);
+      p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
       p.textFont('VT323');
 
@@ -127,10 +128,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       for (let i = p.nodes.length - 1; i < p.nodes.length; i++) {
-        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 100) {
+        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 65) {
           p.nodes[i].size = 110;
 
-        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 110) {
+        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 66) {
           p.nodes[i].size = 90;
         }
         if (p.nodes[i].size > 100 && p.mouseIsPressed) {
@@ -172,7 +173,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.loadingGraphic.noStroke();
       p.loadingGraphic.fill(255, p.textFillOpacity);
       p.loadingGraphic.text(p.displayText, p.width / 2.35, p.height / 2);
-      p.image(p.loadingGraphic, 0, 0);
+      p.image(p.loadingGraphic, p.width / 2, p.height / 2);
     };
 
     p.endOfLoading = () => {
@@ -203,7 +204,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (p.distance < p.maxDistance) {
           if (j !== theNode) {
             p.stroke(p.node2.color);
-            p.strokeWeight(30 - (p.distance / p.maxDistance) * 30); // Distance/ max creates line thickness
+            p.strokeWeight(10 - (p.distance / p.maxDistance) * 10); // Distance/ max creates line thickness
             p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
           }
         }
@@ -212,7 +213,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     p.Ball = function (x , y) {
-      this.size = 50;
+      this.size = 30;
       this.x = x;
       this.y = y;
       this.speed = 1.5;
@@ -254,27 +255,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
       this.color = p.color(0, 253, 114, 255);
       this.colorTwo = p.color(0, 253, 114, 100);
+      this.circleOne = p.loadImage('assets/generalImages/circleOne.svg');
+      this.direction = 1;
 
       this.display = function () {
         p.noStroke();
         p.fill(this.color);
+
+          p.push();
+          p.translate(this.x, this.y);
+          p.rotate(p.radians(p.frameCount * this.direction));
+          p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+          p.pop();
+
         p.ellipse(this.x, this.y, this.size , this.size );
         p.fill(this.colorTwo);
         p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
         p.fill(0);
         p.textSize(this.size / 3.5);
-        p.textLeading(this.size / 4);
+        p.textLeading(this.size / 4.5);
         p.text(this.texti, this.x, this.y);
       };
 
       this.update = function() {
-        if (this.x + this.xSpeed + (this.size / 2) > p.width || this.x + this.xSpeed - (this.size / 2) < 0) {
+        if (this.x + this.xSpeed + (this.sizeTwo / 2) > p.width || this.x + this.xSpeed - (this.sizeTwo / 2) < 0) {
           this.xSpeed *= -1;
+          this.direction = this.direction * -1;
         } else {
           this.x += this.xSpeed;
         }
-        if (this.y + this.ySpeed + (this.size / 2) > p.height || this.y + this.ySpeed - (this.size / 2) < 0) {
+        if (this.y + this.ySpeed + (this.sizeTwo / 2) > p.height || this.y + this.ySpeed - (this.sizeTwo / 2) < 0) {
           this.ySpeed *= -1;
+          this.direction = this.direction * -1;
         } else {
           this.y += this.ySpeed;
         }
