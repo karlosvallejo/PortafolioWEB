@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   writing = false;
   showCursor = true;
 
-  typewriter_textOne = 'HI, MY NAME IS CARLOS AND I’AM A INTERACTIVE MEDIA DESIGNER';
+  typewriter_textOne = 'HI, MY NAME IS CARLOS AND I’AM AN INTERACTIVE MEDIA DESIGNER';
   typewriter_displayOne = '';
 
   typewriter_textTwo = 'WRITE A REQUEST OR QUESTION';
@@ -87,6 +87,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.displayText =  '';
     p.intervalLoading = null;
     p.instanceAboutNode = null;
+    p.instanceSkillsNode = null;
 
 
     p.setup = () => {
@@ -106,14 +107,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Create nodes
       for (let i = 0; i < p.nodeCount; i++) {
-        const b = new p.Ball(p.random(26, p.width - 26), p.random(26, p.height - 26));
+        const b = new p.Ball(p.random((p.width / 10) * 3, (p.width / 10) * 7 ), p.random(p.height / 10) * 4, (p.height / 10) * 6);
         p.nodes.push(b);
       }
 
-      p.instanceAboutNode = new p.NavigationNode(p.random(51, p.width - 51), p.random(51, p.height - 51), 'WHO\nARE\nYOU?');
+      p.instanceAboutNode = new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
+        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'WHO\nARE\nYOU?', 1);
+
+      p.instanceSkillsNode = new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
+        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'WHAT\nCAN\nYOU DO?', 2);
 
       p.instanceNodes.push(p.instanceAboutNode);
+      p.instanceNodes.push(p.instanceSkillsNode);
       p.nodes.push(p.instanceAboutNode);
+      p.nodes.push(p.instanceSkillsNode);
     };
 
     p.draw = () => {
@@ -127,17 +134,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.nodes[i].update();
       }
 
-      for (let i = p.nodes.length - 1; i < p.nodes.length; i++) {
-        if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) < 65) {
-          p.nodes[i].size = 110;
 
-        } else if (p.dist(p.nodes[i].x, p.nodes[i].y, p.mouseX, p.mouseY) > 66) {
-          p.nodes[i].size = 90;
-        }
-        if (p.nodes[i].size > 100 && p.mouseIsPressed) {
-          this.router.navigate(['about']);
-        }
-      }
 
 
 /*
@@ -216,7 +213,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.size = 30;
       this.x = x;
       this.y = y;
-      this.speed = 1.5;
+      this.speed = 2;
       this.xSpeed = this.speed * p.random(-1, 1);
       this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
@@ -235,6 +232,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.x += this.xSpeed;
         }
         if (this.y + this.ySpeed + (this.size / 2) > p.height || this.y + this.ySpeed - (this.size / 2) < 0) {
+          this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
           this.ySpeed *= -1;
         } else {
           this.y += this.ySpeed;
@@ -243,11 +241,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     };
 
-    p.NavigationNode = function (x, y, textito) {
-      this.size = 50;
+    p.NavigationNode = function (x, y, textito, shapeType) {
       this.sizeTwo = 120;
+      this.size = this.sizeTwo * 0.8;
       this.x = x;
       this.y = y;
+      this.shapeKind = shapeType;
       this.texti = textito;
       this.speed = 1;
       this.xSpeed = this.speed * p.random(-1, 1);
@@ -255,12 +254,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
       this.color = p.color(0, 253, 114, 255);
       this.colorTwo = p.color(0, 253, 114, 100);
-      this.circleOne = p.loadImage('assets/generalImages/circleOne.svg');
+
+
       this.direction = 1;
+      this.hoverin = false;
+
+
+
+      this.loadShapeImages = function () {
+        switch (this.shapeKind) {
+          case 1:
+            this.circleOne = p.loadImage('assets/generalImages/circleOne.svg');
+            break;
+          case 2:
+            this.circleOne = p.loadImage('assets/generalImages/circleTwo.svg');
+            this.shapeTwo = p.loadImage('assets/generalImages/pathTwo.svg');
+        }
+      };
+
+      this.loadShapeImages();
 
       this.display = function () {
         p.noStroke();
-        p.fill(this.color);
+
 
           p.push();
           p.translate(this.x, this.y);
@@ -268,9 +284,22 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
           p.pop();
 
-        p.ellipse(this.x, this.y, this.size , this.size );
-        p.fill(this.colorTwo);
-        p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
+          switch (this.shapeKind) {
+            case 1:
+              p.fill(this.color);
+              p.ellipse(this.x, this.y, this.size , this.size );
+              p.fill(this.colorTwo);
+              p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
+              break;
+
+            case 2:
+              p.image(this.shapeTwo, this.x, this.y, this.sizeTwo , this.sizeTwo );
+              p.fill(255, 255, 255, 240);
+              p.ellipse(this.x, this.y, this.size , this.size );
+              break;
+          }
+
+
         p.fill(0);
         p.textSize(this.size / 3.5);
         p.textLeading(this.size / 4.5);
@@ -279,19 +308,48 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.update = function() {
         if (this.x + this.xSpeed + (this.sizeTwo / 2) > p.width || this.x + this.xSpeed - (this.sizeTwo / 2) < 0) {
+          this.XSpeed = this.XSpeed * p.random(0.9, 1.1);
           this.xSpeed *= -1;
-          this.direction = this.direction * -1;
+         // this.direction = this.direction * -1;
         } else {
           this.x += this.xSpeed;
         }
         if (this.y + this.ySpeed + (this.sizeTwo / 2) > p.height || this.y + this.ySpeed - (this.sizeTwo / 2) < 0) {
+          this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
           this.ySpeed *= -1;
-          this.direction = this.direction * -1;
+        //  this.direction = this.direction * -1;
         } else {
           this.y += this.ySpeed;
         }
+        this.hoverCursor();
       };
 
+      this.hoverCursor =  function () {
+        if (p.dist(this.x, this.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
+          this.size = this.sizeTwo * 0.9;
+          this.hoverin = true;
+
+        } else if (p.dist(this.x, this.y, p.mouseX, p.mouseY) > this.sizeTwo / 2) {
+          this.size = this.sizeTwo * 0.7;
+          this.hoverin = false;
+        }
+      };
+
+    };
+
+    p.mouseClicked = () => {
+        for (let i = p.nodes.length - 1; i >= 0; i--) {
+
+        if (p.nodes[i].hoverin) {
+          switch (p.nodes[i].texti) {
+            case 'WHO\nARE\nYOU?':
+              this.router.navigate(['about']);
+              break;
+          }
+
+          break;
+        }
+      }
     };
 
   }
