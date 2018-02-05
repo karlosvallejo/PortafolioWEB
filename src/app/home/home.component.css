@@ -9,10 +9,12 @@
 .textBasic {
   margin: 0;
   display: inline-block;
+
 }
 .blockOfText {
   margin: 2% 0;
   font-size: 1.4vw;
+  text-shadow: 0 0 2px white, 0 0 4px rgba(255,255,255, 0.5), 0 0 6px rgba(255,255,255,0.3);
 }
 
 .cursorin {
@@ -30,6 +32,7 @@
   padding: 0;
   margin: 0;
   border: solid white;
+  box-shadow: 0 0 5px rgba(255,253,255,1), 0 0 10px rgba(255,253,255, 0.5);
 }
 .cursorBlock {
   height: 100%;

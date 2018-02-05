@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130">
+  <title>circleTres</title>
+  <g id="Capa_1" data-name="Capa 1">
+    <g style="opacity: 0">
+      <circle cx="65" cy="65" r="55" style="fill: none;stroke: #00fa73;stroke-linecap: round;stroke-miterlimit: 10;stroke-width: 2px;stroke-dasharray: 0.8594146370887756,171.8829345703125"/>
+    </g>
+    <circle cx="120" cy="65" r="10" style="fill: #fff"/>
+  </g>
+</svg>

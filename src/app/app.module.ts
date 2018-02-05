@@ -9,10 +9,14 @@ import { BackgroundComponent } from './background/background.component';
 import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
+import { SkillsComponent } from './skills/skills.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'about', component: AboutComponent, pathMatch: 'full' },
+  { path: 'skills', component: SkillsComponent, pathMatch: 'full' },
+  { path: 'projects', component: ProjectsComponent, pathMatch: 'full' },
   { path: '**' , redirectTo: ''}
 ];
 
@@ -24,12 +28,14 @@ const appRoutes: Routes = [
     BackgroundComponent,
     MenuComponent,
     HomeComponent,
-    AboutComponent
+    AboutComponent,
+    SkillsComponent,
+    ProjectsComponent
   ],
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      { enableTracing: false } // <-- debugging purposes only
     ),
     BrowserModule,
     AngularFittextModule

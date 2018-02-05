@@ -2,7 +2,8 @@
  <!-- <div class="blockOfText"><p>></p><h4 *ngIf="!showCursorOne">{{typewriter_displayOne}}█</h4><p #cursor *ngIf="showCursorOne && showCursor">█</p></div> -->
   <div class="blockOfText"><p class="textBasic">></p> {{typewriter_displayOne}}<p class="textBasic cursorin" *ngIf="showCursor && showCursorOne">█</p></div>
   <div class="blockOfText"><p class="textBasic" *ngIf="showCursorTwo || typewriter_displayTwo!=''">></p> {{typewriter_displayTwo}}<p class="textBasic cursorin" *ngIf="showCursor && showCursorTwo">█</p></div>
-  <div class="blockOfText"><p class="textBasic" *ngIf="showCursorThree">></p> <p class="textBasic cursorin" *ngIf="showCursor && showCursorThree">█</p></div>
+  <div class="blockOfText"><p class="textBasic" *ngIf="showCursorThree || typewriter_displayTres!=''">></p> {{typewriter_displayTres}}<p class="textBasic cursorin" *ngIf="showCursor && showCursorThree">█</p></div>
+<!--  <div class="blockOfText" *ngIf="showCursorFour"><p class="textBasic">></p> PROCESSING...<p *ngIf="showCursor && showCursorFour" class="textBasic cursorin">█</p></div> -->
 
 </div>
 

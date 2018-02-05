@@ -2,6 +2,8 @@ header{
   position: fixed;
   width: 100%;
   background-color: rgba(0,253,114,1);
+  box-shadow: 0 0 2px rgba(0,253,114,1), 0 0 4px rgba(50,255,100,0.8), 0 0 8px rgba(100,255,150,0.6), 0 0 16px rgba(150,255,200,0.4), 0 0 32px rgba(200,255,250,0.2);
+
   font-family: 'VT323', monospace;
 }
 
@@ -10,6 +12,7 @@ header h3 {
   margin: 0 6.4%;
   padding: 0;
   font-size: 3vw;
+  text-shadow: 0 0 2px black;
 }
 
 
@@ -38,17 +41,22 @@ ul li {
    color: white;
    padding: 5% 0 5% 10%;
    font-family: 'Press Start 2P', monospace;
-  font-size: 1vw;
+   font-size: 1vw;
+   text-shadow: 0 0 2px white, 0 0 4px rgba(255,255,255, 0.5), 0 0 6px rgba(255,255,255,0.3);
  }
 
 .activeMenu {
   color: black;
   background-color: rgba(255,255,255,1);
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
+  text-shadow: 0 0 2px black;
 }
 
 .menuItem:hover {
   color: black;
   background-color: rgba(255,255,255,1);
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
+  text-shadow: 0 0 2px black;
   cursor: pointer;
 }
 
@@ -58,6 +66,7 @@ ul li {
   margin: 0;
   width: 6.125%;
   border: none;
+
 }
 
 #lastItemDiv {
@@ -78,4 +87,5 @@ ul li {
   height: 100%;
   top: 0;
   background-color: white;
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
 }

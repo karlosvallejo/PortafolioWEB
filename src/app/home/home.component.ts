@@ -20,6 +20,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showCursorThree = false;
 
+  showCursorFour = false;
+
   writing = false;
   showCursor = true;
 
@@ -28,6 +30,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   typewriter_textTwo = 'WRITE A REQUEST OR QUESTION';
   typewriter_displayTwo = '';
+
+  typewriter_textTres = 'jjeeje';
+  typewriter_displayTres = '';
 
 
   constructor(public router: Router) {
@@ -88,6 +93,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.intervalLoading = null;
     p.instanceAboutNode = null;
     p.instanceSkillsNode = null;
+    p.instanceProyectsNode = null;
 
 
     p.setup = () => {
@@ -95,7 +101,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.loadingGraphic = p.createGraphics(p.width, p.height);
       p.loadingGraphic.textAlign(p.LEFT);
       p.loadingGraphic.textFont('VT323');
-      p.frameRate(24);
+      p.frameRate(25);
       p.rectMode(p.CENTER);
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
@@ -117,10 +123,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.instanceSkillsNode = new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
         p.random((p.height / 10) * 2, (p.height / 10) * 8), 'WHAT\nCAN\nYOU DO?', 2);
 
+      p.instanceProyectsNode =  new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
+        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'OPEN\nYOUR\nPROJECTS', 3);
+
       p.instanceNodes.push(p.instanceAboutNode);
       p.instanceNodes.push(p.instanceSkillsNode);
+      p.instanceNodes.push(p.instanceProyectsNode);
       p.nodes.push(p.instanceAboutNode);
       p.nodes.push(p.instanceSkillsNode);
+      p.nodes.push(p.instanceProyectsNode);
+
+
+
     };
 
     p.draw = () => {
@@ -149,6 +163,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (p.loading) {
         p.drawLoading();
       }
+
+   //   console.log(p.frameRate());
     };
 
     p.startLoading = () => {
@@ -161,6 +177,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             p.displayText = p.textLoading;
           }
       }, 500);
+
     };
 
     p.drawLoading = () => {
@@ -184,6 +201,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           clearInterval(p.intervalLoading);
         }
       }, 30);
+      p.drawingContext.shadowColor = 'rgba(230,255,230,0.8)';
+      p.drawingContext.shadowBlur = 5;
     };
 
     p.windowResized = () => {
@@ -193,16 +212,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.drawConnection = (theNode) => {
       p.node1 = p.nodes[theNode];
 
-
       for (let j = theNode; j < p.nodes.length; j++) {
 
         p.node2 = p.nodes[j];
         p.distance = p.dist(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
         if (p.distance < p.maxDistance) {
           if (j !== theNode) {
-            p.stroke(p.node2.color);
-            p.strokeWeight(10 - (p.distance / p.maxDistance) * 10); // Distance/ max creates line thickness
-            p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
+              p.stroke(p.node2.color);
+              p.strokeWeight(10 - (p.distance / p.maxDistance) * 10);
+              p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
           }
         }
       }
@@ -213,11 +231,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.size = 30;
       this.x = x;
       this.y = y;
-      this.speed = 2;
+      this.speed = 1.5;
       this.xSpeed = this.speed * p.random(-1, 1);
       this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      this.color = p.color(255, 255, 255);
+      this.color = p.color(20, 253, 114, 200);
 
       this.display = function () {
         p.noStroke();
@@ -252,8 +270,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.xSpeed = this.speed * p.random(-1, 1);
       this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      this.color = p.color(0, 253, 114, 255);
-      this.colorTwo = p.color(0, 253, 114, 100);
+      this.color = p.color(255, 255, 255, 255);
+      this.colorTwo = p.color(255, 255, 255, 100);
+      this.contadorFrames = p.frameCount;
 
 
       this.direction = 1;
@@ -265,10 +284,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         switch (this.shapeKind) {
           case 1:
             this.circleOne = p.loadImage('assets/generalImages/circleOne.svg');
+
             break;
           case 2:
-            this.circleOne = p.loadImage('assets/generalImages/circleTwo.svg');
+            this.circleOne = p.loadImage('assets/generalImages/circleTwoWhite.svg');
             this.shapeTwo = p.loadImage('assets/generalImages/pathTwo.svg');
+            break;
+          case 3:
+            this.circleTres = p.loadImage('assets/generalImages/circleTres.svg');
+            break;
         }
       };
 
@@ -278,46 +302,94 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.noStroke();
 
 
-          p.push();
-          p.translate(this.x, this.y);
-          p.rotate(p.radians(p.frameCount * this.direction));
-          p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
-          p.pop();
+
+
 
           switch (this.shapeKind) {
             case 1:
+              p.push();
+              p.translate(this.x, this.y);
+              p.rotate(p.radians((p.frameCount * this.direction) % 360));
+              p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+              p.pop();
               p.fill(this.color);
+
               p.ellipse(this.x, this.y, this.size , this.size );
               p.fill(this.colorTwo);
               p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
+
               break;
 
             case 2:
-              p.image(this.shapeTwo, this.x, this.y, this.sizeTwo , this.sizeTwo );
-              p.fill(255, 255, 255, 240);
+              p.push();
+              p.translate(this.x, this.y);
+              p.rotate(p.radians((p.frameCount * this.direction) % 360));
+              p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+              p.pop();
+              p.push();
+              p.fill(this.color);
+              p.translate(this.x, this.y);
+              if (this.hoverin) {
+                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
+              } else {
+                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
+              }
+              p.image(this.shapeTwo, 0, 0, this.sizeTwo , this.sizeTwo );
+              p.pop();
+              p.fill(255, 255, 255, 250);
               p.ellipse(this.x, this.y, this.size , this.size );
+              break;
+
+            case 3:
+
+              p.push();
+              p.translate(this.x, this.y);
+              p.rotate(p.radians((p.frameCount * this.direction) % 360));
+              p.image(this.circleTres, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+              p.pop();
+              p.push();
+              p.fill(this.color);
+              p.translate(this.x, this.y);
+              if (this.hoverin) {
+                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
+              } else {
+                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
+              }
+              p.arc(0, 0, this.size, this.size, 0, p.TWO_PI - 1, p.PIE);
+              p.pop();
+              p.fill(this.colorTwo);
+              p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
               break;
           }
 
 
         p.fill(0);
-        p.textSize(this.size / 3.5);
+        p.textSize(this.size / 4);
         p.textLeading(this.size / 4.5);
         p.text(this.texti, this.x, this.y);
       };
 
       this.update = function() {
         if (this.x + this.xSpeed + (this.sizeTwo / 2) > p.width || this.x + this.xSpeed - (this.sizeTwo / 2) < 0) {
-          this.XSpeed = this.XSpeed * p.random(0.9, 1.1);
+        //  this.XSpeed = this.XSpeed * p.random(0.9, 1.1);
           this.xSpeed *= -1;
-         // this.direction = this.direction * -1;
+          switch (this.shapeKind) {
+            case 1:
+              this.direction = this.direction * -1;
+              break;
+          }
+
         } else {
           this.x += this.xSpeed;
         }
         if (this.y + this.ySpeed + (this.sizeTwo / 2) > p.height || this.y + this.ySpeed - (this.sizeTwo / 2) < 0) {
-          this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
+        //  this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
           this.ySpeed *= -1;
-        //  this.direction = this.direction * -1;
+          switch (this.shapeKind) {
+            case 1:
+              this.direction = this.direction * -1;
+              break;
+          }
         } else {
           this.y += this.ySpeed;
         }
@@ -326,8 +398,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.hoverCursor =  function () {
         if (p.dist(this.x, this.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
-          this.size = this.sizeTwo * 0.9;
+          this.size = this.sizeTwo * 0.8;
           this.hoverin = true;
+          this.contadorFrames++;
 
         } else if (p.dist(this.x, this.y, p.mouseX, p.mouseY) > this.sizeTwo / 2) {
           this.size = this.sizeTwo * 0.7;
@@ -343,7 +416,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (p.nodes[i].hoverin) {
           switch (p.nodes[i].texti) {
             case 'WHO\nARE\nYOU?':
-              this.router.navigate(['about']);
+              this.typingTres('WHO ARE YOU?', 'about');
+              break;
+
+            case 'WHAT\nCAN\nYOU DO?':
+              this.typingTres('WHAT CAN YOU DO?', 'skills');
+              break;
+
+            case 'OPEN\nYOUR\nPROJECTS':
+              this.typingTres('OPEN YOUR PROJECTS', 'projects');
               break;
           }
 
@@ -375,7 +456,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.writing = false;
           this.typingTwo();
         }
-      }, 120);
+      }, 100);
     }, 2000);
   }
 
@@ -400,8 +481,37 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 1000);
 
         }
-      }, 120);
+      }, 100);
     }, 1000);
+  }
+
+  typingTres(mensaje: string, route: string) {
+    this.typewriter_textTres =  mensaje;
+    setTimeout(() => {
+      let total_length = this.typewriter_textTres.length;
+      let current_length = this.typewriter_displayTres.length;
+      this.writing = true;
+      const intervalito = setInterval(() => {
+        total_length = this.typewriter_textTres.length;
+        current_length = this.typewriter_displayTres.length;
+        if (current_length < total_length) {
+          this.typewriter_displayTres += this.typewriter_textTres[current_length];
+        } else {
+          // this.typewriter_displayOne = '';
+
+          clearInterval(intervalito);
+          setTimeout(() => {
+            this.showCursorFour = true;
+            this.showCursorThree = false;
+            this.writing = false;
+            setTimeout(() => {
+              this.router.navigate([route]);
+            }, 2000);
+          }, 200);
+
+        }
+      }, 100);
+    }, 100);
   }
 
 }
