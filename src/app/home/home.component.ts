@@ -85,7 +85,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.nodeCount = 30;
     p.maxDistance = 200;
     p.loading = false;
-    p.loadingGraphic = null;
     p.backgrounOpacity = 255;
     p.textFillOpacity = 255;
     p.textLoading = 'LOADING.';
@@ -97,11 +96,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     p.setup = () => {
-      p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 45));
-      p.loadingGraphic = p.createGraphics(p.width, p.height);
-      p.loadingGraphic.textAlign(p.LEFT);
-      p.loadingGraphic.textFont('VT323');
-      p.frameRate(25);
+      p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 44));
+     // p.frameRate(25);
       p.rectMode(p.CENTER);
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
@@ -113,18 +109,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Create nodes
       for (let i = 0; i < p.nodeCount; i++) {
-        const b = new p.Ball(p.random((p.width / 10) * 3, (p.width / 10) * 7 ), p.random(p.height / 10) * 4, (p.height / 10) * 6);
+        const b = new p.Ball(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1), p.random(-1, 1)));
         p.nodes.push(b);
       }
 
-      p.instanceAboutNode = new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
-        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'WHO\nARE\nYOU?', 1);
+      p.instanceAboutNode = new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+        p.random(-1, 1)), 'WHO\nARE\nYOU?', 1);
 
-      p.instanceSkillsNode = new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
-        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'WHAT\nCAN\nYOU DO?', 2);
+      p.instanceSkillsNode = new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+        p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', 2);
 
-      p.instanceProyectsNode =  new p.NavigationNode(p.random((p.width / 10) * 2, (p.width / 10) * 8 ),
-        p.random((p.height / 10) * 2, (p.height / 10) * 8), 'OPEN\nYOUR\nPROJECTS', 3);
+      p.instanceProyectsNode =  new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+        p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', 3);
 
       p.instanceNodes.push(p.instanceAboutNode);
       p.instanceNodes.push(p.instanceSkillsNode);
@@ -145,7 +141,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       for (let i = 0; i < p.nodes.length; i++) {
         p.drawConnection(i);
         p.nodes[i].display();
-        p.nodes[i].update();
+        p.nodes[i].movimiento();
+        p.nodes[i].edgeCheck();
       }
 
 
@@ -177,32 +174,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             p.displayText = p.textLoading;
           }
       }, 500);
+      p.textAlign(p.LEFT);
 
     };
 
     p.drawLoading = () => {
-      p.loadingGraphic.clear();
-      p.loadingGraphic.background(0, p.backgrounOpacity);
-      p.loadingGraphic.textSize(p.width / 30);
-      p.loadingGraphic.noStroke();
-      p.loadingGraphic.fill(255, p.textFillOpacity);
-      p.loadingGraphic.text(p.displayText, p.width / 2.35, p.height / 2);
-      p.image(p.loadingGraphic, p.width / 2, p.height / 2);
+      p.background(0, p.backgrounOpacity);
+      p.textSize(p.width / 30);
+      p.fill(255, p.textFillOpacity);
+      p.text(p.displayText, p.width / 2.35, p.height / 2);
+
     };
 
     p.endOfLoading = () => {
      //
+      p.drawingContext.shadowColor = 'rgba(110,120,120,0.5)';
+      p.drawingContext.shadowBlur = 4;
     const intervalino =  setInterval(() => {
-        p.backgrounOpacity -= 5;
-        p.textFillOpacity -= 17;
+        p.backgrounOpacity -= 10;
+        p.textFillOpacity -= 20;
+        if (p.textFillOpacity <= 0) {
+          p.textAlign(p.CENTER);
+        }
+
         if (p.backgrounOpacity <= 0) {
           p.loading = false;
           clearInterval(intervalino);
           clearInterval(p.intervalLoading);
+          p.drawingContext.shadowBlur = 4;
+          p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
         }
-      }, 30);
-      p.drawingContext.shadowColor = 'rgba(230,255,230,0.8)';
-      p.drawingContext.shadowBlur = 5;
+      }, 50);
+
     };
 
     p.windowResized = () => {
@@ -215,60 +218,63 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       for (let j = theNode; j < p.nodes.length; j++) {
 
         p.node2 = p.nodes[j];
-        p.distance = p.dist(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
+        p.distance = p.dist(p.node1.loc.x, p.node1.loc.y, p.node2.loc.x, p.node2.loc.y);
         if (p.distance < p.maxDistance) {
           if (j !== theNode) {
               p.stroke(p.node2.color);
               p.strokeWeight(10 - (p.distance / p.maxDistance) * 10);
-              p.line(p.node1.x, p.node1.y, p.node2.x, p.node2.y);
+              p.line(p.node1.loc.x, p.node1.loc.y, p.node2.loc.x, p.node2.loc.y);
           }
         }
       }
 
     };
 
-    p.Ball = function (x , y) {
+    p.Ball = function (pos , velo) {
+      this.loc = pos;
+      this.vel = velo;
       this.size = 30;
-      this.x = x;
-      this.y = y;
-      this.speed = 1.5;
-      this.xSpeed = this.speed * p.random(-1, 1);
-      this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
       this.color = p.color(20, 253, 114, 200);
 
       this.display = function () {
         p.noStroke();
         p.fill(this.color);
-        p.ellipse(this.x, this.y, this.size , this.size );
+        p.ellipse(this.loc.x, this.loc.y, this.size , this.size );
       };
 
-      this.update = function() {
-        if (this.x + this.xSpeed + (this.size / 2) > p.width || this.x + this.xSpeed - (this.size / 2) < 0) {
-          this.xSpeed *= -1;
-        } else {
-          this.x += this.xSpeed;
+      this.movimiento = function() {
+        this.loc.add(this.vel);
+      };
+
+      this.edgeCheck = function () {
+        if (this.loc.x < this.size / 2) {
+          this.loc.x = this.size / 2;
+          this.vel.x = -1 * this.vel.x;
         }
-        if (this.y + this.ySpeed + (this.size / 2) > p.height || this.y + this.ySpeed - (this.size / 2) < 0) {
-          this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
-          this.ySpeed *= -1;
-        } else {
-          this.y += this.ySpeed;
+        if (this.loc.x > p.width - (this.size / 2)) {
+          this.loc.x = p.width - (this.size / 2);
+          this.vel.x = -1 * this.vel.x;
+        }
+        if (this.loc.y < this.size / 2) {
+          this.loc.y = this.size / 2;
+          this.vel.y = -1 * this.vel.y;
+        }
+        if (this.loc.y > p.height - (this.size / 2)) {
+          this.loc.y = p.height - (this.size / 2);
+          this.vel.y = -1 * this.vel.y;
         }
       };
 
     };
 
-    p.NavigationNode = function (x, y, textito, shapeType) {
+    p.NavigationNode = function (pos , velo, textito, shapeType) {
       this.sizeTwo = 120;
       this.size = this.sizeTwo * 0.8;
-      this.x = x;
-      this.y = y;
+      this.loc = pos;
+      this.vel = velo;
       this.shapeKind = shapeType;
       this.texti = textito;
-      this.speed = 1;
-      this.xSpeed = this.speed * p.random(-1, 1);
-      this.ySpeed = this.speed * p.random(-1, 1);
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
       this.color = p.color(255, 255, 255, 255);
       this.colorTwo = p.color(255, 255, 255, 100);
@@ -308,27 +314,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           switch (this.shapeKind) {
             case 1:
               p.push();
-              p.translate(this.x, this.y);
+              p.translate(this.loc.x, this.loc.y);
               p.rotate(p.radians((p.frameCount * this.direction) % 360));
               p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
               p.pop();
               p.fill(this.color);
 
-              p.ellipse(this.x, this.y, this.size , this.size );
+              p.ellipse(this.loc.x, this.loc.y, this.size , this.size );
               p.fill(this.colorTwo);
-              p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
+              p.ellipse(this.loc.x, this.loc.y, this.sizeTwo , this.sizeTwo );
 
               break;
 
             case 2:
               p.push();
-              p.translate(this.x, this.y);
+              p.translate(this.loc.x, this.loc.y);
               p.rotate(p.radians((p.frameCount * this.direction) % 360));
               p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
               p.pop();
               p.push();
               p.fill(this.color);
-              p.translate(this.x, this.y);
+              p.translate(this.loc.x, this.loc.y);
               if (this.hoverin) {
                 p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
               } else {
@@ -337,19 +343,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               p.image(this.shapeTwo, 0, 0, this.sizeTwo , this.sizeTwo );
               p.pop();
               p.fill(255, 255, 255, 250);
-              p.ellipse(this.x, this.y, this.size , this.size );
+              p.ellipse(this.loc.x, this.loc.y, this.size , this.size );
               break;
 
             case 3:
 
               p.push();
-              p.translate(this.x, this.y);
+              p.translate(this.loc.x, this.loc.y);
               p.rotate(p.radians((p.frameCount * this.direction) % 360));
               p.image(this.circleTres, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
               p.pop();
               p.push();
               p.fill(this.color);
-              p.translate(this.x, this.y);
+              p.translate(this.loc.x, this.loc.y);
               if (this.hoverin) {
                 p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
               } else {
@@ -358,7 +364,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               p.arc(0, 0, this.size, this.size, 0, p.TWO_PI - 1, p.PIE);
               p.pop();
               p.fill(this.colorTwo);
-              p.ellipse(this.x, this.y, this.sizeTwo , this.sizeTwo );
+              p.ellipse(this.loc.x, this.loc.y, this.sizeTwo , this.sizeTwo );
               break;
           }
 
@@ -366,43 +372,52 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.fill(0);
         p.textSize(this.size / 4);
         p.textLeading(this.size / 4.5);
-        p.text(this.texti, this.x, this.y);
+        p.text(this.texti, this.loc.x, this.loc.y);
       };
 
-      this.update = function() {
-        if (this.x + this.xSpeed + (this.sizeTwo / 2) > p.width || this.x + this.xSpeed - (this.sizeTwo / 2) < 0) {
-        //  this.XSpeed = this.XSpeed * p.random(0.9, 1.1);
-          this.xSpeed *= -1;
-          switch (this.shapeKind) {
-            case 1:
-              this.direction = this.direction * -1;
-              break;
-          }
-
-        } else {
-          this.x += this.xSpeed;
-        }
-        if (this.y + this.ySpeed + (this.sizeTwo / 2) > p.height || this.y + this.ySpeed - (this.sizeTwo / 2) < 0) {
-        //  this.ySpeed = this.ySpeed * p.random(0.9, 1.1);
-          this.ySpeed *= -1;
-          switch (this.shapeKind) {
-            case 1:
-              this.direction = this.direction * -1;
-              break;
-          }
-        } else {
-          this.y += this.ySpeed;
-        }
+      this.movimiento = function() {
+        this.loc.add(this.vel);
         this.hoverCursor();
       };
 
+      this.edgeCheck = function () {
+        if (this.loc.x < this.size / 2) {
+          this.loc.x = this.size / 2;
+          this.vel.x = -1 * this.vel.x;
+          if (this.shapeKind === 1) {
+            this.direction = this.direction * -1;
+          }
+        }
+        if (this.loc.x > p.width - (this.size / 2)) {
+          this.loc.x = p.width - (this.size / 2);
+          this.vel.x = -1 * this.vel.x;
+          if (this.shapeKind === 1) {
+            this.direction = this.direction * -1;
+          }
+        }
+        if (this.loc.y < this.size / 2) {
+          this.loc.y = this.size / 2;
+          this.vel.y = -1 * this.vel.y;
+          if (this.shapeKind === 1) {
+            this.direction = this.direction * -1;
+          }
+        }
+        if (this.loc.y > p.height - (this.size / 2)) {
+          this.loc.y = p.height - (this.size / 2);
+          this.vel.y = -1 * this.vel.y;
+          if (this.shapeKind === 1) {
+            this.direction = this.direction * -1;
+          }
+        }
+      };
+
       this.hoverCursor =  function () {
-        if (p.dist(this.x, this.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
+        if (p.dist(this.loc.x, this.loc.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
           this.size = this.sizeTwo * 0.8;
           this.hoverin = true;
           this.contadorFrames++;
 
-        } else if (p.dist(this.x, this.y, p.mouseX, p.mouseY) > this.sizeTwo / 2) {
+        } else if (p.dist(this.loc.x, this.loc.y, p.mouseX, p.mouseY) > this.sizeTwo / 2) {
           this.size = this.sizeTwo * 0.7;
           this.hoverin = false;
         }
@@ -450,10 +465,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.typewriter_displayOne += this.typewriter_textOne[current_length];
         } else {
          // this.typewriter_displayOne = '';
-          clearInterval(intervalito);
+
           this.showCursorOne = false;
           this.showCursorTwo = true;
           this.writing = false;
+          clearInterval(intervalito);
           this.typingTwo();
         }
       }, 100);
