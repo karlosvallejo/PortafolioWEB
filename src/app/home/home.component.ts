@@ -98,6 +98,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.setup = () => {
       p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 44));
      // p.frameRate(25);
+     // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
+     // p.drawingContext.shadowBlur = 4;
       p.rectMode(p.CENTER);
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
@@ -188,8 +190,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     p.endOfLoading = () => {
      //
-      p.drawingContext.shadowColor = 'rgba(110,120,120,0.5)';
-      p.drawingContext.shadowBlur = 4;
     const intervalino =  setInterval(() => {
         p.backgrounOpacity -= 10;
         p.textFillOpacity -= 20;
@@ -201,8 +201,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           p.loading = false;
           clearInterval(intervalino);
           clearInterval(p.intervalLoading);
-          p.drawingContext.shadowBlur = 4;
-          p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
+
         }
       }, 50);
 
@@ -472,7 +471,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           clearInterval(intervalito);
           this.typingTwo();
         }
-      }, 100);
+      }, 50);
     }, 2000);
   }
 
@@ -497,7 +496,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 1000);
 
         }
-      }, 100);
+      }, 50);
     }, 1000);
   }
 
