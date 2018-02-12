@@ -2,7 +2,7 @@ header{
   position: fixed;
   width: 100%;
   background-color: rgba(0,253,114,1);
-  box-shadow: 0 0 2px rgba(0,253,114,1), 0 0 4px rgba(50,255,100,0.8), 0 0 8px rgba(100,255,150,0.6), 0 0 16px rgba(150,255,200,0.4), 0 0 32px rgba(200,255,250,0.2);
+  box-shadow: 0 0 2px rgba(0,253,114,1), 0 0 4px rgba(50,255,100,0.8), 0 0 8px rgba(100,255,150,0.6);
 
   font-family: 'VT323', monospace;
 }

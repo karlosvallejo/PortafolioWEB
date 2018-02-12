@@ -1,4 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {trigger, style, transition, animate, keyframes, query, stagger, state} from '@angular/animations';
 import {Router} from '@angular/router';
 declare let p5: any;
 
@@ -8,7 +9,18 @@ declare let p5: any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('charging', [
+      state('rise', style({
+        width : '94%'
+      })),
+      state('descend',   style({
+        width : '5%'
+      })),
+      transition('* => *', animate('8000ms ease')),
+    ])
+  ]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -33,6 +45,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   typewriter_textTres = 'jjeeje';
   typewriter_displayTres = '';
+
+  moveBarState = 'rise';
 
 
   constructor(public router: Router) {
@@ -60,6 +74,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.typingOne();
     this.createCanvas();
+  }
+
+  animationDone(): void {
+    switch (this.moveBarState) {
+      case 'rise':
+        this.moveBarState = 'descend';
+        break;
+      case 'descend':
+        this.moveBarState = 'rise';
+        break;
+    }
   }
   /*
   private onWindowResize (e) {
@@ -97,6 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.glitchImage = null;
     p.glitchEffectObject = null;
     p.drone = null;
+    p.wavesArray = [];
 
 
     p.loadImage('https://vignette.wikia.nocookie.net/gearsofwar/images/d/d0/Drone-l.jpg', function(img) {
@@ -142,6 +168,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.nodes.push(p.instanceProyectsNode);
 
 
+      for (let i = 1 ; i < 10; i++) {
+        p.wavesArray.push(new p.wave((p.height / 10) * i, p.height / 100));
+      }
+
 
     };
 
@@ -149,6 +179,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // p.clear();
       // p.fill('rgba(255,255,255, 0.8)');
       p.background(0);
+      for (let i = 0; i < p.wavesArray.length; i++) {
+        p.wavesArray[i].display();
+      }
+
 
       for (let i = 0; i < p.nodes.length; i++) {
         p.drawConnection(i);
@@ -702,14 +736,41 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     };
 
+    p.wave = function (ypos, ampMax) {
+      this.A = p.random(1, ampMax);   // wave amplitude
+      this.frequency = p.random(0.0314, 0.1256);    // angular frequency
+      this.time = 1.97;
+      this.diameter = 10;
+      this.radius = this.diameter / 2;
+      this.phase = p.random(0.1, 0.6);
+      this.phi = undefined;
+
+      this.display = function () {
+        p.strokeWeight(2);
+        p.stroke(255, 90);
+        p.push();
+        p.translate(0, ypos);
+        p.beginShape();
+
+        for (let x = this.radius; x <= p.width - this.radius; x += this.diameter * 1.5) {
+          this.phi = -x * this.phase;           // phase
+          // p.vertex(x, this.A * p.map((p.sin(this.frequency * this.time + this.phi) + p.map(p.noise(x), 0, 1, -1, 1)), -2, 2, -1, 1));
+          p.vertex(x, this.A * p.sin(this.frequency * this.time + this.phi));
+        }
+
+        p.endShape();
+        p.pop();
+        this.time += 1;
+      };
+    };
+
     p.glishear = function () {
 
-        p.saveFrames('out', 'jpg', 1, 1, function (data) {
+        p.saveFrames('out', 'jpg', 0.2, 5, function (data) {
           p.loadImage(data[0].imageData, function(img) {
             p.glitchImage  = img ;
             p.glitchEffectObject = new p.glitch(p.glitchImage);
           });
-
         });
 
     };

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AngularFittextModule} from 'angular-fittext';
 
@@ -11,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { SkillsComponent } from './skills/skills.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { RootsComponent } from './roots/roots.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -30,7 +32,8 @@ const appRoutes: Routes = [
     HomeComponent,
     AboutComponent,
     SkillsComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    RootsComponent
   ],
   imports: [
     RouterModule.forRoot(
@@ -38,6 +41,7 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     ),
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFittextModule
   ],
   providers: [],
