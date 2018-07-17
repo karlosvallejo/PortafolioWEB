@@ -47,6 +47,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   typewriter_displayTres = '';
 
   moveBarState = 'rise';
+  moveBarStateTwo = 'rise';
+
 
 
   constructor(public router: Router) {
@@ -83,6 +85,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'descend':
         this.moveBarState = 'rise';
+        break;
+    }
+  }
+
+  animationDoneTwo(): void {
+    switch (this.moveBarStateTwo) {
+      case 'rise':
+        this.moveBarStateTwo = 'descend';
+        break;
+      case 'descend':
+        this.moveBarStateTwo = 'rise';
         break;
     }
   }
@@ -124,11 +137,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     p.drone = null;
     p.wavesArray = [];
 
-
+/*
     p.loadImage('https://vignette.wikia.nocookie.net/gearsofwar/images/d/d0/Drone-l.jpg', function(img) {
       p.drone = img ;
     });
-
+*/
 
     p.setup = () => {
       p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 44));
