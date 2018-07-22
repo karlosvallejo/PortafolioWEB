@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {trigger, style, transition, animate, keyframes, query, stagger, state} from '@angular/animations';
 import {Router} from '@angular/router';
-declare let p5: any;
+import 'p5';
 
 
 
@@ -13,7 +13,7 @@ declare let p5: any;
   animations: [
     trigger('charging', [
       state('rise', style({
-        width : '94%'
+        width : '93%'
       })),
       state('descend',   style({
         width : '5%'
@@ -23,8 +23,8 @@ declare let p5: any;
   ]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  private p5;
+  @ViewChild('p5Canvas', {read: ElementRef}) containerSketch: ElementRef;
+  private canvas;
 
   showCursorOne = true;
 
@@ -109,46 +109,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private createCanvas () {
     console.log('creating canvas');
-    this.p5 = new p5(this.sketch, 'p5Canvas');
+    this.canvas = new p5(this.sketch, this.containerSketch.nativeElement);
   }
 
   private destroyCanvas () {
     console.log('destroying canvas');
-    this.p5.noCanvas();
-    this.p5 = null;
+    this.canvas.noCanvas();
+    this.canvas = null;
   }
 
-  private sketch = (p: any) => {
-    p.nodes = [];
-    p.instanceNodes = [];
-    p.nodeCount = 30;
-    p.maxDistance = 200;
-    p.loading = false;
-    p.backgrounOpacity = 255;
-    p.textFillOpacity = 255;
-    p.textLoading = 'LOADING.';
-    p.displayText =  '';
-    p.intervalLoading = null;
-    p.instanceAboutNode = null;
-    p.instanceSkillsNode = null;
-    p.instanceProyectsNode = null;
-    p.glitchImage = null;
-    p.glitchEffectObject = null;
-    p.drone = null;
-    p.wavesArray = [];
+  private sketch = (p: p5) => {
+    const nodes = [];
+    const instanceNodes = [];
+    const nodeCount = 30;
+    const maxDistance = 200;
+    let loading = false;
+    let backgrounOpacity = 255;
+    let textFillOpacity = 255;
+    const textLoading = 'LOADING.';
+    let displayText =  '';
+    let intervalLoading = null;
+    let instanceAboutNode = null;
+    let instanceSkillsNode = null;
+    let instanceProyectsNode = null;
+    const wavesArray = [];
 
-/*
-    p.loadImage('https://vignette.wikia.nocookie.net/gearsofwar/images/d/d0/Drone-l.jpg', function(img) {
-      p.drone = img ;
-    });
-*/
+
 
     p.setup = () => {
-      p.createCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 44));
-     // p.frameRate(25);
-     // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
-     // p.drawingContext.shadowBlur = 4;
-
+      p.createCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45), p.P2D);
+      p.frameRate(30);
+      // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
+      // p.drawingContext.shadowBlur = 4;
       p.rectMode(p.CENTER);
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
@@ -156,52 +148,54 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-      p.startLoading();
+      startLoading();
 
       // Create nodes
-      for (let i = 0; i < p.nodeCount; i++) {
-        const b = new p.Ball(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1), p.random(-1, 1)));
-        p.nodes.push(b);
+      for (let i = 0; i < nodeCount; i++) {
+        const b = new Ball(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-2, 2), p.random(-2, 2)));
+        nodes.push(b);
       }
 
-      p.instanceAboutNode = new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceAboutNode = new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'WHO\nARE\nYOU?', 1);
 
-      p.instanceSkillsNode = new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceSkillsNode = new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', 2);
 
-      p.instanceProyectsNode =  new p.NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceProyectsNode =  new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', 3);
 
-      p.instanceNodes.push(p.instanceAboutNode);
-      p.instanceNodes.push(p.instanceSkillsNode);
-      p.instanceNodes.push(p.instanceProyectsNode);
-      p.nodes.push(p.instanceAboutNode);
-      p.nodes.push(p.instanceSkillsNode);
-      p.nodes.push(p.instanceProyectsNode);
+      instanceNodes.push(instanceAboutNode);
+      instanceNodes.push(instanceSkillsNode);
+      instanceNodes.push(instanceProyectsNode);
+      nodes.push(instanceAboutNode);
+      nodes.push(instanceSkillsNode);
+      nodes.push(instanceProyectsNode);
 
 
       for (let i = 1 ; i < 10; i++) {
-        p.wavesArray.push(new p.wave((p.height / 10) * i, p.height / 100));
+        wavesArray.push(new Wave((p.height / 10) * i, p.height / 100));
       }
+
+
 
 
     };
 
     p.draw = () => {
-      // p.clear();
+      p.clear();
       // p.fill('rgba(255,255,255, 0.8)');
-      p.background(0);
-      for (let i = 0; i < p.wavesArray.length; i++) {
-        p.wavesArray[i].display();
+      // p.background(0);
+      for (let i = 0; i < wavesArray.length; i++) {
+        wavesArray[i].display();
       }
 
 
-      for (let i = 0; i < p.nodes.length; i++) {
-        p.drawConnection(i);
-        p.nodes[i].display();
-        p.nodes[i].movimiento();
-        p.nodes[i].edgeCheck();
+      for (let i = 0; i < nodes.length; i++) {
+        drawConnection(i);
+        nodes[i].display();
+        nodes[i].movimiento();
+        nodes[i].edgeCheck();
       }
 
 
@@ -216,98 +210,103 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 */
 
 
-      if (p.loading) {
-        p.drawLoading();
+      if (loading) {
+        drawLoading();
       }
 
    //   console.log(p.frameRate());
-
-      if (p.glitchImage != null) {
-        p.glitchEffectObject.show();
-      }
     };
 
-    p.startLoading = () => {
-      p.loading = true;
-      p.displayText = p.textLoading;
-      p.intervalLoading = setInterval(() => {
-          p.displayText += '.';
-       //   console.log ('entro');
-          if (p.displayText.length === p.textLoading.length + 4) {
-            p.displayText = p.textLoading;
-          }
+    function startLoading() {
+      loading = true;
+      displayText = textLoading;
+      intervalLoading = setInterval(() => {
+        displayText += '.';
+        //   console.log ('entro');
+        if (displayText.length === textLoading.length + 4) {
+          displayText = textLoading;
+        }
       }, 500);
       p.textAlign(p.LEFT);
+      setTimeout(() => {
+        endOfLoading();
+      }, 8000);
+    }
 
-    };
+    function endOfLoading() {
+        const intervalino =  setInterval(() => {
+          backgrounOpacity -= 10;
+          textFillOpacity -= 20;
+          if (textFillOpacity <= 0) {
+            p.textAlign(p.CENTER);
+          }
+          if (backgrounOpacity <= 0) {
+            loading = false;
+            clearInterval(intervalino);
+            clearInterval(intervalLoading);
+          }
+        }, 50);
+    }
 
-    p.drawLoading = () => {
-      p.background(0, p.backgrounOpacity);
+
+
+
+    function drawLoading() {
+      p.background(0, backgrounOpacity);
       p.textSize(p.width / 30);
-      p.fill(255, p.textFillOpacity);
-      p.text(p.displayText, p.width / 2.35, p.height / 2);
+      p.fill(255, textFillOpacity);
+      p.text(displayText, p.width / 2.35, p.height / 2);
 
-    };
+    }
 
-    p.endOfLoading = () => {
-     //
-    const intervalino =  setInterval(() => {
-        p.backgrounOpacity -= 10;
-        p.textFillOpacity -= 20;
-        if (p.textFillOpacity <= 0) {
-          p.textAlign(p.CENTER);
-        }
 
-        if (p.backgrounOpacity <= 0) {
-          p.loading = false;
-          clearInterval(intervalino);
-          clearInterval(p.intervalLoading);
-
-        }
-      }, 50);
-
-    };
 
     p.windowResized = () => {
-      p.resizeCanvas(((p.windowWidth / 16) * 14), ((p.windowHeight / 100) * 45) );
+      p.resizeCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45));
     };
 
-    p.drawConnection = (theNode) => {
-      p.node1 = p.nodes[theNode];
+    function drawConnection(theNode) {
+      const node1 = nodes[theNode];
 
-      for (let j = theNode; j < p.nodes.length; j++) {
+      for (let j = theNode; j < nodes.length; j++) {
 
-        p.node2 = p.nodes[j];
-        p.distance = p.dist(p.node1.loc.x, p.node1.loc.y, p.node2.loc.x, p.node2.loc.y);
-        if (p.distance < p.maxDistance) {
+        const node2 = nodes[j];
+        const distance = p.dist(node1.loc.x, node1.loc.y, node2.loc.x, node2.loc.y);
+        if (distance < maxDistance) {
           if (j !== theNode) {
-              p.stroke(p.node2.color);
-              p.strokeWeight(10 - (p.distance / p.maxDistance) * 10);
-              p.line(p.node1.loc.x, p.node1.loc.y, p.node2.loc.x, p.node2.loc.y);
+              p.stroke(node2.color);
+              p.strokeWeight(10 - (distance / maxDistance) * 10);
+              p.line(node1.loc.x, node1.loc.y, node2.loc.x, node2.loc.y);
           }
         }
       }
+    }
 
-    };
-
-    p.Ball = function (pos , velo) {
-      this.loc = pos;
-      this.vel = velo;
-      this.size = 30;
+    class Ball {
+      loc: p5.Vector;
+      vel: p5.Vector;
+      size: number;
+      color: p5.Color;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      this.color = p.color(20, 253, 114, 200);
 
-      this.display = function () {
+      constructor(pos: p5.Vector , velo: p5.Vector) {
+        this.loc = pos;
+        this.vel = velo;
+        this.size = 30;
+        this.color = p.color(20, 253, 114, 200);
+      }
+
+      display() {
         p.noStroke();
         p.fill(this.color);
         p.ellipse(this.loc.x, this.loc.y, this.size , this.size );
-      };
+      }
 
-      this.movimiento = function() {
+      movimiento() {
         this.loc.add(this.vel);
-      };
+      }
 
-      this.edgeCheck = function () {
+      edgeCheck() {
         if (this.loc.x < this.size / 2) {
           this.loc.x = this.size / 2;
           this.vel.x = -1 * this.vel.x;
@@ -324,29 +323,46 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.loc.y = p.height - (this.size / 2);
           this.vel.y = -1 * this.vel.y;
         }
-      };
+      }
 
-    };
+    }
 
-    p.NavigationNode = function (pos , velo, textito, shapeType) {
-      this.sizeTwo = 120;
-      this.size = this.sizeTwo * 0.8;
-      this.loc = pos;
-      this.vel = velo;
-      this.shapeKind = shapeType;
-      this.texti = textito;
+    class NavigationNode {
+      sizeTwo: number;
+      size: number;
+      loc: p5.Vector;
+      vel: p5.Vector;
+      shapeKind: number;
+      texti: string;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      this.color = p.color(255, 255, 255, 255);
-      this.colorTwo = p.color(255, 255, 255, 100);
-      this.contadorFrames = p.frameCount;
+      color: p5.Color;
+      colorTwo: p5.Color;
+      contadorFrames: number;
 
 
-      this.direction = 1;
-      this.hoverin = false;
+      direction = 1;
+      hoverin = false;
+
+      circleOne: p5.Image;
+      shapeTwo: p5.Image;
+      circleTres: p5.Image;
+
+      constructor(pos: p5.Vector , velo: p5.Vector, textito: string, shapeType: number) {
+        this.sizeTwo = 120;
+        this.size = this.sizeTwo * 0.8;
+        this.loc = pos;
+        this.vel = velo;
+        this.shapeKind = shapeType;
+        this.texti = textito;
+        this.color = p.color(255, 255, 255, 255);
+        this.colorTwo = p.color(255, 255, 255, 100);
+        this.contadorFrames = p.frameCount;
+        this.loadShapeImages();
+      }
 
 
 
-      this.loadShapeImages = function () {
+      loadShapeImages() {
         switch (this.shapeKind) {
           case 1:
             this.circleOne = p.loadImage('assets/generalImages/circleOne.svg');
@@ -360,11 +376,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.circleTres = p.loadImage('assets/generalImages/circleTres.svg');
             break;
         }
-      };
+      }
 
-      this.loadShapeImages();
 
-      this.display = function () {
+
+      display() {
         p.noStroke();
 
 
@@ -433,14 +449,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.textSize(this.size / 4);
         p.textLeading(this.size / 4.5);
         p.text(this.texti, this.loc.x, this.loc.y);
-      };
+      }
 
-      this.movimiento = function() {
+      movimiento () {
         this.loc.add(this.vel);
         this.hoverCursor();
-      };
+      }
 
-      this.edgeCheck = function () {
+      edgeCheck() {
         if (this.loc.x < this.size / 2) {
           this.loc.x = this.size / 2;
           this.vel.x = -1 * this.vel.x;
@@ -469,9 +485,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.direction = this.direction * -1;
           }
         }
-      };
+      }
 
-      this.hoverCursor =  function () {
+      hoverCursor() {
         if (p.dist(this.loc.x, this.loc.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
           this.size = this.sizeTwo * 0.8;
           this.hoverin = true;
@@ -481,288 +497,36 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.size = this.sizeTwo * 0.7;
           this.hoverin = false;
         }
-      };
-
-    };
-
-    p.glitch = function (img) {
-
-      this.channelLen = 4;
-      this.imgOrigin = img;
-      this.imgOrigin.loadPixels();
-      this.copyData = [];
-      this.flowLineImgs = [];
-      this.shiftLineImgs = [];
-      this.shiftRGBs = [];
-      this.scatImgs = [];
-      this.throughFlag = true;
-      this.countTFlag = 0;
-      this.copyData = new Uint8ClampedArray(this.imgOrigin.pixels);
-
-      // flow line
-      for (let i = 0; i < 1; i++) {
-        const o = {
-          pixels: null,
-          t1: p.floor(p.random(0, 1000)),
-          speed: p.floor(p.random(4, 24)),
-          randX: p.floor(p.random(24, 80))
-        };
-        this.flowLineImgs.push(o);
       }
 
-      // shift line
-      for (let i = 0; i < 6; i++) {
-        const o = null;
-        this.shiftLineImgs.push(o);
+    }
+
+    class Wave {
+      A: number;   // wave amplitude
+      frequency: number;    // angular frequency
+      time: number;
+      diameter: number;
+      radius: number;
+      phase: number;
+      phi: number;
+      ypos: number;
+
+      constructor(ypos: number, ampMax: number) {
+        this.A = p.random(1, ampMax);   // wave amplitude
+        this.ypos = ypos;
+        this.frequency = p.random(0.0314, 0.1256);
+        this.time = 1.97;
+        this.diameter = 10;
+        this.radius = this.diameter / 2;
+        this.phase = p.random(0.1, 0.6);
       }
 
-      // shift RGB
-      for (let i = 0; i < 1; i++) {
-        const o = null;
-        this.shiftRGBs.push(o);
-      }
-
-      // scat imgs
-      for (let i = 0; i < 3; i++) {
-        const scatImg = {
-          img: null,
-          x: 0,
-          y: 0
-        };
-        this.scatImgs.push(scatImg);
-      }
-
-
-      this.replaceData = function (destImg, srcPixels) {
-        for (let y = 0; y < destImg.height; y++) {
-          for (let x = 0; x < destImg.width; x++) {
-            let r, g, b, a;
-            let index;
-            index = (y * destImg.width + x) * this.channelLen;
-            r = index;
-            g = index + 1;
-            b = index + 2;
-            a = index + 3;
-            destImg.pixels[r] = srcPixels[r];
-            destImg.pixels[g] = srcPixels[g];
-            destImg.pixels[b] = srcPixels[b];
-            destImg.pixels[a] = srcPixels[a];
-          }
-        }
-        destImg.updatePixels();
-      };
-
-      this.flowLine = function (srcImg, obj) {
-
-        let destPixels,
-          tempY;
-        destPixels = new Uint8ClampedArray(srcImg.pixels);
-        obj.t1 %= srcImg.height;
-        obj.t1 += obj.speed;
-        // tempY = floor(noise(obj.t1) * srcImg.height);
-        tempY = p.floor(obj.t1);
-        for (let y = 0; y < srcImg.height; y++) {
-          if (tempY === y) {
-            for (let x = 0; x < srcImg.width; x++) {
-              let r, g, b, a;
-              let index;
-              index = (y * srcImg.width + x) * this.channelLen;
-              r = index;
-              g = index + 1;
-              b = index + 2;
-              a = index + 3;
-              destPixels[r] = srcImg.pixels[r] + obj.randX;
-              destPixels[g] = srcImg.pixels[g] + obj.randX;
-              destPixels[b] = srcImg.pixels[b] + obj.randX;
-              destPixels[a] = srcImg.pixels[a];
-            }
-          }
-        }
-        return destPixels;
-      };
-
-      this.shiftLine = function (srcImg) {
-
-        let offsetX;
-        let rangeMin, rangeMax;
-        let destPixels;
-        let rangeH;
-
-        destPixels = new Uint8ClampedArray(srcImg.pixels);
-        rangeH = srcImg.height;
-        rangeMin = p.floor(p.random(0, rangeH));
-        rangeMax = rangeMin + p.floor(p.random(1, rangeH - rangeMin));
-        offsetX = this.channelLen * p.floor(p.random(-40, 40));
-
-        for (let y = 0; y < srcImg.height; y++) {
-          if (y > rangeMin && y < rangeMax) {
-            for (let x = 0; x < srcImg.width; x++) {
-              let r, g, b, a;
-              let r2, g2, b2;
-              const a2 = null;
-              let index;
-
-              index = (y * srcImg.width + x) * this.channelLen;
-              r = index;
-              g = index + 1;
-              b = index + 2;
-              a = index + 3;
-              r2 = r + offsetX;
-              g2 = g + offsetX;
-              b2 = b + offsetX;
-              destPixels[r] = srcImg.pixels[r2];
-              destPixels[g] = srcImg.pixels[g2];
-              destPixels[b] = srcImg.pixels[b2];
-              destPixels[a] = srcImg.pixels[a];
-            }
-          }
-        }
-        return destPixels;
-      };
-
-      this.shiftRGB = function (srcImg) {
-
-        let randR, randG, randB;
-        let destPixels;
-        let range;
-
-        range = 16;
-        destPixels = new Uint8ClampedArray(srcImg.pixels);
-        randR = (p.floor(p.random(-range, range)) * srcImg.width + p.floor(p.random(-range, range))) * this.channelLen;
-        randG = (p.floor(p.random(-range, range)) * srcImg.width + p.floor(p.random(-range, range))) * this.channelLen;
-        randB = (p.floor(p.random(-range, range)) * srcImg.width + p.floor(p.random(-range, range))) * this.channelLen;
-
-        for (let y = 0; y < srcImg.height; y++) {
-          for (let x = 0; x < srcImg.width; x++) {
-            let r, g, b, a;
-            let r2, g2, b2;
-            const a2 = null;
-            let index;
-
-            index = (y * srcImg.width + x) * this.channelLen;
-            r = index;
-            g = index + 1;
-            b = index + 2;
-            a = index + 3;
-            r2 = (r + randR) % srcImg.pixels.length;
-            g2 = (g + randG) % srcImg.pixels.length;
-            b2 = (b + randB) % srcImg.pixels.length;
-            destPixels[r] = srcImg.pixels[r2];
-            destPixels[g] = srcImg.pixels[g2];
-            destPixels[b] = srcImg.pixels[b2];
-            destPixels[a] = srcImg.pixels[a];
-          }
-        }
-
-        return destPixels;
-      };
-
-      this.getRandomRectImg = function (srcImg) {
-        let startX;
-        let startY;
-        let rectW;
-        let rectH;
-        let destImg;
-        startX = p.floor(p.random(0, srcImg.width - 30));
-        startY = p.floor(p.random(0, srcImg.height - 50));
-        rectW = p.floor(p.random(30, srcImg.width - startX));
-        rectH = p.floor(p.random(1, 50));
-        destImg = srcImg.get(startX, startY, rectW, rectH);
-        destImg.loadPixels();
-        return destImg;
-      };
-
-      this.show = function () {
-
-        // restore the original state
-        this.replaceData(this.imgOrigin, this.copyData);
-
-        // sometimes pass without effect processing
-        const n = p.floor(p.random(100));
-        if (n > 75 && this.throughFlag) {
-          this.countTFlag++;
-          this.throughFlag = false;
-          setTimeout(() => {
-            this.throughFlag = true;
-          }, p.floor(p.random(40, 400)));
-        }
-        if (!this.throughFlag) {
-          p.push();
-          p.translate((p.width) / 2, (p.height) / 2);
-          if (this.countTFlag >= 7) {
-            console.log('3ntro');
-            p.image(this.imgOrigin, 0, 0);
-          }
-          p.pop();
-          return;
-        }
-
-        // flow line
-        this.flowLineImgs.forEach((v, i, arr) => {
-          arr[i].pixels = this.flowLine(this.imgOrigin, v);
-          if (arr[i].pixels) {
-            this.replaceData(this.imgOrigin, arr[i].pixels);
-          }
-        });
-
-        // shift line
-        this.shiftLineImgs.forEach((v, i, arr) => {
-          if (p.floor(p.random(100)) > 50) {
-            arr[i] = this.shiftLine(this.imgOrigin);
-            this.replaceData(this.imgOrigin, arr[i]);
-          } else {
-            if (arr[i]) {
-              this.replaceData(this.imgOrigin, arr[i]);
-            }
-          }
-        });
-
-        // shift rgb
-        this.shiftRGBs.forEach((v, i, arr) => {
-          if (p.floor(p.random(100)) > 65) {
-            arr[i] = this.shiftRGB(this.imgOrigin);
-            this.replaceData(this.imgOrigin, arr[i]);
-          }
-        });
-
-        p.push();
-        p.translate((p.width) / 2, (p.height) / 2);
-        p.image(this.imgOrigin, 0, 0);
-        p.pop();
-
-        // scat image
-        this.scatImgs.forEach((obj) => {
-          p.push();
-          p.translate((p.width) / 2, (p.height) / 2);
-          if (p.floor(p.random(100)) > 80) {
-            obj.x = p.floor(p.random(-this.imgOrigin.width * 0.3, this.imgOrigin.width * 0.7));
-            obj.y = p.floor(p.random(-this.imgOrigin.height * 0.1, this.imgOrigin.height));
-            obj.img = this.getRandomRectImg(this.imgOrigin);
-          }
-          if (obj.img) {
-            p.image(obj.img, obj.x, obj.y);
-          }
-          p.pop();
-        });
-
-      };
-
-    };
-
-    p.wave = function (ypos, ampMax) {
-      this.A = p.random(1, ampMax);   // wave amplitude
-      this.frequency = p.random(0.0314, 0.1256);    // angular frequency
-      this.time = 1.97;
-      this.diameter = 10;
-      this.radius = this.diameter / 2;
-      this.phase = p.random(0.1, 0.6);
-      this.phi = undefined;
-
-      this.display = function () {
+      display() {
+        p.noFill();
         p.strokeWeight(2);
         p.stroke(255, 90);
         p.push();
-        p.translate(0, ypos);
+        p.translate(0, this.ypos);
         p.beginShape();
 
         for (let x = this.radius; x <= p.width - this.radius; x += this.diameter * 1.5) {
@@ -774,25 +538,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         p.endShape();
         p.pop();
         this.time += 1;
-      };
-    };
-
-    p.glishear = function () {
-
-        p.saveFrames('out', 'jpg', 0.2, 5, function (data) {
-          p.loadImage(data[0].imageData, function(img) {
-            p.glitchImage  = img ;
-            p.glitchEffectObject = new p.glitch(p.glitchImage);
-          });
-        });
-
-    };
+      }
+    }
 
     p.mouseClicked = () => {
-        for (let i = p.nodes.length - 1; i >= 0; i--) {
+        for (let i = nodes.length - 1; i >= 0; i--) {
 
-        if (p.nodes[i].hoverin) {
-          switch (p.nodes[i].texti) {
+        if (nodes[i].hoverin) {
+          switch (nodes[i].texti) {
             case 'WHO\nARE\nYOU?':
               this.typingTres('WHO ARE YOU?', 'about');
               break;
@@ -814,6 +567,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
+
 
 
 
@@ -858,7 +612,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.writing = false;
           clearInterval(intervalito);
           setTimeout(() => {
-             this.p5.endOfLoading();
           }, 1000);
 
         }
@@ -885,7 +638,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.showCursorFour = true;
             this.showCursorThree = false;
             this.writing = false;
-            this.p5.glishear();
             setTimeout(() => {
               this.router.navigate([route]);
             }, 6000);
