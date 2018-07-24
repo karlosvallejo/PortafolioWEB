@@ -3,14 +3,189 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="Soy karlos, un diseñador de medios interactivos" />
-  <title>Karlos</title>
+  <title>HOMINID INTERACTIVE</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height, user-scalable=no">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
+
+  <style type="text/css">
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    .superiorDiv {
+      position: absolute;
+      width: 100%;
+      height: 6%;
+      background-color: rgba(255,255,255,1);
+      box-shadow:0 0 5px rgba(255,255,255,1), 0 0 15px rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .superiorDiv h2{
+      margin: auto;
+      text-align: center;
+      padding: 0;
+      color: rgba(0,0,0,1);
+      z-index: 2;
+      font-size: 2vw;
+      text-shadow: 0 0 2px black;
+    }
+
+    .app-loading {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,1);
+    }
+
+    .logo {
+      position: absolute;
+      width: 50%;
+      height: 60%;
+      left: 25%;
+      top: 20%;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzY5LjAwMiIgaGVpZ2h0PSI0ODYuNTYyIiB2aWV3Qm94PSIwIDAgMzY5LjAwMiA0ODYuNTYyIj4gIDxkZWZzPiAgICA8ZmlsdGVyIGlkPSJsdW1pbm9zaXR5LWludmVydC1ub2NsaXAiIHg9IjAiIHk9IjAiIHdpZHRoPSIzNjkuMDAyIiBoZWlnaHQ9IjMyMS43MzkiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4gICAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9Ii0xIDAgMCAwIDEgMCAtMSAwIDAgMSAwIDAgLTEgMCAxIDAgMCAwIDEgMCIgcmVzdWx0PSJpbnZlcnQiLz4gICAgICA8ZmVGbG9vZCBmbG9vZC1jb2xvcj0iI2ZmZiIgcmVzdWx0PSJiZyIvPiAgICAgIDxmZUJsZW5kIGluPSJpbnZlcnQiIGluMj0iYmciLz4gICAgPC9maWx0ZXI+ICAgIDxtYXNrIGlkPSJtYXNrIiB4PSIwIiB5PSIwIiB3aWR0aD0iMzY5LjAwMiIgaGVpZ2h0PSIzMjEuNzM5IiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4gICAgICA8ZyBzdHlsZT0iZmlsdGVyOiB1cmwoI2x1bWlub3NpdHktaW52ZXJ0LW5vY2xpcCkiPiAgICAgICAgPHJlY3QgeD0iODcuODM3IiB5PSI4OC4yNCIgd2lkdGg9IjE5My40MzgiIGhlaWdodD0iMTkzLjQzOCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTg0Ljg0IC03Ni4zMjgpIHJvdGF0ZSg0NSkiIHN0eWxlPSJmaWxsOiAjZmZmIi8+ICAgICAgPC9nPiAgICA8L21hc2s+ICA8L2RlZnM+ICA8dGl0bGU+SG9taW5pZCBJbnRlcmFjdGl2ZTwvdGl0bGU+ICA8ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiI+ICAgIDxnIGlkPSJDYXBhXzEtMiIgZGF0YS1uYW1lPSJDYXBhIDEiPiAgICAgIDxnPiAgICAgICAgPGc+ICAgICAgICAgIDxwb2x5bGluZSBwb2ludHM9IjE4NS4yOTcgNDcuMDk3IDIyNy45OTkgOTEuNTc5IDIyOC4xMDcgMzIxLjk0NyAxODUuODM4IDM0NS4zNzIgMTg1LjI5NyA0Ny4wOTciIHN0eWxlPSJmaWxsOiAjZmZmO3N0cm9rZTogI2ZmZjtzdHJva2UtbGluZWpvaW46IGJldmVsO3N0cm9rZS13aWR0aDogNXB4Ii8+ICAgICAgICAgIDxwb2x5bGluZSBwb2ludHM9IjE4NS40NTQgNDcuMDk3IDE0MC42MTUgOTEuNDQ2IDE0MC42MTUgMzIxLjk0NyAxODUuNDI3IDM0NS4xNjYgMTg1LjQ1NCA0Ny4wOTciIHN0eWxlPSJmaWxsOiBub25lO3N0cm9rZTogI2ZmZjtzdHJva2UtbGluZWNhcDogc3F1YXJlO3N0cm9rZS1saW5lam9pbjogYmV2ZWw7c3Ryb2tlLXdpZHRoOiA1cHgiLz4gICAgICAgICAgPGcgc3R5bGU9Im1hc2s6IHVybCgjbWFzaykiPiAgICAgICAgICAgIDxwb2x5bGluZSBwb2ludHM9IjE4NC41MjMgMCAzNjkuMDAyIDE4NC4zNTcgMjc0LjM4NiAyNzguODMzIDE4NS4xMTggMjc3Ljg1NyA5NC42MTYgMjc4LjgzMyAwIDE4NC4zNTcgMTg0LjUyMyAwIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8L2c+ICAgICAgICAgIDxwYXRoIGQ9Ik01LjcwOCwyMjkuMjY3Ii8+ICAgICAgICAgIDxwYXRoIGQ9Ik00OC41OTEsMTg5LjcwNSIgc3R5bGU9ImZpbGw6IG5vbmU7c3Ryb2tlOiByZWQ7c3Ryb2tlLW1pdGVybGltaXQ6IDEwIi8+ICAgICAgICA8L2c+ICAgICAgICA8Zz4gICAgICAgICAgPHBhdGggZD0iTTg1Ljk5LDM4My45MjdoOC43djQwLjRoLTguN1Y0MDguNTA2SDYyLjE0djE1LjgyNWgtOC43di00MC40aDguN3YxNS44MjVIODUuOTlaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNMTA5LjMzNCwzODMuOTI3aDIzLjc5M2E4LjMzNSw4LjMzNSwwLDAsMSw4LjMwNyw4LjMwNXYyMy43OTNhOC4zMzUsOC4zMzUsMCwwLDEtOC4zMDcsOC4zMDVIMTA5LjMzNGE4LjI0LDguMjQsMCwwLDEtOC4zMDUtOC4zMDVWMzkyLjIzMmE4LjIzOSw4LjIzOSwwLDAsMSw4LjMwNS04LjMwNVptLjM5Myw4Ljc1NHYyMi45aDIyLjl2LTIyLjlaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNMTcwLjI3Niw0MDAuMjU3bDEzLjYzNy0xNi4zM2g5LjAzNXY0MC40aC04Ljc1NXYtMjcuMWwtMTMuOTE3LDE2LjYxMUwxNTYuMywzOTcuMjgzdjI3LjA0OGgtOC43di00MC40aDguOTc5WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTE5OS43MzcsNDI0LjMzMXYtNDAuNGg4Ljc1NXY0MC40WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTI0My42Miw0MTAuODYzVjM4My45MjdoOC44MTF2NDAuNGgtOC45NzlsLTIyLjcyOC0yNy4wNDh2MjcuMDQ4aC04Ljd2LTQwLjRIMjIxWiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTI1OC43NzEsNDI0LjMzMXYtNDAuNGg4Ljc1NXY0MC40WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTI3MS4xNzIsMzgzLjkyN2gzMi4wNDNhOC4zMzUsOC4zMzUsMCwwLDEsOC4zNjEsOC4zMDV2MjMuNzkzYTguMzM1LDguMzM1LDAsMCwxLTguMzYxLDguMzA1SDI3MS4xNzJabTguNyw4Ljc1NHYyMi45aDIyLjl2LTIyLjlaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNNC40NjUsNDg2LjA2SDEuNlY0NDkuNDg5SDQuNDY1WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTQ2LjQ2NSw0ODYuMDZINDMuNkwyNi4zNDYsNDU0LjkxNFY0ODYuMDZIMjMuNDU4VjQ0OS40ODloMi44ODhsMTcuMjgxLDMxLjJ2LTMxLjJoMi44MzhaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNODUuMTc2LDQ1Mi4yaC0xMC40VjQ4Ni4wNkg3MS44ODlWNDUyLjJINjEuNTE1di0yLjcxMkg4NS4xNzZaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNMTE3LjkzMyw0NjguNTUzSDEwMy43NDJWNDgzLjRoMTYuMzI2djIuNjYzSDEwMC44NzhWNDQ5LjQ4OWgxOS4wNjRWNDUyLjJoLTE2LjJWNDY1Ljg5aDE0LjE5MVoiIHN0eWxlPSJmaWxsOiAjZmZmIi8+ICAgICAgICAgIDxwYXRoIGQ9Ik0xNDcuNjUsNDcwLjgzOGgtOC41NFY0ODYuMDZoLTIuODg5VjQ0OS40ODloMTAuMDIycTUsMCw3Ljc0OCwyLjg1MXQyLjc1MSw3LjkyNWExMS4zLDExLjMsMCwwLDEtMS43MDgsNi4yMTYsOC44NzMsOC44NzMsMCwwLDEtNC42LDMuNzA1bDcuNjEsMTUuNTQ3di4zMjdoLTMuMDY0Wm0tOC41NC0yLjY2M2g3LjYzNmE2LjUxNiw2LjUxNiwwLDAsMCw1LjE3NS0yLjIyMyw5LjU3OCw5LjU3OCwwLDAsMC0uMDc2LTExLjY0Miw3LjQsNy40LDAsMCwwLTUuNjI2LTIuMTFIMTM5LjExWiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTE5MS4wMDgsNDc1LjgzN0gxNzcuMjkzbC0zLjExNCwxMC4yMjNoLTIuOTg5bDExLjY1NS0zNi41NzFoMi42NjJsMTEuNjU0LDM2LjU3MWgtMi45ODlabS0xMi44ODYtMi42ODdoMTIuMDU3bC02LjAyOC0xOS42MTdaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNMjM0LjA2Myw0NzQuNjU2cS0uNCw2LjE1NS0zLjMxNSw5LjAzdC04LjA2MywyLjg3NmE5Ljk2LDkuOTYsMCwwLDEtOC4zNjMtNC4wMDZxLTMuMDY2LTQuMDA2LTMuMDktMTAuODg4VjQ2My43M3EwLTYuOTA3LDMuMTI3LTEwLjgyNWExMC4zNTEsMTAuMzUxLDAsMCwxLDguNTUzLTMuOTE4cTUuMTI0LDAsNy45MzcsMi45Mzh0My4yMTYsOS4wMThoLTIuOTE0cS0uNC00Ljk3NC0yLjM0OS03LjEwOHQtNS44OS0yLjEzNWE3LjYsNy42LDAsMCwwLTYuNDU1LDMuMDlxLTIuMzEyLDMuMDg5LTIuMzEyLDguOTY3djcuODM2cTAsNS44MjgsMi4yMzYsOS4wNjdhNy4yMTcsNy4yMTcsMCwwLDAsNi4zLDMuMjRxNC4yNywwLDYuMTgtMi4xMzV0Mi4yODUtNy4xMDhaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgICA8cGF0aCBkPSJNMjcxLjI0LDQ1Mi4yaC0xMC40VjQ4Ni4wNmgtMi44ODlWNDUyLjJIMjQ3LjU3OXYtMi43MTJIMjcxLjI0WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTI5MC4zMzMsNDg2LjA2SDI4Ny40N1Y0NDkuNDg5aDIuODYzWiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTMxOC44Miw0ODEuNDg4bC4wNzUuNC4xLS40LDkuNTQ1LTMyaDMuMTY1TDMyMC4yNzcsNDg2LjA2aC0yLjcxM2wtMTEuNDI5LTM2LjU3MWgzLjE0WiIgc3R5bGU9ImZpbGw6ICNmZmYiLz4gICAgICAgICAgPHBhdGggZD0iTTM2NC4wMTEsNDY4LjU1M0gzNDkuODE5VjQ4My40aDE2LjMyNnYyLjY2M0gzNDYuOTU2VjQ0OS40ODloMTkuMDY0VjQ1Mi4yaC0xNi4yVjQ2NS44OWgxNC4xOTFaIiBzdHlsZT0iZmlsbDogI2ZmZiIvPiAgICAgICAgPC9nPiAgICAgIDwvZz4gICAgPC9nPiAgPC9nPjwvc3ZnPg==') no-repeat center / contain;
+
+    }
+
+    .progress-container {
+      position: absolute;
+      top: 90%;
+      width: 80%;
+      height: 5%;
+      left: 10%;
+      background-color: rgba(255,255,255,0.3);
+    }
+
+    #progress-bar {
+      position: absolute;
+      height: 100%;
+      width: 0;
+      background-color: rgba(255,255,255,1);
+    }
+  </style>
+
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <script>
+
+      //----------------------------------
+      let loadedBytes;
+      let decodedBytes;
+      let encodedBytes;
+
+      let width = 0;
+      let movingBar = false;
+     // let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+     // let estimatedSpeed = connection.downlink;
+
+      setInterval(function () {
+        decodedBytes = 0;
+        encodedBytes = 0;
+        loadedBytes = 0;
+        // Use getEntriesByType() to just get the "resource" events
+        let p = performance.getEntriesByType("resource");
+        for (let i=0; i < p.length; i++) {
+          log_sizes(p[i]);
+        }
+        // console.log("decoded bytes: " + decodedBytes);
+        //console.log("encoded bytes: " + encodedBytes);
+        //console.log("loaded bytes: " + loadedBytes);
+        if(!movingBar && !(width > 8720000 && width <  8760000)) {
+          moveBar(encodedBytes);
+        }
+      },500);
+
+      function log_sizes(perfEntry){
+        // Check for support of the PerformanceEntry.*size properties and print their values
+        // if supported.
+        if ("decodedBodySize" in perfEntry) {
+          // console.log("decodedBodySize = " + perfEntry.decodedBodySize);
+          decodedBytes += perfEntry.decodedBodySize;
+        }
+        else
+        {
+          console.log("decodedBodySize = NOT supported");
+        }
+
+        if ("encodedBodySize" in perfEntry) {
+          //  console.log("encodedBodySize = " + perfEntry.encodedBodySize);
+          encodedBytes += perfEntry.encodedBodySize;
+        }
+        else
+        {
+          //  console.log("encodedBodySize = NOT supported");
+        }
+
+        if ("transferSize" in perfEntry) {
+          //  console.log("transferSize = " + perfEntry.transferSize);
+          loadedBytes += perfEntry.transferSize;
+        }
+        else
+        {
+          //  console.log("transferSize = NOT supported");
+        }
+      }
+      function moveBar(target) {
+        movingBar = true;
+        let elem = document.getElementById("progress-bar");
+        let widthTargetPercent = map_range(target,0,8757050,0,100);
+        let id = setInterval(frame, 10);
+        function frame() {
+          if (width >= widthTargetPercent) {
+            clearInterval(id);
+            movingBar = false;
+          } else {
+            width+=0.5;
+            elem.style.width = width + '%';
+          }
+        }
+      }
+
+      function map_range(value, low1, high1, low2, high2) {
+        return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+      }
+
+
+      window.onload = function () {
+        //one();
+        function one() {
+          // Use getEntriesByType() to just get the "navigation" events
+          let perfEntries = performance.getEntriesByType("navigation");
+
+          for (let i=0; i < perfEntries.length; i++) {
+            console.log("= Navigation entry[" + i + "]");
+            let p = perfEntries[i];
+            // dom Properties
+            console.log("DOM content loaded = " + (p.domContentLoadedEventEnd - p.domContentLoadedEventStart));
+            console.log("DOM complete = " + p.domComplete);
+            console.log("DOM interactive = " + p.interactive);
+
+            // document load and unload time
+            console.log("document load = " + (p.loadEventEnd - p.loadEventStart));
+            console.log("document unload = " + (p.unloadEventEnd - p.unloadEventStart));
+
+            // other properties
+            console.log("type = " + p.type);
+            console.log("redirectCount = " + p.redirectCount);
+          }
+        }
+      };
+
+    </script>
+    <div class="app-loading">
+      <div class="superiorDiv"><h2>CARGANDO</h2></div>
+      <div class="logo"></div>
+      <div class="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
+  </app-root>
 </body>
 </html>

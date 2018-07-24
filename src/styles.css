@@ -10,3 +10,7 @@ body {
   padding: 0;
   font-family: 'Cutive Mono', monospace;
 }
+
+canvas {
+  display: block;
+}

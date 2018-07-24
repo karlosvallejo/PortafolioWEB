@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     let loading = false;
     let backgrounOpacity = 255;
     let textFillOpacity = 255;
-    const textLoading = 'LOADING.';
+    let textLoading;
     let displayText =  '';
     let intervalLoading = null;
     let instanceAboutNode = null;
@@ -152,17 +152,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Create nodes
       for (let i = 0; i < nodeCount; i++) {
-        const b = new Ball(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-2, 2), p.random(-2, 2)));
+        const b = new Ball(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-2, 2),
+          p.random(-2, 2)));
         nodes.push(b);
       }
 
-      instanceAboutNode = new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'WHO\nARE\nYOU?', 1);
 
-      instanceSkillsNode = new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', 2);
 
-      instanceProyectsNode =  new NavigationNode(p.createVector(p.width / 2, p.height / 2), p.createVector(p.random(-1, 1),
+      instanceProyectsNode =  new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
         p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', 3);
 
       instanceNodes.push(instanceAboutNode);
@@ -179,7 +180,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
+      textLoading  = 'LOADING.';
     };
 
     p.draw = () => {

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -46,7 +46,19 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     AngularFittextModule
   ],
-  providers: [],
+  providers: [{
+    provide: APP_INITIALIZER,
+    useFactory: () => {
+      return () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve();
+          }, 5000);
+        });
+      };
+    },
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
