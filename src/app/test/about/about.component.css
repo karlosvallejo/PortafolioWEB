@@ -1,0 +1,8 @@
+.drone {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  left: 25%;
+  background: url("https://vignette.wikia.nocookie.net/gearsofwar/images/2/22/Drone_GOW_3.png/revision/latest/scale-to-width-down/1000?cb=20171217220240&path-prefix=es") no-repeat center / contain;
+}

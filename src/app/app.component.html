@@ -1,10 +1,14 @@
 <app-background></app-background>
-<app-three-component *ngIf="loading"></app-three-component>
+
 <app-menu></app-menu>
+<div [hidden]="loading">
 <router-outlet></router-outlet>
+</div>
 
 
-
+<div [hidden]="!loading">
+  <app-three-component></app-three-component>
+</div>
 
 
 
