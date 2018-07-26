@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {trigger, style, transition, animate, keyframes, query, stagger, state} from '@angular/animations';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import 'p5';
 
 
@@ -64,13 +64,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showCursor = true;
       }
     }, 500);
-
-
   }
 
   ngOnDestroy(): void {
     this.destroyCanvas();
-    console.log('bye');
   }
 
   ngAfterViewInit(): void {
@@ -108,12 +105,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   */
 
   private createCanvas () {
-    console.log('creating canvas');
     this.canvas = new p5(this.sketch, this.containerSketch.nativeElement);
   }
 
   private destroyCanvas () {
-    console.log('destroying canvas');
     this.canvas.noCanvas();
     this.canvas = null;
   }
@@ -157,14 +152,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         nodes.push(b);
       }
 
-      instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
-        p.random(-1, 1)), 'WHO\nARE\nYOU?', 1);
+      instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+        p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHO\nARE\nYOU?', 1);
 
-      instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
-        p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', 2);
+      instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+        p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', 2);
 
-      instanceProyectsNode =  new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-1, 1),
-        p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', 3);
+      instanceProyectsNode =  new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+        p.createVector(p.random(-1, 1), p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', 3);
 
       instanceNodes.push(instanceAboutNode);
       instanceNodes.push(instanceSkillsNode);

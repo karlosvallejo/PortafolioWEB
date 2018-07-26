@@ -1,11 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {HttpClientModule} from '@angular/common/http';
 
 import {AngularFittextModule} from 'angular-fittext';
 
-import {DelayResolver} from './delay.resolver';
+import {GeneralServiceService} from './services/general-service.service';
+
+
+import {AboutResolver} from './otherComponents/about/about.resolver';
+import {HomeResolver} from './home/home.resolver';
 import { AppComponent } from './app.component';
 import { BackgroundComponent } from './background/background.component';
 import { MenuComponent } from './menu/menu.component';
@@ -16,8 +21,9 @@ import { RootsComponent } from './roots/roots.component';
 import { ThreeComponentComponent } from './three-component/three-component.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'about', loadChildren: './test/test.module#TestModule', pathMatch: 'full', resolve: {dicho : DelayResolver} },
+  { path: '', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
+  { path: 'about', loadChildren: './otherComponents/otherComponents.module#OtherComponentsModule', pathMatch: 'full',
+    resolve: {imagenes : AboutResolver} },
   { path: 'skills', component: SkillsComponent, pathMatch: 'full' },
   { path: 'projects', component: ProjectsComponent, pathMatch: 'full' },
   { path: '**' , redirectTo: ''}
@@ -43,7 +49,8 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    AngularFittextModule
+    AngularFittextModule,
+    HttpClientModule
   ],
   providers: [{
     provide: APP_INITIALIZER,
@@ -57,7 +64,7 @@ const appRoutes: Routes = [
       };
     },
     multi: true
-  }, DelayResolver],
+  }, AboutResolver, HomeResolver, GeneralServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

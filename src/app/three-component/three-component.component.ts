@@ -43,10 +43,10 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   private initRenderer() {
-    this.renderer =  new THREE.WebGLRenderer({ antialias: true });
+    this.renderer =  new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
-    this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 1);
+    this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0.6);
    // this.renderer.shadowMap.enabled = true;
    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);

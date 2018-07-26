@@ -1,0 +1,10 @@
+.drone {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  left: 25%;
+  background-repeat:  no-repeat;
+  background-size: contain;
+  background-position: center;
+}

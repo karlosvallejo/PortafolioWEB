@@ -84,8 +84,10 @@
       let movingBar = false;
      // let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
      // let estimatedSpeed = connection.downlink;
+      let intervalPrincipal;
+      let interval;
 
-      setInterval(function () {
+      intervalPrincipal = setInterval(function () {
         decodedBytes = 0;
         encodedBytes = 0;
         loadedBytes = 0;
@@ -97,7 +99,7 @@
         // console.log("decoded bytes: " + decodedBytes);
         //console.log("encoded bytes: " + encodedBytes);
         //console.log("loaded bytes: " + loadedBytes);
-        if(!movingBar && !(width > 8720000 && width <  8760000)) {
+        if(!movingBar) {
           moveBar(encodedBytes);
         }
       },500);
@@ -136,10 +138,10 @@
         movingBar = true;
         let elem = document.getElementById("progress-bar");
         let widthTargetPercent = map_range(target,0,8757050,0,100);
-        let id = setInterval(frame, 10);
+        interval = setInterval(frame, 10);
         function frame() {
           if (width >= widthTargetPercent) {
-            clearInterval(id);
+            clearInterval(interval);
             movingBar = false;
           } else {
             width+=0.5;
@@ -155,6 +157,11 @@
 
       window.onload = function () {
         //one();
+        setTimeout(function () {
+          clearInterval(interval);
+          clearInterval(intervalPrincipal);
+        },5000);
+
         function one() {
           // Use getEntriesByType() to just get the "navigation" events
           let perfEntries = performance.getEntriesByType("navigation");
