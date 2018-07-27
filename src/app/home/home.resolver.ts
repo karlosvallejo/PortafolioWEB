@@ -11,16 +11,15 @@ import {delay} from 'rxjs/operators';
 
 @Injectable()
 export class HomeResolver implements Resolve<Observable<any>> {
-firstInit: boolean;
 
-  constructor() { this.firstInit = false; }
+
+  constructor() { }
 
   resolve() {
-    if (!this.firstInit) {
-      this.firstInit = true;
-      return of('toca');
+    if (!GeneralServiceService.started) {
+      return of([]);
     } else {
-      return of('toca').pipe(delay(3000));
+      return of([]).pipe(delay(3000));
     }
   }
 }

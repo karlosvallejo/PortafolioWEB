@@ -11,20 +11,22 @@ import {GeneralServiceService} from '../../services/general-service.service';
 export class AboutComponent implements OnInit {
   data: Observable<Blob>;
   drone: string;
+  droneTwo: string;
+  droneThree: string;
 
   constructor(private route: ActivatedRoute) {
-    this.drone = 'https://vignette.wikia.nocookie.net/gearsofwar/images/2/22/Drone_GOW_3.png/revision' +
-    '/latest/scale-to-width-down/1000?cb=20171217220240&path-prefix=es';
+    this.drone = '';
+    this.droneTwo = '';
+    this.droneThree = '';
   }
 
   ngOnInit() {
     this.data = this.route.snapshot.data.imagenes;
     GeneralServiceService.convertBlobToBase64(this.data[0]).then(base64 => this.drone = base64);
-    this.data.forEach(images => {
+    GeneralServiceService.convertBlobToBase64(this.data[1]).then(base64 => this.droneTwo = base64);
+    GeneralServiceService.convertBlobToBase64(this.data[2]).then(base64 => this.droneThree = base64);
+    this.data.forEach((images: Blob) => {
      // GeneralServiceService.convertBlobToBase64(images).then(base64 => console.log(base64));
     });
-
-
-
   }
 }

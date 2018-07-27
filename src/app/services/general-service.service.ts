@@ -7,22 +7,25 @@ import { HttpClient } from '@angular/common/http';
 })
 export class GeneralServiceService {
 
+static started = false;
+
+  constructor(private httpClient: HttpClient) {
+      GeneralServiceService.started = true;
+  }
 
 
-  constructor(private httpClient: HttpClient) { }
-
-
-
-  static convertBlobToBase64 = (blob): Promise<string> => {
+  static convertBlobToBase64 (blob: Blob): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader;
       reader.onerror = reject;
       reader.onload = () => {
+        // console.log(reader.result);
         resolve(reader.result);
       };
       reader.readAsDataURL(blob);
     });
   }
+
 
 
 

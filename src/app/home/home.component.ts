@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {trigger, style, transition, animate, keyframes, query, stagger, state} from '@angular/animations';
 import {ActivatedRoute, Router} from '@angular/router';
 import 'p5';
+import {GeneralServiceService} from '../services/general-service.service';
 
 
 
@@ -52,7 +53,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   constructor(public router: Router) {
-
   //  window.onresize = this.onWindowResize;
   }
 
