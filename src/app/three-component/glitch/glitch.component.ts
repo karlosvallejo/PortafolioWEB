@@ -1,5 +1,13 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import * as THREE from 'three-full';
+import * as THREE from 'three';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
+import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
 
 
 @Component({
@@ -39,8 +47,8 @@ export class GlitchComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.initRenderer();
     this.createCamera();
-   // this.createLights();
-   // this.createCube();
+    this.createLights();
+    this.createCube();
     this.shadering();
     this.renderLoop();
   }
@@ -68,10 +76,15 @@ export class GlitchComponent implements OnInit, AfterViewInit {
     this.composerin = new THREE.EffectComposer(this.renderer);
     this.renderPass = new THREE.RenderPass(this.scene, this.camera);
     this.composerin.addPass(this.renderPass);
-    const passOne = new THREE.GlitchPass(64);
+    const passOne = new THREE.FilmPass(64);
     this.composerin.addPass(passOne);
-    passOne.renderToScreen = true;
-    passOne.goWild = false;
+
+
+    const passTwo = new (THREE as any).GlitchPass(64);
+    this.composerin.addPass(passTwo);
+    passTwo.renderToScreen = true;
+  //  passOne.enabled = true;
+  //  passTwo.goWild = false;
   }
 
 
@@ -79,7 +92,7 @@ export class GlitchComponent implements OnInit, AfterViewInit {
     requestAnimationFrame(() => this.renderLoop());
     this.composerin.render();
     // this.renderer.render(this.scene, this.camera);
-   // this.animateCube();
+    this.animateCube();
   }
 
   private createLights() {

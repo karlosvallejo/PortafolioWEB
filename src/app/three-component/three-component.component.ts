@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import * as THREE from 'three-full';
+import * as THREE from 'three';
 
 @Component({
   selector: 'app-three-component',
