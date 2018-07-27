@@ -1,14 +1,15 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three-full';
 
-@Component({
-  selector: 'app-three-component',
-  templateUrl: './three-component.component.html',
-  styleUrls: ['./three-component.component.css']
-})
-export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('rendererContainer')
+@Component({
+  selector: 'app-glitch',
+  templateUrl: './glitch.component.html',
+  styleUrls: ['./glitch.component.css']
+})
+export class GlitchComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('glitchContainer')
   private rendererContainer: ElementRef;
 
   private get renderContainer(): HTMLCanvasElement {
@@ -19,6 +20,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   mesh: THREE.Mesh;
+  composerin: THREE.EffectComposer;
+  renderPass: THREE.RenderPass;
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event) {
@@ -27,18 +30,18 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.camera.updateProjectionMatrix();
   }
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
-    this.scene = new THREE.Scene();
+    this.scene = new THREE.Scene;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.initRenderer();
     this.createCamera();
-    this.createLights();
-    this.createCube();
+   // this.createLights();
+   // this.createCube();
+    this.shadering();
     this.renderLoop();
   }
 
@@ -46,14 +49,13 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderer =  new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
-    this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0.6);
-   // this.renderer.shadowMap.enabled = true;
-   // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0);
+    // this.renderer.shadowMap.enabled = true;
+    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);
   }
 
-
-  createCamera() {
+  private createCamera() {
     this.camera = new THREE.PerspectiveCamera(75, this.getAspectRatio(), 1, 3000);
     this.camera.position.z = 500;
   }
@@ -62,13 +64,25 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     return this.renderContainer.clientWidth / this.renderContainer.clientHeight;
   }
 
-  private renderLoop() {
-    requestAnimationFrame(() => this.renderLoop());
-    this.renderer.render(this.scene, this.camera);
-    this.animateCube();
+  private shadering() {
+    this.composerin = new THREE.EffectComposer(this.renderer);
+    this.renderPass = new THREE.RenderPass(this.scene, this.camera);
+    this.composerin.addPass(this.renderPass);
+    const passOne = new THREE.GlitchPass(64);
+    this.composerin.addPass(passOne);
+    passOne.renderToScreen = true;
+    passOne.goWild = false;
   }
 
-  createLights() {
+
+  private renderLoop() {
+    requestAnimationFrame(() => this.renderLoop());
+    this.composerin.render();
+    // this.renderer.render(this.scene, this.camera);
+   // this.animateCube();
+  }
+
+  private createLights() {
     const ambient = new THREE.AmbientLight( 0xffffff, 1);
     this.scene.add(ambient);
     const hemis = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1.5 );
@@ -78,13 +92,14 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.scene.add(point);
   }
 
-  createCube() {
+  private createCube() {
     const geometry = new THREE.BoxGeometry(300, 300, 300);
     const material =  new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(90, 98, 102)'), roughness: 0.6, metalness: 0.9}) ;
     this.mesh = new THREE.Mesh(geometry, material);
     // this.mesh.castShadow = true;
     this.scene.add(this.mesh);
   }
+
 
 
   private animateCube() {

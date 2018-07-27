@@ -15,6 +15,7 @@ import { BackgroundComponent } from './background/background.component';
 import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './home/home.component';
 import { ThreeComponentComponent } from './three-component/three-component.component';
+import { GlitchComponent } from './three-component/glitch/glitch.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     BackgroundComponent,
     MenuComponent,
     HomeComponent,
-    ThreeComponentComponent
+    ThreeComponentComponent,
+    GlitchComponent
   ],
   imports: [
     RouterModule.forRoot(
