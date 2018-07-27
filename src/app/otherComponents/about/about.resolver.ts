@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Resolve } from '@angular/router';
 import {Observable} from 'rxjs/internal/Observable';
-import { of } from 'rxjs';
 import {delay} from 'rxjs/operators';
 import {GeneralServiceService} from '../../services/general-service.service';
 import {forkJoin} from 'rxjs/internal/observable/forkJoin';

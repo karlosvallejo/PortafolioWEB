@@ -9,23 +9,16 @@ import {AngularFittextModule} from 'angular-fittext';
 import {GeneralServiceService} from './services/general-service.service';
 
 
-import {AboutResolver} from './otherComponents/about/about.resolver';
 import {HomeResolver} from './home/home.resolver';
 import { AppComponent } from './app.component';
 import { BackgroundComponent } from './background/background.component';
 import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './home/home.component';
-import { SkillsComponent } from './skills/skills.component';
-import { ProjectsComponent } from './projects/projects.component';
-import { RootsComponent } from './roots/roots.component';
 import { ThreeComponentComponent } from './three-component/three-component.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
-  { path: 'about', loadChildren: './otherComponents/otherComponents.module#OtherComponentsModule', pathMatch: 'full',
-    resolve: {imagenes : AboutResolver} },
-  { path: 'skills', component: SkillsComponent, pathMatch: 'full' },
-  { path: 'projects', component: ProjectsComponent, pathMatch: 'full' },
+  { path: 'REstORinG', loadChildren: './otherComponents/otherComponents.module#OtherComponentsModule'},
   { path: '**' , redirectTo: ''}
 ];
 
@@ -37,9 +30,6 @@ const appRoutes: Routes = [
     BackgroundComponent,
     MenuComponent,
     HomeComponent,
-    SkillsComponent,
-    ProjectsComponent,
-    RootsComponent,
     ThreeComponentComponent
   ],
   imports: [
@@ -64,7 +54,7 @@ const appRoutes: Routes = [
       };
     },
     multi: true
-  }, AboutResolver, HomeResolver, GeneralServiceService],
+  }, HomeResolver, GeneralServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

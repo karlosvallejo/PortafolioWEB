@@ -3,9 +3,14 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 
 import {AboutComponent} from './about/about.component';
+import {SkillsComponent} from './skills/skills.component';
+import {ProjectsComponent} from './projects/projects.component';
+import {AboutResolver} from './about/about.resolver';
 
-export const routes: Routes = [
-  { path: '', component: AboutComponent }
+const routes: Routes = [
+  { path: 'ABoUT', component: AboutComponent, resolve: {imagenes : AboutResolver}, pathMatch: 'full'  },
+  { path: 'SkIlLs', component: SkillsComponent, pathMatch: 'full' },
+  { path: 'ProJEcTs', component: ProjectsComponent, pathMatch: 'full'  }
 ];
 
 @NgModule({
@@ -13,7 +18,12 @@ export const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AboutComponent]
+  declarations: [
+    AboutComponent,
+    SkillsComponent,
+    ProjectsComponent
+  ],
+  providers: [AboutResolver]
 })
 export class OtherComponentsModule { }
 

@@ -543,15 +543,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (nodes[i].hoverin) {
           switch (nodes[i].texti) {
             case 'WHO\nARE\nYOU?':
-              this.typingTres('WHO ARE YOU?', 'about');
+              this.typingTres('WHO ARE YOU?', 'REstORinG/ABoUT');
               break;
 
             case 'WHAT\nCAN\nYOU DO?':
-              this.typingTres('WHAT CAN YOU DO?', 'skills');
+              this.typingTres('WHAT CAN YOU DO?', 'REstORinG/SkIlLs');
               break;
 
             case 'OPEN\nYOUR\nPROJECTS':
-              this.typingTres('OPEN YOUR PROJECTS', 'projects');
+              this.typingTres('OPEN YOUR PROJECTS', 'REstORinG/ProJEcTs');
               break;
           }
 
