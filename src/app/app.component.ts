@@ -7,18 +7,19 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
+import {EventsService} from './services/events.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent implements AfterViewInit {
   title: string;
-  loading: boolean;
 
-  constructor(private router: Router) {
-    this.loading = true;
+
+  constructor(private router: Router, private serviceEvents: EventsService) {
+
     this.title = 'Hominid Interactive';
   }
 
@@ -26,8 +27,7 @@ export class AppComponent implements AfterViewInit{
     this.router.events.subscribe((event: RouterEvent) => {
       switch (true) {
         case event instanceof NavigationStart: {
-          this.loading = true;
-
+         this.send('loading');
           break;
         }
 
@@ -35,7 +35,7 @@ export class AppComponent implements AfterViewInit{
         case event instanceof NavigationCancel:
         case event instanceof  NavigationError: {
          // setTimeout(() => { // here
-            this.loading = false;
+           this.send('endLoading');
          // }, 5000);
           break;
         }
@@ -44,5 +44,9 @@ export class AppComponent implements AfterViewInit{
         }
       }
     });
+  }
+
+  send(message: string) {
+    this.serviceEvents.newEvent(message);
   }
 }

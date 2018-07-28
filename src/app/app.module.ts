@@ -56,7 +56,7 @@ const appRoutes: Routes = [
       };
     },
     multi: true
-  }, HomeResolver, GeneralServiceService],
+  }, GeneralServiceService, HomeResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -7,10 +7,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class GeneralServiceService {
 
-static started = false;
-
   constructor(private httpClient: HttpClient) {
-      GeneralServiceService.started = true;
+
   }
 
 

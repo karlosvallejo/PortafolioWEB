@@ -1,5 +1,16 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
+import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
+import {GeneralServiceService} from '../services/general-service.service';
+import {EventsService} from '../services/events.service';
+import {Object3D} from 'three';
 
 @Component({
   selector: 'app-three-component',
@@ -18,7 +29,12 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
-  mesh: THREE.Mesh;
+  meshObject: THREE.Object3D;
+  composer: THREE.EffectComposer;
+  renderPass: THREE.RenderPass;
+  passOne: THREE.FilmPass;
+  passTwo: any;
+
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event) {
@@ -27,11 +43,34 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.camera.updateProjectionMatrix();
   }
 
-  constructor() {
+  constructor(private service: EventsService) {
   }
 
   ngOnInit() {
     this.scene = new THREE.Scene();
+    this.service.events$.subscribe((event: string) => {
+      console.log(event);
+      switch (event) {
+        case 'Wild':
+          this.passTwo.goWild = true;
+          break;
+
+        case 'noWild':
+          this.passTwo.goWild = false;
+          break;
+
+        case 'loading':
+
+          this.meshObject.visible = true;
+          this.renderer.setClearColor(new THREE.Color('rgb(33,33,33)'), 1);
+         break;
+
+        case 'endLoading':
+         this.meshObject.visible = false;
+          this.renderer.setClearColor(new THREE.Color('rgb(33,33,33)'), 0);
+        break;
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -39,14 +78,15 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.createCamera();
     this.createLights();
     this.createCube();
+    this.shadering();
     this.renderLoop();
   }
 
   private initRenderer() {
-    this.renderer =  new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer =  new THREE.WebGLRenderer({ antialias: false, alpha: true });
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
-    this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0.6);
+   // this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0);
    // this.renderer.shadowMap.enabled = true;
    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);
@@ -64,7 +104,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
   private renderLoop() {
     requestAnimationFrame(() => this.renderLoop());
-    this.renderer.render(this.scene, this.camera);
+    this.composer.render();
+    // this.renderer.render(this.scene, this.camera);
     this.animateCube();
   }
 
@@ -81,15 +122,32 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   createCube() {
     const geometry = new THREE.BoxGeometry(300, 300, 300);
     const material =  new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(90, 98, 102)'), roughness: 0.6, metalness: 0.9}) ;
-    this.mesh = new THREE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(geometry, material);
+    this.meshObject = new THREE.Object3D();
+    this.meshObject.add(mesh);
     // this.mesh.castShadow = true;
-    this.scene.add(this.mesh);
+    this.scene.add(this.meshObject);
   }
 
 
   private animateCube() {
-    this.mesh.rotation.x += 0.002;
-    this.mesh.rotation.y += 0.004;
+    this.meshObject.rotation.x += 0.002;
+    this.meshObject.rotation.y += 0.004;
+  }
+
+  private shadering() {
+    this.composer = new THREE.EffectComposer(this.renderer);
+    this.renderPass = new THREE.RenderPass(this.scene, this.camera);
+    this.composer.addPass(this.renderPass);
+    this.passOne = new THREE.FilmPass(20);
+    this.composer.addPass(this.passOne);
+
+
+    this.passTwo = new (THREE as any).GlitchPass(64);
+    this.composer.addPass(this.passTwo);
+    this.passTwo.renderToScreen = true;
+    this.passOne.enabled = false;
+   // this.passTwo.goWild = false;
   }
 
 }

@@ -3,6 +3,7 @@ import {trigger, style, transition, animate, keyframes, query, stagger, state} f
 import {ActivatedRoute, Router} from '@angular/router';
 import 'p5';
 import {GeneralServiceService} from '../services/general-service.service';
+import {EventsService} from '../services/events.service';
 
 
 
@@ -52,7 +53,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private service: EventsService) {
   //  window.onresize = this.onWindowResize;
   }
 
@@ -634,7 +635,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.showCursorFour = true;
             this.showCursorThree = false;
             this.writing = false;
+            this.service.newEvent('Wild');
             setTimeout(() => {
+              this.service.newEvent('noWild');
               this.router.navigate([route]);
             }, 6000);
           }, 200);
