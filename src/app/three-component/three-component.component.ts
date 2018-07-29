@@ -1,16 +1,11 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
-import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
-import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
-import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
-import {GeneralServiceService} from '../services/general-service.service';
 import {EventsService} from '../services/events.service';
-import {Object3D} from 'three';
 
 @Component({
   selector: 'app-three-component',
@@ -34,6 +29,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   renderPass: THREE.RenderPass;
   passOne: THREE.FilmPass;
   passTwo: any;
+  clock: THREE.Clock;
 
 
   @HostListener('window:resize', ['$event'])
@@ -67,7 +63,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
         case 'endLoading':
          this.meshObject.visible = false;
-          this.renderer.setClearColor(new THREE.Color('rgb(33,33,33)'), 0);
+          this.renderer.setClearColor(new THREE.Color('rgb(150,150,180)'), 0.2);
         break;
       }
     });
@@ -90,6 +86,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
    // this.renderer.shadowMap.enabled = true;
    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);
+    this.clock = new THREE.Clock;
   }
 
 
@@ -104,7 +101,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
   private renderLoop() {
     requestAnimationFrame(() => this.renderLoop());
-    this.composer.render();
+    // this.passOne.uniforms['time'].value = (this.clock.getDelta()) * 100;
+    this.composer.render(this.clock.getDelta());
     // this.renderer.render(this.scene, this.camera);
     this.animateCube();
   }
@@ -139,15 +137,28 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer = new THREE.EffectComposer(this.renderer);
     this.renderPass = new THREE.RenderPass(this.scene, this.camera);
     this.composer.addPass(this.renderPass);
-    this.passOne = new THREE.FilmPass(20);
+
+    this.passOne = new THREE.FilmPass(1, 0.7, 2731, false);
     this.composer.addPass(this.passOne);
 
+    /*
+    this.passOne = new THREE.ShaderPass((THREE as any).FilmShader);
+    this.passOne.uniforms['time'].value = 0;
+    this.passOne.uniforms['nIntensity'].value = 1;
+    this.passOne.uniforms['sIntensity'].value = 0.65;
+    this.passOne.uniforms['sCount'].value = 3096;
+    this.passOne.uniforms['grayscale'].value = 0.5;
+    this.composer.addPass(this.passOne);
+    */
 
     this.passTwo = new (THREE as any).GlitchPass(64);
     this.composer.addPass(this.passTwo);
     this.passTwo.renderToScreen = true;
-    this.passOne.enabled = false;
+    this.passOne.enabled = true;
+    this.passTwo.enabled = true;
    // this.passTwo.goWild = false;
+
+
   }
 
 }

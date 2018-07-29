@@ -6,8 +6,6 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {AngularFittextModule} from 'angular-fittext';
 
-import {GeneralServiceService} from './services/general-service.service';
-
 
 import {HomeResolver} from './home/home.resolver';
 import { AppComponent } from './app.component';
@@ -56,7 +54,7 @@ const appRoutes: Routes = [
       };
     },
     multi: true
-  }, GeneralServiceService, HomeResolver],
+  }, HomeResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

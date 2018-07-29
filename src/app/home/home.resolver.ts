@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 
-import {NavigationEnd, Resolve, Router} from '@angular/router';
+import {Resolve, Router} from '@angular/router';
 import {Observable} from 'rxjs/internal/Observable';
 import { of } from 'rxjs';
 import {delay} from 'rxjs/operators';

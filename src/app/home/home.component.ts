@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    // TODO: limpiar intervalos e intentar implementar observables
     setInterval(() => {
       if (!this.writing) {
         this.showCursor = !this.showCursor;
