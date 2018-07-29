@@ -5,6 +5,9 @@ import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
+import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
 import {EventsService} from '../services/events.service';
 
 @Component({
