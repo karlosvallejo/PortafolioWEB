@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
+import 'imports-loader?THREE=three!three/examples/js/loaders/GLTFLoader';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
@@ -23,16 +24,18 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   private get renderContainer(): HTMLCanvasElement {
     return this.rendererContainer.nativeElement;
   }
-
+  GLloader: any;
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   meshObject: THREE.Object3D;
+  GLObject: THREE.Scene;
   composer: THREE.EffectComposer;
   renderPass: THREE.RenderPass;
   passOne: THREE.FilmPass;
   passTwo: any;
   clock: THREE.Clock;
+  visibleObjects: boolean;
 
 
   @HostListener('window:resize', ['$event'])
@@ -60,12 +63,20 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
         case 'loading':
 
-          this.meshObject.visible = true;
+          this.meshObject.visible = false;
+          this.visibleObjects = true;
+          if (this.GLObject) {
+            this.GLObject.visible = true;
+          }
           this.renderer.setClearColor(new THREE.Color('rgb(33,33,33)'), 1);
          break;
 
         case 'endLoading':
          this.meshObject.visible = false;
+          this.visibleObjects = false;
+         if (this.GLObject) {
+           this.GLObject.visible = false;
+         }
           this.renderer.setClearColor(new THREE.Color('rgb(150,150,180)'), 0.2);
         break;
       }
@@ -77,6 +88,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.createCamera();
     this.createLights();
     this.createCube();
+    this.importLogo();
     this.shadering();
     this.renderLoop();
   }
@@ -90,12 +102,13 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);
     this.clock = new THREE.Clock;
+    this.GLloader = new (THREE as any).GLTFLoader();
   }
 
 
   createCamera() {
-    this.camera = new THREE.PerspectiveCamera(75, this.getAspectRatio(), 1, 3000);
-    this.camera.position.z = 500;
+    this.camera = new THREE.PerspectiveCamera(45, this.getAspectRatio(), 1, 3000);
+    this.camera.position.z = 100;
   }
 
   private getAspectRatio() {
@@ -116,12 +129,12 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     const hemis = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1.5 );
     this.scene.add(hemis);
     const point = new THREE.PointLight( 0xffffff, 2);
-    point.position.z = 400;
+    point.position.z = 100;
     this.scene.add(point);
   }
 
   createCube() {
-    const geometry = new THREE.BoxGeometry(300, 300, 300);
+    const geometry = new THREE.BoxGeometry(50, 50, 50);
     const material =  new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(90, 98, 102)'), roughness: 0.6, metalness: 0.9}) ;
     const mesh = new THREE.Mesh(geometry, material);
     this.meshObject = new THREE.Object3D();
@@ -130,10 +143,55 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.scene.add(this.meshObject);
   }
 
+  importLogo() {
+// Load a glTF resource
+    this.GLloader.load(
+      // resource URL
+      'assets/model/logo3d.glb',
+      // called when the resource is loaded
+       ( gltf ) =>  {
+         gltf.scene.traverse( function( node ) {
+
+           if ( node.isMesh ) {
+             node.material.color = new THREE.Color('rgb(90, 98, 102)');
+             node.material.roughness = 0.4;
+             node.material.metalness = 0.9;
+             node.castShadow = true;
+           }
+         } );
+        this.GLObject = gltf.scene;
+        if (this.visibleObjects) {
+          this.GLObject.visible = true;
+        } else {
+          this.GLObject.visible = false;
+        }
+        this.scene.add( gltf.scene );
+
+
+
+
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+      },
+      // called when loading has errors
+      function ( error ) {
+
+        console.log( 'An error happened' + error );
+
+      }
+    );
+  }
 
   private animateCube() {
     this.meshObject.rotation.x += 0.002;
     this.meshObject.rotation.y += 0.004;
+    if (this.GLObject) {
+      this.GLObject.rotation.y += 0.004;
+    }
   }
 
   private shadering() {
