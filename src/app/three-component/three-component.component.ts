@@ -8,6 +8,7 @@ import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
 import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
+import 'imports-loader?THREE=three!three/examples/js/shaders/RGBShiftShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
 import {EventsService} from '../services/events.service';
 
@@ -32,10 +33,13 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   GLObject: THREE.Scene;
   composer: THREE.EffectComposer;
   renderPass: THREE.RenderPass;
-  passOne: THREE.FilmPass;
+  passOne: THREE.ShaderPass;
   passTwo: any;
+  passThree: THREE.FilmPass;
   clock: THREE.Clock;
   visibleObjects: boolean;
+  theta = 0;
+  rotarionDirection = 0;
 
 
   @HostListener('window:resize', ['$event'])
@@ -94,12 +98,12 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   private initRenderer() {
-    this.renderer =  new THREE.WebGLRenderer({ antialias: false, alpha: true });
+    this.renderer =  new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
    // this.renderer.setClearColor(new THREE.Color('rgb(38,50,56)'), 0);
-   // this.renderer.shadowMap.enabled = true;
-   // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderContainer.appendChild(this.renderer.domElement);
     this.clock = new THREE.Clock;
     this.GLloader = new (THREE as any).GLTFLoader();
@@ -107,8 +111,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
 
   createCamera() {
-    this.camera = new THREE.PerspectiveCamera(45, this.getAspectRatio(), 1, 3000);
-    this.camera.position.z = 100;
+    this.camera = new THREE.PerspectiveCamera(30, this.getAspectRatio(), 1, 3000);
+    this.camera.position.z = 170;
   }
 
   private getAspectRatio() {
@@ -124,17 +128,33 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   createLights() {
-    const ambient = new THREE.AmbientLight( 0xffffff, 1);
+    const ambient = new THREE.AmbientLight( 0xffffff, 0.2);
     this.scene.add(ambient);
-    const hemis = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1.5 );
+    const hemis = new THREE.HemisphereLight( 0xffffbb, 0x080820, 0.4 );
     this.scene.add(hemis);
-    const point = new THREE.PointLight( 0xffffff, 2);
+    const point = new THREE.PointLight( 0xffffff, 0.1);
     point.position.z = 100;
+    point.castShadow = true;
+    point.shadow.mapSize.width = 1024;
+    point.shadow.mapSize.height = 1024;
     this.scene.add(point);
+    const pointTwo = new THREE.PointLight( 0xffffff, 0.2);
+    pointTwo.position.z = 150;
+    pointTwo.position.y = 20;
+    pointTwo.castShadow = true;
+    pointTwo.shadow.mapSize.width = 1024;
+    pointTwo.shadow.mapSize.height = 1024;
+    this.scene.add(pointTwo);
+    const spot = new THREE.SpotLight(0xffffff, 5, 200, 60, 0.6, 1.5);
+    spot.position.set( 100, 30, 120 );
+    spot.castShadow = true;
+    spot.shadow.mapSize.width = 2048;
+    spot.shadow.mapSize.height = 2048;
+    this.scene.add(spot);
   }
 
   createCube() {
-    const geometry = new THREE.BoxGeometry(50, 50, 50);
+    const geometry = new THREE.BoxGeometry(10, 10, 10);
     const material =  new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(90, 98, 102)'), roughness: 0.6, metalness: 0.9}) ;
     const mesh = new THREE.Mesh(geometry, material);
     this.meshObject = new THREE.Object3D();
@@ -147,16 +167,17 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 // Load a glTF resource
     this.GLloader.load(
       // resource URL
-      'assets/model/logo3d.glb',
+      'assets/model/logo3d.gltf',
       // called when the resource is loaded
        ( gltf ) =>  {
          gltf.scene.traverse( function( node ) {
 
            if ( node.isMesh ) {
-             node.material.color = new THREE.Color('rgb(90, 98, 102)');
-             node.material.roughness = 0.4;
-             node.material.metalness = 0.9;
+           //  node.material.color = new THREE.Color('rgb(90, 98, 102)');
+             node.material.roughness = 0.6;
+             node.material.metalness = 0.5;
              node.castShadow = true;
+             node.receiveShadow = true;
            }
          } );
         this.GLObject = gltf.scene;
@@ -190,7 +211,10 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.meshObject.rotation.x += 0.002;
     this.meshObject.rotation.y += 0.004;
     if (this.GLObject) {
-      this.GLObject.rotation.y += 0.004;
+
+      this.theta += 0.3;
+      this.GLObject.rotation.y =  Math.sin(THREE.Math.degToRad(this.theta)) * 0.8;
+
     }
   }
 
@@ -199,7 +223,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderPass = new THREE.RenderPass(this.scene, this.camera);
     this.composer.addPass(this.renderPass);
 
-    this.passOne = new THREE.FilmPass(1, 0.7, 2731, false);
+    this.passOne =  new THREE.ShaderPass(THREE.RGBShiftShader);
+    this.passOne.uniforms['amount'].value = 0.0015;
     this.composer.addPass(this.passOne);
 
     /*
@@ -214,10 +239,10 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
     this.passTwo = new (THREE as any).GlitchPass(64);
     this.composer.addPass(this.passTwo);
-    this.passTwo.renderToScreen = true;
-    this.passOne.enabled = true;
-    this.passTwo.enabled = true;
-   // this.passTwo.goWild = false;
+
+    this.passThree = new THREE.FilmPass(10, 1, 1400, false);
+    this.composer.addPass(this.passThree);
+    this.passThree.renderToScreen = true;
 
 
   }
