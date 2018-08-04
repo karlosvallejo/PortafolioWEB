@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   constructor(public router: Router, private service: EventsService) {
-  //  window.onresize = this.onWindowResize;
+
   }
 
   ngOnInit() {
@@ -98,13 +98,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
   }
-  /*
-  private onWindowResize (e) {
-    setTimeout(() => {
-      this.p5.resizeCanvas( ((this.p5.windowWidth / 16) * 14), ((this.p5.windowHeight / 100) * 44) );
-    }, 200);
-  }
-  */
+
 
   private createCanvas () {
     this.canvas = new p5(this.sketch, this.containerSketch.nativeElement);
@@ -112,7 +106,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private destroyCanvas () {
     this.canvas.noCanvas();
-    this.canvas = null;
   }
 
   private sketch = (p: p5) => {
@@ -226,12 +219,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }, 500);
       p.textAlign(p.LEFT);
-      setTimeout(() => {
-        endOfLoading();
-      }, 8000);
     }
 
-    function endOfLoading() {
+    (p as any).endOfLoading = () => {
         const intervalino =  setInterval(() => {
           backgrounOpacity -= 10;
           textFillOpacity -= 20;
@@ -244,7 +234,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             clearInterval(intervalLoading);
           }
         }, 50);
-    }
+    };
 
 
 
@@ -610,6 +600,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.writing = false;
           clearInterval(intervalito);
           setTimeout(() => {
+
+              this.canvas.endOfLoading();
+
           }, 1000);
 
         }
