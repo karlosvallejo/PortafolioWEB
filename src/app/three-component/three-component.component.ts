@@ -45,8 +45,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   GLObject: THREE.Scene;
   composer: THREE.EffectComposer;
   renderPass: THREE.RenderPass;
-  passOne: THREE.ShaderPass;
-  passTwo: THREE.FilmPass;
+  passOne:  THREE.FilmPass;
+  passTwo: THREE.ShaderPass;
   passThree: any;
   clock: THREE.Clock;
   visibleObjects: boolean;
@@ -321,9 +321,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderPass = new THREE.RenderPass(this.scene, this.camera);
     this.composer.addPass(this.renderPass);
 
-    this.passOne =  new THREE.ShaderPass(THREE.RGBShiftShader);
-    this.passOne.uniforms['amount'].value = 0.0015;
+
+    this.passOne = new THREE.FilmPass(10, 1, 1500, false);
     this.composer.addPass(this.passOne);
+
+
 
 
     /*
@@ -336,9 +338,10 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.passTwo);
     */
 
-
-    this.passTwo = new THREE.FilmPass(10, 1, 1500, false);
+    this.passTwo =  new THREE.ShaderPass(THREE.RGBShiftShader);
+    this.passTwo.uniforms['amount'].value = 0.0035;
     this.composer.addPass(this.passTwo);
+
 
     this.passThree =  new (THREE as any).GlitchPass();
     this.composer.addPass(this.passThree);
