@@ -322,7 +322,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.renderPass);
 
 
-    this.passOne = new THREE.FilmPass(10, 1, 1500, false);
+    this.passOne = new THREE.FilmPass(10, 1, 1500, true);
     this.composer.addPass(this.passOne);
 
 
