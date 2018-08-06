@@ -8,13 +8,29 @@
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: stretch;
+  background-color: red;
+}
+
+.imgContainer {
+  background-color: blue;
+  margin: 1%;
+  width: 100%;
 }
 
 .drone {
+  /*
   margin: 1%;
+  */
+  /*
   width: 100%;
+  */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /*
   background-repeat:  no-repeat;
   background-size: contain;
   background-position: center;
   background-color: blue;
+  */
 }

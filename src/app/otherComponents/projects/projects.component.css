@@ -1,0 +1,48 @@
+.projectsContainer {
+  position: absolute;
+  top: 13%;
+  left: 6.4%;
+  width: 87.25%;
+  height: 70%;
+  background-color: rgba(200,150,200,0.0);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  overflow: auto;
+}
+
+.leftDiv {
+  width: 28%;
+  height: 99%;
+  background-color: rgba(100,150,200,0.0);
+  overflow: auto;
+}
+
+.infoProjectContainer {
+  width: 70%;
+  height: 97.5%;
+  background-color: rgba(200,200,100,0.0);
+  outline: 0.5vh solid rgba(255,255,255,0.5);
+  box-shadow: 0 0 1.5vh white;
+  overflow: auto;
+}
+
+.generalTitle {
+  margin: 1% 1% 5% 1%;
+  width: 98%;
+  height: 8%;
+  background-color: rgba(150,200,150,0.0);
+  outline: 0.5vh solid rgba(255,255,255,0.5);
+  box-shadow: 0 0 1.5vh white;
+}
+
+.projectsNameContainer {
+  margin: 4.5% 1% 1% 1%;
+  width: 98%;
+  height: 87%;
+  background-color: rgba(50,255,150,0.0);
+  outline: 0.5vh solid rgba(255,255,255,0.5);
+  box-shadow: 0 0 1.5vh white;
+}
+

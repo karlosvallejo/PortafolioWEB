@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} f
 import * as THREE from 'three';
 import 'imports-loader?THREE=three!three/examples/js/loaders/GLTFLoader';
 import 'imports-loader?THREE=three!three/examples/js/controls/OrbitControls.js';
+// import 'imports-loader?THREE=three!three/examples/js/libs/stats.min.js';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
@@ -12,7 +13,8 @@ import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/RGBShiftShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
 import {EventsService} from '../services/events.service';
-
+// import {Stats} from '../../../node_modules/three/examples/js/libs/stats.min.js';
+import * as ThreeStats from '../../../node_modules/three/examples/js/libs/stats.min.js';
 @Component({
   selector: 'app-three-component',
   templateUrl: './three-component.component.html',
@@ -23,6 +25,9 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   @ViewChild('rendererContainer')
   private rendererContainer: ElementRef;
 
+  @ViewChild('threeHTMLcontainer')
+  private threeHTMLcontainer: ElementRef;
+
   private get renderContainer(): HTMLCanvasElement {
     return this.rendererContainer.nativeElement;
   }
@@ -32,6 +37,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   lightHelperTwo: THREE.SpotLightHelper;
   pointHelper: THREE.PointLightHelper;
   shadowCameraHelper: THREE.CameraHelper;
+  stats: any;
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
@@ -40,15 +46,17 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   composer: THREE.EffectComposer;
   renderPass: THREE.RenderPass;
   passOne: THREE.ShaderPass;
-  passTwo: any;
-  passThree: THREE.FilmPass;
+  passTwo: THREE.FilmPass;
+  passThree: any;
   clock: THREE.Clock;
   visibleObjects: boolean;
   theta = 0;
 
 
   @HostListener('window:resize', ['$event'])
-  onWindowResize(event) {
+  public onResize(event: Event) {
+    this.renderContainer.style.width = '100%';
+    this.renderContainer.style.height = '100%';
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
     this.camera.aspect = this.getAspectRatio();
     this.camera.updateProjectionMatrix();
@@ -63,11 +71,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
       console.log(event);
       switch (event) {
         case 'Wild':
-          this.passTwo.goWild = true;
+          this.passThree.goWild = true;
           break;
 
         case 'noWild':
-          this.passTwo.goWild = false;
+          this.passThree.goWild = false;
           break;
 
         case 'loading':
@@ -79,7 +87,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
           } else {
             this.meshObject.visible = true;
           }
-          this.renderer.setClearColor(new THREE.Color('rgb(33,33,33)'), 1);
+          this.renderer.setClearColor(new THREE.Color('rgb(13,17,19)'), 1);
          break;
 
         case 'endLoading':
@@ -105,21 +113,24 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   private initRenderer() {
-    this.renderer =  new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer =  new THREE.WebGLRenderer({canvas: this.renderContainer, antialias: false, alpha: true });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.setClearColor(new THREE.Color('rgb(150,150,180)'), 1);
+    this.renderer.setClearColor(new THREE.Color('rgb(20,20,20)'), 1);
     this.renderer.autoClear = true;
     // this.renderer.toneMapping = THREE.ReinhardToneMapping;
     // this.renderer.toneMappingExposure = Math.pow( 1.5, 5.0 ); // to allow for very bright scenes.
     this.renderer.gammaOutput = true;
     this.renderer.gammaInput = true;
-    this.renderContainer.appendChild(this.renderer.domElement);
+    // this.renderContainer.appendChild(this.renderer.domElement);
     this.clock = new THREE.Clock;
     this.GLloader = new (THREE as any).GLTFLoader();
+    this.stats = new ThreeStats();
+    console.log(this.stats);
+    this.threeHTMLcontainer.nativeElement.appendChild(this.stats.domElement);
   }
 
 
@@ -137,11 +148,23 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   private renderLoop() {
-    requestAnimationFrame(() => this.renderLoop());
+
+
+    // setTimeout( () => {
+
+      requestAnimationFrame(() => this.renderLoop());
+
+  //  }, 1000 / 60 );
+
+    /*
     this.passTwo.uniforms['time'].value = (this.clock.getDelta()) * 100;
     this.composer.render();
-    // this.composer.render(this.clock.getDelta());
+    */
+    this.stats.begin();
+    this.composer.render(this.clock.getDelta());
+
     // this.renderer.render(this.scene, this.camera);
+    this.stats.end();
     this.animateCube();
   }
 
@@ -220,16 +243,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
  //   const textureLoader = new THREE.TextureLoader();
 
     // env map
-    /*
-    const path = 'assets/textures/cube/MilkyWay/';
-    const format = '.jpg';
-    const urls = [
-      path + 'dark-s_nx' + format, path + 'dark-s_ny' + format,
-      path + 'dark-s_nz' + format, path + 'dark-s_px' + format,
-      path + 'dark-s_py' + format, path + 'dark-s_pz' + format
-    ];
-    */
-    const path = 'assets/textures/cube/SwedishRoyalCastle/';
+    const path = 'assets/textures/cube/Park3Med/';
     const format = '.jpg';
     const urls = [
       path + 'px' + format, path + 'nx' + format,
@@ -258,7 +272,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
            //  node.material.roughness = 0.5;
            //  node.material.metalness = 0.5;
              node.material.envMap = reflectionCube;
-             node.material.envMapIntensity = 2;
+             node.material.envMapIntensity = 0.5;
              node.castShadow = true;
              node.receiveShadow = true;
            }
@@ -312,6 +326,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.passOne);
 
 
+    /*
     this.passTwo = new THREE.ShaderPass((THREE as any).FilmShader);
     this.passTwo.uniforms['time'].value = 0;
     this.passTwo.uniforms['nIntensity'].value = 1;
@@ -319,10 +334,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.passTwo.uniforms['sCount'].value = 3096;
     this.passTwo.uniforms['grayscale'].value = false;
     this.composer.addPass(this.passTwo);
+    */
 
 
-    // this.passTwo = new THREE.FilmPass(10, 1, 1400, false);
-    // this.composer.addPass(this.passTwo);
+    this.passTwo = new THREE.FilmPass(10, 1, 1500, false);
+    this.composer.addPass(this.passTwo);
 
     this.passThree =  new (THREE as any).GlitchPass();
     this.composer.addPass(this.passThree);
