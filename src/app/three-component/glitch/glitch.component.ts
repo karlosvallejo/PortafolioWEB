@@ -32,7 +32,7 @@ export class GlitchComponent implements OnInit, AfterViewInit {
   renderPass: THREE.RenderPass;
 
   @HostListener('window:resize', ['$event'])
-  onWindowResize(event) {
+  onWindowResize() {
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
     this.camera.aspect = this.getAspectRatio();
     this.camera.updateProjectionMatrix();

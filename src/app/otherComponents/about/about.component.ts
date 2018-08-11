@@ -25,8 +25,10 @@ export class AboutComponent implements OnInit {
     GeneralServiceService.convertBlobToBase64(this.data[0]).then(base64 => this.drone = base64);
     GeneralServiceService.convertBlobToBase64(this.data[1]).then(base64 => this.droneTwo = base64);
     GeneralServiceService.convertBlobToBase64(this.data[2]).then(base64 => this.droneThree = base64);
+    /*
     this.data.forEach((images: Blob) => {
      // GeneralServiceService.convertBlobToBase64(images).then(base64 => console.log(base64));
     });
+    */
   }
 }

@@ -54,7 +54,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
 
   @HostListener('window:resize', ['$event'])
-  public onResize(event: Event) {
+  public onResize() {
     this.renderContainer.style.width = '100%';
     this.renderContainer.style.height = '100%';
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);

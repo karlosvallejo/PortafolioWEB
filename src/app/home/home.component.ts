@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {trigger, style, transition, animate, keyframes, query, stagger, state} from '@angular/animations';
-import {ActivatedRoute, Router} from '@angular/router';
-import 'p5';
-import {GeneralServiceService} from '../services/general-service.service';
+import {trigger, style, transition, animate, state} from '@angular/animations';
+import {Router} from '@angular/router';
+import * as p5 from 'p5';
 import {EventsService} from '../services/events.service';
 
 
@@ -125,7 +124,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const wavesArray = [];
 
 
-
     p.setup = () => {
       p.createCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45), p.P2D);
       p.frameRate(30);
@@ -135,6 +133,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
       p.textFont('VT323');
+      textLoading  = 'LOADING.';
 
 
 
@@ -170,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-      textLoading  = 'LOADING.';
+
     };
 
     p.draw = () => {
@@ -555,6 +554,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
+
+
 
 
 

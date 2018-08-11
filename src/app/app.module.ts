@@ -4,8 +4,6 @@ import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 
-import {AngularFittextModule} from 'angular-fittext';
-
 
 import {HomeResolver} from './home/home.resolver';
 import { AppComponent } from './app.component';
@@ -39,14 +37,13 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    AngularFittextModule,
     HttpClientModule
   ],
   providers: [{
     provide: APP_INITIALIZER,
     useFactory: () => {
       return () => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           setTimeout(() => {
             resolve();
           }, 5000);
