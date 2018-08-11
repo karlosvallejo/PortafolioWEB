@@ -1,0 +1,90 @@
+header{
+  position: fixed;
+  width: 100%;
+  background-color: rgba(0,253,114,1);
+  box-shadow: 0 0 2px rgba(0,253,114,1), 0 0 4px rgba(50,255,100,0.8), 0 0 8px rgba(100,255,150,0.6);
+  font-family: 'VT323', monospace;
+}
+
+header h3 {
+  display: inline-block;
+  margin: 0 6.4%;
+  padding: 0;
+  font-size: 3vw;
+  text-shadow: 0 0 2px black;
+}
+
+
+nav {
+  position: fixed;
+  top: 90%;
+  width: 100%;
+  background-color: rgba(255,255,255,0.0);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  display: inline-block;
+  width: 18.75%;
+
+}
+
+
+.menuItem {
+   margin: 0;
+   background-color: rgba(200,100,40,0.0);
+   color: white;
+   padding: 5% 0 5% 10%;
+   font-family: 'Press Start 2P', monospace;
+   font-size: 1vw;
+   text-shadow: 0 0 2px white, 0 0 4px rgba(255,255,255, 0.5), 0 0 6px rgba(255,255,255,0.3);
+ }
+
+.activeMenu {
+  color: black;
+  background-color: rgba(255,255,255,1);
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
+  text-shadow: 0 0 2px black;
+}
+
+.menuItem:hover {
+  color: black;
+  background-color: rgba(255,255,255,1);
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
+  text-shadow: 0 0 2px black;
+  cursor: pointer;
+}
+
+
+
+#espacioLI {
+  margin: 0;
+  width: 6.125%;
+  border: none;
+
+}
+
+#lastItemDiv {
+  position: absolute;
+  top: 0;
+  width: 12.5%;
+  height: 100%;
+  background: url("/assets/generalImages/correin-blanco.svg") no-repeat center;
+}
+
+#lastItemDiv:hover {
+  background: rgba(255,255,255,1) url("/assets/generalImages/correin-negro.svg") no-repeat center;
+}
+
+.barraBlanca {
+  position: absolute;
+  width: 0.25%;
+  height: 100%;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
+}
