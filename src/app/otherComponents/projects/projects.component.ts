@@ -6,10 +6,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
+  projectsArray: ProjectListNode[];
+  activeProject: ProjectListNode;
 
-  constructor() { }
+
+  constructor() {
+    this.projectsArray = [new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'),  new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB')];
+  }
 
   ngOnInit() {
+    this.activeProject = this.projectsArray[0];
+  }
+
+  toggleProject(selected: ProjectListNode ): void {
+    this.activeProject = selected;
   }
 
 
@@ -19,6 +39,7 @@ class ProjectListNode implements ProjectList {
   nameOfProject: string;
   info: string;
   url: string;
+  kind: string;
  // node: Array<ProjectList>;
 
    /*
@@ -30,10 +51,11 @@ class ProjectListNode implements ProjectList {
   }
   */
 
-  constructor(nameOfProject: string, info: string, url: string) {
+  constructor(nameOfProject: string, info: string, url: string, kind: string) {
     this.nameOfProject = nameOfProject;
     this.info = info;
     this.url = url;
+    this.kind = kind;
   }
 /*
   addNode(node: ProjectList): void {
@@ -47,5 +69,6 @@ interface ProjectList {
   nameOfProject: string;
   info: string;
   url: string;
+  kind: string;
  // node: Array<ProjectList>;
 }

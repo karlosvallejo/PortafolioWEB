@@ -3,17 +3,24 @@
   <div class="leftDiv">
 
     <div class="generalTitle">
-      <h3>PROGRAMING</h3>
+      <h3>{{activeProject.kind}}</h3>
     </div>
 
     <div class="projectsNameContainer">
-      <div class="proyectName">
+
+      <div *ngFor="let project of projectsArray" class="proyectName" [ngClass]="activeProject === project? 'active' : ''"  (click)="toggleProject(project)">
+        <h3>{{project.nameOfProject}}</h3>
       </div>
+
     </div>
 
   </div>
 
-  <div class="infoProjectContainer"></div>
+  <div class="infoProjectContainer">
+    <h2>{{activeProject.nameOfProject}}</h2>
+    <h4>{{activeProject.info}}</h4>
+    <a [href]="activeProject.url" target="_blank">{{activeProject.url}}</a>
+  </div>
 
 
 </div>

@@ -52,6 +52,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   passThree: THREE.ShaderPass;
   passFour: any;
   clock: THREE.Clock;
+  deltaClock: number;
   visibleObjects: boolean;
   theta = 0;
 
@@ -155,6 +156,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
   private renderLoop() {
 
+    this.deltaClock = this.clock.getDelta();
 
     // setTimeout( () => {
 
@@ -166,9 +168,9 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.passTwo.uniforms['time'].value = (this.clock.getDelta()) * 100;
     this.composer.render();
     */
-    this.passThree.uniforms[ 'time' ].value =  this.clock.getDelta();
+    this.passThree.uniforms[ 'time' ].value =  this.deltaClock;
     this.stats.begin();
-    this.composer.render(this.clock.getDelta());
+    this.composer.render(this.deltaClock);
 
     // this.renderer.render(this.scene, this.camera);
     this.stats.end();
@@ -318,7 +320,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     if (this.GLObject) {
 
       this.theta += 0.2;
-      this.GLObject.rotation.y =  Math.sin(THREE.Math.degToRad(this.theta)) * 0.7;
+      this.GLObject.rotation.y =  Math.sin(THREE.Math.degToRad(this.theta)) * 0.4;
 
     }
   }
@@ -329,7 +331,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.renderPass);
 
 
-    this.passOne = new THREE.FilmPass(1, 0.7, 1500, false);
+    this.passOne = new THREE.FilmPass(10, 1, 1500, false);
     this.composer.addPass(this.passOne);
 
 
