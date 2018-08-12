@@ -1,8 +1,10 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {EventsService} from '../services/events.service';
 import * as THREE from 'three';
+import * as ThreeStats from '../../../node_modules/three/examples/js/libs/stats.min';
+import 'imports-loader?THREE=three!./shaders/StaticShader';
 import 'imports-loader?THREE=three!three/examples/js/loaders/GLTFLoader';
 import 'imports-loader?THREE=three!three/examples/js/controls/OrbitControls.js';
-// import 'imports-loader?THREE=three!three/examples/js/libs/stats.min.js';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
@@ -12,9 +14,9 @@ import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/RGBShiftShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
-import {EventsService} from '../services/events.service';
-// import {Stats} from '../../../node_modules/three/examples/js/libs/stats.min.js';
-import * as ThreeStats from '../../../node_modules/three/examples/js/libs/stats.min.js';
+
+
+
 @Component({
   selector: 'app-three-component',
   templateUrl: './three-component.component.html',
@@ -47,7 +49,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   renderPass: THREE.RenderPass;
   passOne:  THREE.FilmPass;
   passTwo: THREE.ShaderPass;
-  passThree: any;
+  passThree: THREE.ShaderPass;
+  passFour: any;
   clock: THREE.Clock;
   visibleObjects: boolean;
   theta = 0;
@@ -71,11 +74,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
       console.log(event);
       switch (event) {
         case 'Wild':
-          this.passThree.goWild = true;
+          this.passFour.goWild = true;
           break;
 
         case 'noWild':
-          this.passThree.goWild = false;
+          this.passFour.goWild = false;
           break;
 
         case 'loading':
@@ -87,6 +90,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
           } else {
             this.meshObject.visible = true;
           }
+          this.passThree.uniforms[ 'amount' ].value = 0.15;
+          this.passThree.uniforms[ 'size' ].value = 3;
           this.renderer.setClearColor(new THREE.Color('rgb(13,17,19)'), 1);
          break;
 
@@ -96,7 +101,9 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
          if (this.GLObject) {
            this.GLObject.visible = false;
          }
-          this.renderer.setClearColor(new THREE.Color('rgb(150,150,180)'), 0.2);
+          this.passThree.uniforms[ 'amount' ].value = 0.1;
+          this.passThree.uniforms[ 'size' ].value = 3;
+          this.renderer.setClearColor(new THREE.Color('rgb(127,127,130)'), 0.2);
         break;
       }
     });
@@ -120,16 +127,15 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setClearColor(new THREE.Color('rgb(20,20,20)'), 1);
-    this.renderer.autoClear = true;
     // this.renderer.toneMapping = THREE.ReinhardToneMapping;
     // this.renderer.toneMappingExposure = Math.pow( 1.5, 5.0 ); // to allow for very bright scenes.
     this.renderer.gammaOutput = true;
     this.renderer.gammaInput = true;
     // this.renderContainer.appendChild(this.renderer.domElement);
     this.clock = new THREE.Clock;
-    this.GLloader = new (THREE as any).GLTFLoader();
+    // @ts-ignore
+    this.GLloader = new THREE.GLTFLoader();
     this.stats = new ThreeStats();
-    console.log(this.stats);
     this.threeHTMLcontainer.nativeElement.appendChild(this.stats.domElement);
   }
 
@@ -160,6 +166,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.passTwo.uniforms['time'].value = (this.clock.getDelta()) * 100;
     this.composer.render();
     */
+    this.passThree.uniforms[ 'time' ].value =  this.clock.getDelta();
     this.stats.begin();
     this.composer.render(this.clock.getDelta());
 
@@ -171,11 +178,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   createLights() {
     // const ambient = new THREE.AmbientLight( 0xffffff, 0);
     // this.scene.add(ambient);
-    /*
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
     directionalLight.position.set(0, 0, 1);
     this.scene.add( directionalLight );
-    */
+
 
     const hemis = new THREE.HemisphereLight( 0xddeeff, 0x0f0e0d, 0.02 );
 
@@ -271,19 +278,19 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
              node.material.metalness = node.material.metalness * 0.8;
            //  node.material.roughness = 0.5;
            //  node.material.metalness = 0.5;
+             /*
              node.material.envMap = reflectionCube;
              node.material.envMapIntensity = 0.5;
+             */
              node.castShadow = true;
              node.receiveShadow = true;
            }
          } );
         this.GLObject = gltf.scene;
-         this.meshObject.visible = false;
-        if (this.visibleObjects) {
-          this.GLObject.visible = true;
-        } else {
-          this.GLObject.visible = false;
-        }
+        this.meshObject.visible = false;
+
+        this.GLObject.visible = this.visibleObjects;
+
         this.scene.add( gltf.scene );
 
 
@@ -322,14 +329,14 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.renderPass);
 
 
-    this.passOne = new THREE.FilmPass(10, 1, 1500, true);
+    this.passOne = new THREE.FilmPass(1, 0.7, 1500, false);
     this.composer.addPass(this.passOne);
 
 
 
-
     /*
-    this.passTwo = new THREE.ShaderPass((THREE as any).FilmShader);
+    // @ts-ignore
+    this.passTwo = new THREE.ShaderPass(THREE.FilmShader);
     this.passTwo.uniforms['time'].value = 0;
     this.passTwo.uniforms['nIntensity'].value = 1;
     this.passTwo.uniforms['sIntensity'].value = 0.65;
@@ -343,12 +350,20 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.composer.addPass(this.passTwo);
 
 
-    this.passThree =  new (THREE as any).GlitchPass();
+    // @ts-ignore
+    this.passThree = new THREE.ShaderPass( THREE.StaticShader );
+    this.passThree.uniforms[ 'amount' ].value = 0.15;
+    this.passThree.uniforms[ 'size' ].value = 3;
     this.composer.addPass(this.passThree);
+
+    // @ts-ignore
+    this.passFour = new THREE.GlitchPass();
+    this.composer.addPass(this.passFour);
     this.passOne.enabled = true;
     this.passTwo.enabled = true;
     this.passThree.enabled = true;
-    this.passThree.renderToScreen = true;
+    this.passFour.enabled = true;
+    this.passFour.renderToScreen = true;
 
 
   }

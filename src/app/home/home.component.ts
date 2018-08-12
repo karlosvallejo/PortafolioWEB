@@ -1,8 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {trigger, style, transition, animate, state} from '@angular/animations';
 import {Router} from '@angular/router';
-import * as p5 from 'p5';
 import {EventsService} from '../services/events.service';
+import * as p5 from 'p5';
+
 
 
 
@@ -220,7 +221,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.textAlign(p.LEFT);
     }
 
-    (p as any).endOfLoading = () => {
+    // @ts-ignore
+    p.endOfLoading = () => {
         const intervalino =  setInterval(() => {
           backgrounOpacity -= 10;
           textFillOpacity -= 20;
@@ -243,7 +245,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.textSize(p.width / 30);
       p.fill(255, textFillOpacity);
       p.text(displayText, p.width / 2.35, p.height / 2);
-
     }
 
 
