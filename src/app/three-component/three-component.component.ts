@@ -43,7 +43,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
-  meshObject: THREE.Object3D;
+ // meshObject: THREE.Object3D;
   GLObject: THREE.Scene;
   composer: THREE.EffectComposer;
   renderPass: THREE.RenderPass;
@@ -89,7 +89,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
           if (this.GLObject) {
             this.GLObject.visible = true;
           } else {
-            this.meshObject.visible = true;
+         //   this.meshObject.visible = true;
           }
           this.passThree.uniforms[ 'amount' ].value = 0.15;
           this.passThree.uniforms[ 'size' ].value = 3;
@@ -98,7 +98,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
         case 'endLoading':
           this.visibleObjects = false;
-          this.meshObject.visible = false;
+        //  this.meshObject.visible = false;
          if (this.GLObject) {
            this.GLObject.visible = false;
          }
@@ -114,7 +114,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.initRenderer();
     this.createCamera();
     this.createLights();
-    this.createCube();
+   // this.createCube();
     this.importLogo();
     this.shadering();
     this.renderLoop();
@@ -178,17 +178,20 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   createLights() {
-    // const ambient = new THREE.AmbientLight( 0xffffff, 0);
-    // this.scene.add(ambient);
-
+     /*
+     const ambient = new THREE.AmbientLight( 0xffffff, 99999);
+     this.scene.add(ambient);
+     */
+    /*
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
     directionalLight.position.set(0, 0, 1);
     this.scene.add( directionalLight );
+    */
 
 
-    const hemis = new THREE.HemisphereLight( 0xddeeff, 0x0f0e0d, 0.02 );
+   // const hemis = new THREE.HemisphereLight( 0xddeeff, 0x0f0e0d, 0.02 );
 
-    this.scene.add(hemis);
+  //  this.scene.add(hemis);
 
     /*
     const point = new THREE.PointLight( 0xffffff, 0.5);
@@ -203,7 +206,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
     const pointTwo = new THREE.PointLight(0xffffff, 1, 200, 2);
     pointTwo.position.set(0, 50, 70);
-    pointTwo.power = 10000;
+    pointTwo.power = 5000;
     pointTwo.castShadow = true;
     pointTwo.shadow.mapSize.width = 1024;
     pointTwo.shadow.mapSize.height = 1024;
@@ -237,6 +240,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     */
   }
 
+  /*
+
   createCube() {
     const geometry = new THREE.BoxGeometry(10, 10, 10);
     const material =  new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(90, 98, 102)'), roughness: 0.6, metalness: 0.9}) ;
@@ -246,8 +251,9 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     // this.mesh.castShadow = true;
     this.scene.add(this.meshObject);
   }
-
+*/
   importLogo() {
+
 // Load a glTF resource
  //   const textureLoader = new THREE.TextureLoader();
 
@@ -261,14 +267,16 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     ];
     const reflectionCube = new THREE.CubeTextureLoader().load( urls );
 
+
     this.GLloader.load(
       // resource URL
-      'assets/model/logo3d.gltf',
+      'assets/model/test/logo3d.gltf',
       // called when the resource is loaded
        ( gltf ) =>  {
    //      gltf.scene.children[3].material.displacementMap = displacementMapa;
    //     gltf.scene.children[3].material.displacementScale = 5;
    //      gltf.scene.children[3].material.displacementBias = -4.4;
+  // gltf.scene.children[2].material =  new THREE.MeshPhongMaterial( { color: 0xccfffd, envMap: reflectionCube, refractionRatio: 0.985 } );
 
          gltf.scene.traverse( function( node ) {
 
@@ -277,19 +285,21 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
            //  node.material.roughness = node.material.roughness * 1.1;
 
-             node.material.metalness = node.material.metalness * 0.8;
+           //  node.material.metalness = node.material.metalness * 0.8;
            //  node.material.roughness = 0.5;
            //  node.material.metalness = 0.5;
-             /*
+
              node.material.envMap = reflectionCube;
-             node.material.envMapIntensity = 0.5;
-             */
+             node.material.envMapIntensity = 1;
+
+
              node.castShadow = true;
              node.receiveShadow = true;
            }
          } );
+
         this.GLObject = gltf.scene;
-        this.meshObject.visible = false;
+      //  this.meshObject.visible = false;
 
         this.GLObject.visible = this.visibleObjects;
 
@@ -315,8 +325,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
   }
 
   private animateCube() {
-    this.meshObject.rotation.x += 0.002;
-    this.meshObject.rotation.y += 0.004;
+  //  this.meshObject.rotation.x += 0.002;
+  //  this.meshObject.rotation.y += 0.004;
     if (this.GLObject) {
 
       this.theta += 0.2;
@@ -348,7 +358,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     */
 
     this.passTwo =  new THREE.ShaderPass(THREE.RGBShiftShader);
-    this.passTwo.uniforms['amount'].value = 0.0035;
+    this.passTwo.uniforms['amount'].value = 0.0015;
     this.composer.addPass(this.passTwo);
 
 
