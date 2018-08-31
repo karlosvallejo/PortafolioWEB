@@ -2,10 +2,13 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {trigger, style, transition, animate, state} from '@angular/animations';
 import {Router} from '@angular/router';
 import {EventsService} from '../services/events.service';
-import * as p5 from 'p5';
+import * as P5 from 'p5';
 
 
 
+interface Ip5Functions extends P5 {
+  endOfLoading: () => void;
+}
 
 
 @Component({
@@ -101,14 +104,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private createCanvas () {
-    this.canvas = new p5(this.sketch, this.containerSketch.nativeElement);
+    this.canvas = new P5(this.sketch, this.containerSketch.nativeElement);
   }
 
   private destroyCanvas () {
     this.canvas.noCanvas();
   }
 
-  private sketch = (p: p5) => {
+  private sketch = (p: Ip5Functions) => {
     const nodes = [];
     const instanceNodes = [];
     const nodeCount = 30;
@@ -221,7 +224,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.textAlign(p.LEFT);
     }
 
-    // @ts-ignore
+
     p.endOfLoading = () => {
         const intervalino =  setInterval(() => {
           backgrounOpacity -= 10;
@@ -271,13 +274,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     class Ball {
-      loc: p5.Vector;
-      vel: p5.Vector;
+      loc: P5.Vector;
+      vel: P5.Vector;
       size: number;
-      color: p5.Color;
+      color: P5.Color;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
 
-      constructor(pos: p5.Vector , velo: p5.Vector) {
+      constructor(pos: P5.Vector , velo: P5.Vector) {
         this.loc = pos;
         this.vel = velo;
         this.size = 30;
@@ -318,24 +321,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     class NavigationNode {
       sizeTwo: number;
       size: number;
-      loc: p5.Vector;
-      vel: p5.Vector;
+      loc: P5.Vector;
+      vel: P5.Vector;
       shapeKind: number;
       texti: string;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      color: p5.Color;
-      colorTwo: p5.Color;
+      color: P5.Color;
+      colorTwo: P5.Color;
       contadorFrames: number;
 
 
       direction = 1;
       hoverin = false;
+      circleOne: P5.Image;
+      shapeTwo: P5.Image;
+      circleTres: P5.Image;
 
-      circleOne: p5.Image;
-      shapeTwo: p5.Image;
-      circleTres: p5.Image;
-
-      constructor(pos: p5.Vector , velo: p5.Vector, textito: string, shapeType: number) {
+      constructor(pos: P5.Vector , velo: P5.Vector, textito: string, shapeType: number) {
         this.sizeTwo = 120;
         this.size = this.sizeTwo * 0.8;
         this.loc = pos;

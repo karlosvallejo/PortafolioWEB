@@ -6,7 +6,11 @@
 /out-tsc
 
 # dependencies
-/node_modules
+/node_modules/*
+!/node_modules/@types/
+/node_modules/@types/*
+!/node_modules/@types/p5/
+
 
 # IDEs and editors
 /.idea

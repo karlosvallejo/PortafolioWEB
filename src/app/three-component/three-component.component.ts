@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {EventsService} from '../services/events.service';
 import * as THREE from 'three';
 import * as ThreeStats from '../../../node_modules/three/examples/js/libs/stats.min';
@@ -22,7 +22,7 @@ import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
   templateUrl: './three-component.component.html',
   styleUrls: ['./three-component.component.css']
 })
-export class ThreeComponentComponent implements OnInit, AfterViewInit {
+export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('rendererContainer')
   private rendererContainer: ElementRef;
@@ -378,6 +378,10 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.passFour.renderToScreen = true;
 
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
 }
