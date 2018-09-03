@@ -44,8 +44,24 @@
 }
 
 .infoProjectContainer h4 {
-  margin: auto;
+  margin: 2vh 1vw;
   color: white;
+  font-size: 1.2vw;
+  text-align: justify;
+}
+
+.infoProjectContainer a {
+  color: white;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8vw;
+  margin: 1.5vh 2vw;
+  padding: 0.5vh 0.4vw;
+}
+
+.infoProjectContainer a:hover {
+  background-color: white;
+  color: black;
 }
 
 .generalTitle {
