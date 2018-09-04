@@ -20,6 +20,7 @@
     <h2>{{activeProject.nameOfProject}}</h2>
     <h4>{{activeProject.info}}</h4>
     <a [href]="activeProject.url" target="_blank">Pagina Web</a>
+    <div class="imagesProjectContainer"><div *ngFor="let image of activeProject.projectImages" [style.backgroundImage]="'url('+ image +')'"></div></div>
   </div>
 
 

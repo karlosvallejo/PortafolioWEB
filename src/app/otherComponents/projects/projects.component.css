@@ -56,7 +56,7 @@
   font-family: 'Press Start 2P', monospace;
   font-size: 0.8vw;
   margin: 1.5vh 2vw;
-  padding: 0.5vh 0.4vw;
+  padding: 1vh 0.4vw;
 }
 
 .infoProjectContainer a:hover {
@@ -128,6 +128,22 @@
   width: 90%;
   font-size: 1.5vw;
   text-shadow: 0 0 0.5vh white;
+}
+
+.imagesProjectContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2%;
+  height: 40%;
+  width: 96%;
+}
+
+.imagesProjectContainer div {
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  width: 30%;
 }
 
 .active {

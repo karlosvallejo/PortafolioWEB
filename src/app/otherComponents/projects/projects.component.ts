@@ -15,16 +15,13 @@ export class ProjectsComponent implements OnInit {
       'el objetivo de fomentar conocimiento sobre las labores medioambientales de smurfit kappa. Para el prototipo de creo ' +
       'una version del famoso juego "El Sapo", donde la informacion era mostrada a partir de las interacciones del usuario, se utilizo ' +
       'un arduino, una raspberry pi, diodos infrarrojos y una pantalla externa.',
-      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
-      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
-      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'),  new ProjectListNode('Hoy es Diseño',
-      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
-      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
-      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
-      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
-      'Pues la web de hed bro', 'hed.com', 'WEB'), new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
-      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING'), new ProjectListNode('Hoy es Diseño',
-      'Pues la web de hed bro', 'hed.com', 'WEB')];
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING', ['/assets/generalImages/projects/kappa0.PNG',
+        '/assets/generalImages/projects/kappa1.PNG', '/assets/generalImages/projects/kappa2.PNG']), new ProjectListNode('Hoy es Diseño',
+      'Pues la web de hed bro', 'hed.com', 'WEB', ['/assets/generalImages/projects/kappa0.PNG']),
+      new ProjectListNode('EcoInteractive', 'un proyecto interactvo de papus para papus',
+      'https://eco-interactive.firebaseapp.com/', 'PROGRAMMING', ['/assets/generalImages/projects/kappa0.PNG',
+          '/assets/generalImages/projects/kappa1.PNG'])
+    ];
   }
 
   ngOnInit() {
@@ -43,6 +40,7 @@ class ProjectListNode implements ProjectList {
   info: string;
   url: string;
   kind: string;
+  projectImages: Array<string>;
  // node: Array<ProjectList>;
 
    /*
@@ -54,11 +52,12 @@ class ProjectListNode implements ProjectList {
   }
   */
 
-  constructor(nameOfProject: string, info: string, url: string, kind: string) {
+  constructor(nameOfProject: string, info: string, url: string, kind: string, images: Array<string>) {
     this.nameOfProject = nameOfProject;
     this.info = info;
     this.url = url;
     this.kind = kind;
+    this.projectImages = images;
   }
 /*
   addNode(node: ProjectList): void {
@@ -73,5 +72,6 @@ interface ProjectList {
   info: string;
   url: string;
   kind: string;
+  projectImages: Array<string>;
  // node: Array<ProjectList>;
 }
