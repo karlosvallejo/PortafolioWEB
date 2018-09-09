@@ -11,6 +11,10 @@ import { BackgroundComponent } from './background/background.component';
 import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './home/home.component';
 import { ThreeComponentComponent } from './three-component/three-component.component';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '../environments/environment';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {GeneralServiceService} from './services/general-service.service';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
@@ -35,21 +39,24 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
   ],
   providers: [{
     provide: APP_INITIALIZER,
-    useFactory: () => {
-      return () => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve();
-          }, 5000);
+    useFactory: (service: GeneralServiceService) => function () {
+      return new Promise((resolve) => {
+
+        service.init().then(() => {
+          resolve();
         });
-      };
+      });
     },
+    deps: [GeneralServiceService],
     multi: true
   }, HomeResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

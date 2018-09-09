@@ -31,11 +31,16 @@
   box-shadow: 0 0 1.5vh white;
   overflow: auto;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .infoProjectContainer h2 {
   margin: 0;
   padding: 2% 0;
+  width: 100%;
   color: black;
   background: rgba(255,255,255,1);
   font-size: 3vw;
@@ -54,8 +59,8 @@
   color: white;
   text-decoration: none;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.8vw;
-  margin: 1.5vh 2vw;
+  font-size: 1vw;
+  margin: 0 1vw;
   padding: 1vh 0.4vw;
 }
 
@@ -133,17 +138,21 @@
 .imagesProjectContainer {
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  margin: 2%;
-  height: 40%;
-  width: 96%;
+  height: 100%;
+  width: 95%;
 }
 
 .imagesProjectContainer div {
   background-size: cover;
   background-position: center;
+  width: 100%;
+  margin: 1.5%;
+}
+
+.imagesProjectContainer div img {
+  width: 100%;
   height: 100%;
-  width: 30%;
+  object-fit: cover;
 }
 
 .active {

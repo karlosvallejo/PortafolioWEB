@@ -73,94 +73,116 @@
 </head>
 <body>
   <app-root>
-    <script>
+    <div class="app-loading">
+      <div class="superiorDiv"><h2>CARGANDO</h2></div>
+      <div class="logo"></div>
+      <div class="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
 
-      //----------------------------------
-      let loadedBytes;
-      let decodedBytes;
-      let encodedBytes;
+    <script type="text/javascript">
 
-      let width = 0;
-      let movingBar = false;
-     // let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-     // let estimatedSpeed = connection.downlink;
-      let intervalPrincipal;
-      let interval;
 
-      intervalPrincipal = setInterval(function () {
-        decodedBytes = 0;
-        encodedBytes = 0;
-        loadedBytes = 0;
-        // Use getEntriesByType() to just get the "resource" events
-        let p = performance.getEntriesByType("resource");
-        for (let i=0; i < p.length; i++) {
-          log_sizes(p[i]);
-        }
-        // console.log("decoded bytes: " + decodedBytes);
-        //console.log("encoded bytes: " + encodedBytes);
-        //console.log("loaded bytes: " + loadedBytes);
-        if(!movingBar) {
-          moveBar(encodedBytes);
-        }
-      },500);
+      class LoadingBar {
 
-      function log_sizes(perfEntry){
-        // Check for support of the PerformanceEntry.*size properties and print their values
-        // if supported.
-        if ("decodedBodySize" in perfEntry) {
-          // console.log("decodedBodySize = " + perfEntry.decodedBodySize);
-          decodedBytes += perfEntry.decodedBodySize;
-        }
-        else
-        {
-          console.log("decodedBodySize = NOT supported");
+        // let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        // let estimatedSpeed = connection.downlink;
+
+
+        constructor () {
+          this.loadedBytes = 0;
+          this.decodedBytes = 0;
+          this.encodedBytes = 0;
+          this.width = 0;
+          this.intervalPrincipal = undefined;
+          this.interval = undefined;
+          this.elem = document.getElementById("progress-bar");
+          this.connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+          this.speed = this.connection.downlink;
+          console.log(this.speed);
+          this.initIntervalPrincipal();
         }
 
-        if ("encodedBodySize" in perfEntry) {
-          //  console.log("encodedBodySize = " + perfEntry.encodedBodySize);
-          encodedBytes += perfEntry.encodedBodySize;
-        }
-        else
-        {
-          //  console.log("encodedBodySize = NOT supported");
+        initIntervalPrincipal () {
+          this.intervalPrincipal = setInterval(()=> {
+            this.decodedBytes = 0;
+            this.encodedBytes = 0;
+            this.loadedBytes = 0;
+            // Use getEntriesByType() to just get the "resource" events
+            let p = performance.getEntriesByType("resource");
+            for (let i=0; i < p.length; i++) {
+              this.log_sizes(p[i]);
+            }
+            // console.log("decoded bytes: " + decodedBytes);
+            // console.log("encoded bytes: " + this.encodedBytes);
+            // console.log("loaded bytes: " + this.loadedBytes);
+          }, 100);
+          this.moveBar();
         }
 
-        if ("transferSize" in perfEntry) {
-          //  console.log("transferSize = " + perfEntry.transferSize);
-          loadedBytes += perfEntry.transferSize;
-        }
-        else
-        {
-          //  console.log("transferSize = NOT supported");
-        }
-      }
-      function moveBar(target) {
-        movingBar = true;
-        let elem = document.getElementById("progress-bar");
-        let widthTargetPercent = map_range(target,0,702441,0,100);
-        interval = setInterval(frame, 10);
-        function frame() {
-          if (width >= widthTargetPercent) {
-            clearInterval(interval);
-            movingBar = false;
-          } else {
-            width+=0.5;
-            elem.style.width = width + '%';
+
+        log_sizes(perfEntry){
+          // Check for support of the PerformanceEntry.*size properties and print their values
+          // if supported.
+          if ("decodedBodySize" in perfEntry) {
+            // console.log("decodedBodySize = " + perfEntry.decodedBodySize);
+            this.decodedBytes += perfEntry.decodedBodySize;
+          }
+          else
+          {
+            console.log("decodedBodySize = NOT supported");
+          }
+
+          if ("encodedBodySize" in perfEntry) {
+            //  console.log("encodedBodySize = " + perfEntry.encodedBodySize);
+            this.encodedBytes += perfEntry.encodedBodySize;
+          }
+          else
+          {
+            //  console.log("encodedBodySize = NOT supported");
+          }
+
+          if ("transferSize" in perfEntry) {
+            //  console.log("transferSize = " + perfEntry.transferSize);
+            this.loadedBytes += perfEntry.transferSize;
+          }
+          else
+          {
+            //  console.log("transferSize = NOT supported");
           }
         }
+
+        moveBar() {
+          this.interval = setInterval( () => {
+            let widthTargetPercent = this.map_range(this.loadedBytes,0,9561022,0,95);
+            if (this.width >= widthTargetPercent) {
+                this.width += ((90 / (72.94 / this.speed)) / 100) * 2;
+                this.elem.style.width = this.width + '%';
+            } else {
+              this.width+=0.5;
+              this.elem.style.width = this.width + '%';
+            }
+          }, 20);
+        }
+
+        map_range(value, low1, high1, low2, high2) {
+          return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+        }
+
       }
 
-      function map_range(value, low1, high1, low2, high2) {
-        return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
-      }
+      barraCarga = new LoadingBar();
 
 
-      window.onload = function () {
+
+      window.onload = () => {
         //one();
-        setTimeout(function () {
-          clearInterval(interval);
-          clearInterval(intervalPrincipal);
-        },4500);
+        barraCarga.elem.style.width = '100%';
+        clearInterval(barraCarga.interval);
+        clearInterval(barraCarga.intervalPrincipal);
+        barraCarga = null;
+
         /*
         function one() {
           // Use getEntriesByType() to just get the "navigation" events
@@ -184,16 +206,9 @@
           }
         }
         */
-      };
+      }
 
     </script>
-    <div class="app-loading">
-      <div class="superiorDiv"><h2>CARGANDO</h2></div>
-      <div class="logo"></div>
-      <div class="progress-container">
-        <div id="progress-bar"></div>
-      </div>
-    </div>
   </app-root>
 </body>
 </html>
