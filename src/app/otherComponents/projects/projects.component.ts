@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {GeneralServiceService, ProjectList} from '../../services/general-service.service';
-import {Observable} from 'rxjs';
+import {ProjectList} from '../../services/general-service.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-projects',
@@ -12,14 +12,12 @@ export class ProjectsComponent implements OnInit {
   activeProject: ProjectList;
 
 
-  constructor(private data: GeneralServiceService) {
-    this.projectsArray = data.projectsList;
-    this.activeProject = new ProjectListNode('', '', '', '', []);
+  constructor(private router: ActivatedRoute) {
+    this.projectsArray = this.router.snapshot.data['proyectos'];
+    this.activeProject = this.projectsArray[0];
   }
 
   ngOnInit() {
-
-        this.activeProject = this.projectsArray[0];
 
   }
 

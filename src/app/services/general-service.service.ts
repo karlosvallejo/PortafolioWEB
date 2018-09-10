@@ -20,9 +20,9 @@ export interface ProjectList {
 export class GeneralServiceService {
 
   private itemsCollection: AngularFirestoreCollection<ProjectList>;
-  items: Observable<ProjectList[]>;
+  private items: Observable<ProjectList[]>;
   projectsList: ProjectList[];
-  subscription: Subscription;
+  private subscription: Subscription;
 
   constructor(private httpClient: HttpClient, private afs: AngularFirestore) {
     this.itemsCollection = afs.collection<ProjectList>('proyectos');
@@ -33,7 +33,7 @@ export class GeneralServiceService {
     return new Promise<void>((resolve) => {
       this.subscription = this.items.subscribe((projectsArray) => {
         this.projectsList = projectsArray;
-        setTimeout(() =>{
+        setTimeout(() => {
           resolve();
         }, 5000);
 

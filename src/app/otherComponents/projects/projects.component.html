@@ -8,7 +8,7 @@
 
     <div class="projectsNameContainer">
 
-      <div *ngFor="let project of projectsArray" [ngClass]="activeProject.nameOfProject === project.nameOfProject? 'proyectName active' : 'proyectName'" (click)="toggleProject(project)">
+      <div *ngFor="let project of projectsArray" [ngClass]="activeProject === project? 'proyectName active' : 'proyectName'" (click)="toggleProject(project)">
         <h3>{{project.nameOfProject}}</h3>
       </div>
 

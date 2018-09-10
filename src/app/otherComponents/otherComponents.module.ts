@@ -12,7 +12,7 @@ import {SkillsResolver} from './skills/skills.resolver';
 const routes: Routes = [
   { path: 'ABoUT', component: AboutComponent, resolve: {imagenes : AboutResolver}, pathMatch: 'full'  },
   { path: 'SkIlLs', component: SkillsComponent, pathMatch: 'full', resolve: [SkillsResolver] },
-  { path: 'ProJEcTs', component: ProjectsComponent, pathMatch: 'full', resolve: [ProjectsResolver]  }
+  { path: 'ProJEcTs', component: ProjectsComponent, pathMatch: 'full', resolve: {proyectos : ProjectsResolver}  }
 ];
 
 @NgModule({
