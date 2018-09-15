@@ -15,9 +15,11 @@ import {AngularFireModule} from '@angular/fire';
 import {environment} from '../environments/environment';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {GeneralServiceService} from './services/general-service.service';
+import { FullScreenRequestComponent } from './full-screen-request/full-screen-request.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
+  { path: '', component: FullScreenRequestComponent, pathMatch: 'full'},
+  { path: 'welcome', component: HomeComponent, pathMatch: 'full' , resolve: [HomeResolver]},
   { path: 'REstORinG', loadChildren: './otherComponents/otherComponents.module#OtherComponentsModule'},
   { path: '**' , redirectTo: ''}
 ];
@@ -30,7 +32,8 @@ const appRoutes: Routes = [
     BackgroundComponent,
     MenuComponent,
     HomeComponent,
-    ThreeComponentComponent
+    ThreeComponentComponent,
+    FullScreenRequestComponent
   ],
   imports: [
     RouterModule.forRoot(

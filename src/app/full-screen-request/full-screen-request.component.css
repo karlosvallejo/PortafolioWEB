@@ -1,0 +1,13 @@
+.divButoncitoFullScreen {
+  position: absolute;
+  top: 85%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.butoncitoFullScreen {
+  background: rgba(255,255,255,1);
+  font-size: 2vw;
+  font-family: 'Cutive Mono', monospace;
+}

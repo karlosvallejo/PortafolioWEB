@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-  constructor(public router: Router, private service: EventsService) {
+  constructor(private router: Router, private service: EventsService) {
 
   }
 
