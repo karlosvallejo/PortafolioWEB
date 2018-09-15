@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {
   Router,
   Event as RouterEvent,
@@ -14,8 +14,10 @@ import {EventsService} from './services/events.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title: string;
+  isFullScreen = false;
+
 
 
   constructor(private router: Router, private serviceEvents: EventsService) {
@@ -48,5 +50,43 @@ export class AppComponent implements AfterViewInit {
 
   send(message: string) {
     this.serviceEvents.newEvent(message);
+  }
+
+  ngOnInit(): void {
+    document.addEventListener('fullscreenchange', this.FShandler);
+    document.addEventListener('webkitfullscreenchange', this.FShandler);
+    document.addEventListener('mozfullscreenchange', this.FShandler);
+    document.addEventListener('MSFullscreenChange', this.FShandler);
+  }
+
+  FShandler = () => {
+    this.isFullScreen = !this.isFullScreen;
+    console.log(this.isFullScreen);
+  }
+
+
+  clicki() {
+    const docelem = document.documentElement;
+      if ('orientation' in screen) {
+        if (docelem.requestFullscreen) {
+          docelem.requestFullscreen();
+        } else
+        // @ts-ignore
+        if (docelem.mozRequestFullScreen) {
+          // @ts-ignore
+          docelem.mozRequestFullScreen();
+        } else if (docelem.webkitRequestFullScreen) {
+          docelem.webkitRequestFullScreen();
+        } else
+        // @ts-ignore
+         if (docelem.msRequestFullscreen) {
+          // @ts-ignore
+          docelem.msRequestFullscreen();
+        }
+        // @ts-ignore
+        screen.orientation.lock('landscape-primary');
+      } else {
+        console.log('no-soportado');
+      }
   }
 }

@@ -35,7 +35,7 @@ export class GeneralServiceService {
         this.projectsList = projectsArray;
         setTimeout(() => {
           resolve();
-        }, 5000);
+        }, 1000);
 
         console.log('entro');
       });

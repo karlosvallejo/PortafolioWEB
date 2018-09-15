@@ -9,7 +9,7 @@ import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectCompos
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass';
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass';
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/GlitchPass';
+import 'imports-loader?THREE=three!../../../src/app/three-component/shaders/GlitchPass';
 import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/RGBShiftShader';
@@ -52,7 +52,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
   passThree: THREE.ShaderPass;
   passFour: any;
   clock: THREE.Clock;
-  deltaClock: number;
+  deltaClock = 0;
+  interval = 1 / 60;
   visibleObjects: boolean;
   theta = 0;
 
@@ -117,7 +118,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
    // this.createCube();
     this.importLogo();
     this.shadering();
-    this.renderLoop();
+    this.initRenderLoop();
   }
 
   private initRenderer() {
@@ -126,7 +127,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setClearColor(new THREE.Color('rgb(20,20,20)'), 1);
     // this.renderer.toneMapping = THREE.ReinhardToneMapping;
     // this.renderer.toneMappingExposure = Math.pow( 1.5, 5.0 ); // to allow for very bright scenes.
@@ -154,27 +155,29 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     return this.renderContainer.clientWidth / this.renderContainer.clientHeight;
   }
 
-  private renderLoop() {
+  private initRenderLoop() {
+    requestAnimationFrame(this.loop());
+  }
 
-    this.deltaClock = this.clock.getDelta();
+  private loop(): FrameRequestCallback {
+    return () => {
+      requestAnimationFrame(this.loop());
+      this.deltaClock += this.clock.getDelta();
+      if (this.deltaClock > this.interval) {
+        /*
+        this.passTwo.uniforms['time'].value = (this.clock.getDelta()) * 100;
+        this.composer.render();
+        */
+        this.passThree.uniforms['time'].value = this.deltaClock;
+        this.stats.begin();
+        this.composer.render(this.deltaClock);
 
-    // setTimeout( () => {
-
-      requestAnimationFrame(() => this.renderLoop());
-
-  //  }, 1000 / 60 );
-
-    /*
-    this.passTwo.uniforms['time'].value = (this.clock.getDelta()) * 100;
-    this.composer.render();
-    */
-    this.passThree.uniforms[ 'time' ].value =  this.deltaClock;
-    this.stats.begin();
-    this.composer.render(this.deltaClock);
-
-    // this.renderer.render(this.scene, this.camera);
-    this.stats.end();
-    this.animateCube();
+        // this.renderer.render(this.scene, this.camera);
+        this.stats.end();
+        this.animateCube(this.deltaClock);
+        this.deltaClock = this.deltaClock % this.interval;
+      }
+    };
   }
 
   createLights() {
@@ -208,8 +211,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     pointTwo.position.set(0, 50, 70);
     pointTwo.power = 5000;
     pointTwo.castShadow = true;
-    pointTwo.shadow.mapSize.width = 1024;
-    pointTwo.shadow.mapSize.height = 1024;
+    // pointTwo.shadow.mapSize.width = 512;
+    // pointTwo.shadow.mapSize.height = 512;
     this.scene.add(pointTwo);
 
 
@@ -218,16 +221,16 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     spot.position.set( 60, -50, 60 );
     spot.power = 15000;
     spot.castShadow = true;
-    spot.shadow.mapSize.width = 1024;
-    spot.shadow.mapSize.height = 1024;
+    // spot.shadow.mapSize.width = 512;
+    // spot.shadow.mapSize.height = 512;
     this.scene.add(spot);
 
     const spotTwo = new THREE.SpotLight(0xffffff, 1, 200, Math.PI / 6, 0.5, 2);
     spotTwo.position.set( -60, -50, 60 );
     spotTwo.power = 15000;
     spotTwo.castShadow = true;
-    spotTwo.shadow.mapSize.width = 1024;
-    spotTwo.shadow.mapSize.height = 1024;
+    // spotTwo.shadow.mapSize.width = 512;
+    // spotTwo.shadow.mapSize.height = 512;
     this.scene.add(spotTwo);
 
     /*
@@ -324,12 +327,12 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     );
   }
 
-  private animateCube() {
+  private animateCube(deltaTime: number) {
   //  this.meshObject.rotation.x += 0.002;
   //  this.meshObject.rotation.y += 0.004;
     if (this.GLObject) {
 
-      this.theta += 0.2;
+      this.theta += 20 * deltaTime;
       this.GLObject.rotation.y =  Math.sin(THREE.Math.degToRad(this.theta)) * 0.4;
 
     }

@@ -14,11 +14,11 @@ export class ProjectsComponent implements OnInit {
 
   constructor(private router: ActivatedRoute) {
     this.projectsArray = this.router.snapshot.data['proyectos'];
-    this.activeProject = this.projectsArray[0];
+
   }
 
   ngOnInit() {
-
+    this.activeProject = this.projectsArray[0];
   }
 
   toggleProject(selected: ProjectList ): void {

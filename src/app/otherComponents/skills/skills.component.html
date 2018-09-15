@@ -1,1 +1,9 @@
-
+<div class="skillsMainContainer">
+    <h2 class="skillTitle">{{skillsArray[activeSkill].title}}</h2>
+    <img [src]="skillsArray[activeSkill].image" class="skillImage">
+    <div class="skillDescriptionContainer">{{skillsArray[activeSkill].description}}</div>
+    <div class="skillButtonsDiv">
+      <button type="button" (click)="changeActiveSkill('back')">back</button>
+      <button type="button" (click)="changeActiveSkill('next')">next</button>
+    </div>
+</div>
