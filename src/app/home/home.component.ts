@@ -2,12 +2,20 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {trigger, style, transition, animate, state} from '@angular/animations';
 import {Router} from '@angular/router';
 import {EventsService} from '../services/events.service';
-import * as P5 from 'p5';
+import * as p5 from 'p5';
+import {interval, Subscription} from 'rxjs';
 
 
 
-interface Ip5Functions extends P5 {
+interface Ip5Functions extends p5 {
   endOfLoading: () => void;
+}
+
+class NewP5 extends p5 implements Ip5Functions {
+  endOfLoading: () => void;
+  constructor(sketch: (...args: any[]) => any, container: HTMLElement) {
+    super(sketch, container);
+  }
 }
 
 
@@ -29,7 +37,7 @@ interface Ip5Functions extends P5 {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('p5Canvas', {read: ElementRef}) containerSketch: ElementRef;
-  private canvas;
+  private canvas: Ip5Functions;
 
   showCursorOne = true;
 
@@ -41,6 +49,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   writing = false;
   showCursor = true;
+  typeShowAndHideInterval: Subscription;
 
   typewriter_textOne = 'HI, MY NAME IS CARLOS AND I’AM AN INTERACTIVE MEDIA DESIGNER';
   typewriter_displayOne = '';
@@ -62,17 +71,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     // TODO: limpiar intervalos e intentar implementar observables
-    setInterval(() => {
+    this.typeShowAndHideInterval = interval(500).subscribe(x => {
       if (!this.writing) {
         this.showCursor = !this.showCursor;
       } else {
         this.showCursor = true;
       }
-    }, 500);
+    });
   }
 
   ngOnDestroy(): void {
     this.destroyCanvas();
+    this.typeShowAndHideInterval.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -104,11 +114,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private createCanvas () {
-    this.canvas = new P5(this.sketch, this.containerSketch.nativeElement);
+    this.canvas = new NewP5(this.sketch, this.containerSketch.nativeElement);
   }
 
   private destroyCanvas () {
-    this.canvas.noCanvas();
+    this.canvas.remove();
+    this.canvas = null;
   }
 
   private sketch = (p: Ip5Functions) => {
@@ -119,7 +130,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     let loading = false;
     let backgrounOpacity = 255;
     let textFillOpacity = 255;
-    let textLoading;
+    let textLoading = 'LOADING.';
     let displayText =  '';
     let intervalLoading = null;
     let instanceAboutNode = null;
@@ -137,8 +148,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.imageMode(p.CENTER);
       p.textAlign(p.CENTER, p.CENTER);
       p.textFont('VT323');
-      textLoading  = 'LOADING.';
-
 
 
       startLoading();
@@ -216,28 +225,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       displayText = textLoading;
       intervalLoading = setInterval(() => {
         displayText += '.';
-        //   console.log ('entro');
         if (displayText.length === textLoading.length + 4) {
           displayText = textLoading;
         }
       }, 500);
-      p.textAlign(p.LEFT);
+      // p.textAlign(p.LEFT);
     }
 
 
     p.endOfLoading = () => {
         const intervalino =  setInterval(() => {
           backgrounOpacity -= 10;
-          textFillOpacity -= 20;
+          textFillOpacity -= 30;
+          /*
           if (textFillOpacity <= 0) {
-            p.textAlign(p.CENTER);
+            // p.textAlign(p.CENTER);
           }
+          */
           if (backgrounOpacity <= 0) {
             loading = false;
             clearInterval(intervalino);
             clearInterval(intervalLoading);
           }
-        }, 50);
+        }, 200);
     };
 
 
@@ -247,7 +257,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.background(0, backgrounOpacity);
       p.textSize(p.width / 30);
       p.fill(255, textFillOpacity);
-      p.text(displayText, p.width / 2.35, p.height / 2);
+      p.text(displayText, p.width / 2, p.height / 2);
     }
 
 
@@ -274,13 +284,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     class Ball {
-      loc: P5.Vector;
-      vel: P5.Vector;
+      loc: p5.Vector;
+      vel: p5.Vector;
       size: number;
-      color: P5.Color;
+      color: p5.Color;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
 
-      constructor(pos: P5.Vector , velo: P5.Vector) {
+      constructor(pos: p5.Vector , velo: p5.Vector) {
         this.loc = pos;
         this.vel = velo;
         this.size = 30;
@@ -321,23 +331,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     class NavigationNode {
       sizeTwo: number;
       size: number;
-      loc: P5.Vector;
-      vel: P5.Vector;
+      loc: p5.Vector;
+      vel: p5.Vector;
       shapeKind: number;
       texti: string;
       // this.color = p.color(p.random(255), p.random(255), p.random(255));
-      color: P5.Color;
-      colorTwo: P5.Color;
+      color: p5.Color;
+      colorTwo: p5.Color;
       contadorFrames: number;
 
 
       direction = 1;
       hoverin = false;
-      circleOne: P5.Image;
-      shapeTwo: P5.Image;
-      circleTres: P5.Image;
+      circleOne: p5.Image;
+      shapeTwo: p5.Image;
+      circleTres: p5.Image;
 
-      constructor(pos: P5.Vector , velo: P5.Vector, textito: string, shapeType: number) {
+      constructor(pos: p5.Vector , velo: p5.Vector, textito: string, shapeType: number) {
         this.sizeTwo = 120;
         this.size = this.sizeTwo * 0.8;
         this.loc = pos;

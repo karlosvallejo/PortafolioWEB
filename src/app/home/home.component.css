@@ -9,7 +9,9 @@
 .textBasic {
   margin: 0;
   display: inline-block;
-
+}
+.textBasic[hidden]{
+  display: none;
 }
 .blockOfText {
   margin: 2% 0;
