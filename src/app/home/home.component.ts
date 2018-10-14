@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {trigger, style, transition, animate, state} from '@angular/animations';
-import {Router} from '@angular/router';
+import {Event as RouterEvent, NavigationStart, Router} from '@angular/router';
 import {EventsService} from '../services/events.service';
 import * as p5 from 'p5';
 import {interval, Subscription} from 'rxjs';
@@ -10,10 +10,12 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 
 interface Ip5Functions extends p5 {
   endOfLoading: () => void;
+  onResize: (width: number, height: number) => void;
 }
 
 class NewP5 extends p5 implements Ip5Functions {
   endOfLoading: () => void;
+  onResize: () => void;
   constructor(sketch: (...args: any[]) => any, container: HTMLElement) {
     super(sketch, container);
   }
@@ -38,6 +40,7 @@ class NewP5 extends p5 implements Ip5Functions {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('p5Canvas', {read: ElementRef}) containerSketch: ElementRef;
+
   private canvas: Ip5Functions;
 
   showCursorOne = true;
@@ -66,6 +69,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isMobile: boolean;
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    const parent: HTMLElement = this.containerSketch.nativeElement;
+    this.canvas.onResize(parent.clientWidth, parent.clientHeight);
+  }
 
 
   constructor(private router: Router, private service: EventsService, private deviceService: DeviceDetectorService) {
@@ -78,6 +86,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showCursor = !this.showCursor;
       } else {
         this.showCursor = true;
+      }
+    });
+
+    this.router.events.subscribe((event: RouterEvent) => {
+      if (event instanceof NavigationStart) {
+        this.destroyCanvas();
       }
     });
   }
@@ -120,15 +134,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private destroyCanvas () {
-    this.canvas.remove();
-    this.canvas = null;
+    if (this.canvas) {
+      this.canvas.remove();
+      this.canvas = null;
+      console.log('destroyed');
+    }
   }
 
   private sketch = (p: Ip5Functions) => {
     const nodes = [];
     const instanceNodes = [];
-    const maxDistance = 200;
     const textLoading = 'LOADING.';
+    let maxDistance = 200;
     let nodeCount: number;
     let loading = false;
     let backgrounOpacity = 255;
@@ -138,12 +155,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     let instanceAboutNode = null;
     let instanceSkillsNode = null;
     let instanceProyectsNode = null;
-    const wavesArray = [];
+    const wavesArray: Wave[] = [];
 
 
     p.setup = () => {
-      p.createCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45), p.P2D);
-      p.frameRate(30);
+      p.createCanvas(this.containerSketch.nativeElement.clientWidth, this.containerSketch.nativeElement.clientHeight);
+      p.frameRate(25);
       // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
       // p.drawingContext.shadowBlur = 4;
       p.rectMode(p.CENTER);
@@ -197,7 +214,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
 
-
+/*
       for (let i = 0; i < nodes.length; i++) {
         if (!this.isMobile) {
           drawConnection(i);
@@ -209,18 +226,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         for (let j = i + 1; j < nodes.length; j++) {
           springTo(nodes[i], nodes[j]);
         }
-        */
+
       }
+*/
 
 
 
-  /*
       nodes.forEach((node: NavigationNode) => {
+        if (!this.isMobile) {
+          drawConnection(node);
+        }
         node.display();
         node.movimiento();
         node.edgeCheck();
       });
-  */
+
 
 /*
       for (let i = 0; i < nodes.length - 1; i++) {
@@ -296,8 +316,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    p.windowResized = () => {
-      p.resizeCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45));
+    p.onResize = (width: number, height: number) => {
+      p.resizeCanvas(width, height);
+      wavesArray.forEach((wave: Wave, index: number) => {
+        wave.ypos = (p.height / 10) * (index + 1);
+        wave.A = p.random(1, p.height / 100);
+      });
     };
 
 
@@ -313,18 +337,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    function drawConnection(theNode) {
-      const node1 = nodes[theNode];
+    function drawConnection(theNode: Ball | NavigationNode) {
+      maxDistance = p.width / 5;
 
-      for (let j = theNode; j < nodes.length; j++) {
+      for (let j = nodes.indexOf(theNode); j < nodes.length; j++) {
 
         const node2 = nodes[j];
-        const distance = p.dist(node1.loc.x, node1.loc.y, node2.loc.x, node2.loc.y);
+        const distance = p.dist(theNode.loc.x, theNode.loc.y, node2.loc.x, node2.loc.y);
         if (distance < maxDistance) {
-          if (j !== theNode) {
+          if (j !== nodes.indexOf(theNode)) {
               p.stroke(node2.color);
-              p.strokeWeight(10 - (distance / maxDistance) * 10);
-              p.line(node1.loc.x, node1.loc.y, node2.loc.x, node2.loc.y);
+              p.strokeWeight((p.width / 150) - ((distance / maxDistance) * p.width / 150));
+              p.line(theNode.loc.x, theNode.loc.y, node2.loc.x, node2.loc.y);
           }
         }
       }
@@ -568,13 +592,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       display() {
         p.noFill();
-        p.strokeWeight(2);
+        p.strokeWeight(p.width / 350);
         p.stroke(255, 90);
         p.push();
         p.translate(0, this.ypos);
         p.beginShape();
 
-        for (let x = this.radius; x <= p.width - this.radius; x += this.diameter * 1.5) {
+        for (let x = 0; x <= p.width + this.radius; x += this.diameter * 1.5) {
           this.phi = -x * this.phase;           // phase
           // p.vertex(x, this.A * p.map((p.sin(this.frequency * this.time + this.phi) + p.map(p.noise(x), 0, 1, -1, 1)), -2, 2, -1, 1));
           p.vertex(x, this.A * p.sin(this.frequency * this.time + this.phi));
@@ -612,10 +636,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
-
-
-
-
 
 
 
@@ -688,6 +708,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.service.newEvent('Wild');
             setTimeout(() => {
               this.service.newEvent('noWild');
+              this.canvas.remove();
+              this.canvas = null;
               this.router.navigate([route]);
             }, 6000);
           }, 200);
