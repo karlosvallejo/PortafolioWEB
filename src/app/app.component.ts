@@ -16,12 +16,13 @@ import {EventsService} from './services/events.service';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title: string;
+  isFullScreen: boolean;
 
 
 
   constructor(private router: Router, private serviceEvents: EventsService) {
-
     this.title = 'Hominid Interactive';
+    this.isFullScreen = false;
   }
 
   ngAfterViewInit(): void {
@@ -52,7 +53,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    document.addEventListener('fullscreenchange', () => this.FShandler());
+    document.addEventListener('webkitfullscreenchange', () => this.FShandler());
+    document.addEventListener('mozfullscreenchange', () => this.FShandler());
+    document.addEventListener('MSFullscreenChange', () => this.FShandler());
+  }
 
+
+  FShandler() {
+    this.isFullScreen = !this.isFullScreen;
+    if (this.isFullScreen) {
+      this.router.navigate(['welcome']);
+    } else {
+      this.router.navigate(['']);
+    }
   }
 
 }

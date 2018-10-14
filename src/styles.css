@@ -8,7 +8,10 @@
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  overflow: auto;
   font-family: 'Cutive Mono', monospace;
+  background-color: rgba(0, 0, 0, 1);
 }
 
 canvas {

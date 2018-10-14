@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'app-full-screen-request',
@@ -8,58 +9,49 @@ import {Router} from '@angular/router';
 })
 export class FullScreenRequestComponent implements OnInit {
 
-  docelem: any ;
-  isFullScreen: boolean;
+  docelem: HTMLElement;
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router,  private deviceService: DeviceDetectorService) {
     this.docelem = document.documentElement;
-    this.isFullScreen = false;
   }
 
   ngOnInit() {
 
-    document.addEventListener('fullscreenchange', () => this.FShandler());
-    document.addEventListener('webkitfullscreenchange', () => this.FShandler());
-    document.addEventListener('mozfullscreenchange', () => this.FShandler());
-    document.addEventListener('MSFullscreenChange', () => this.FShandler());
+
   }
 
 
 
-  FShandler() {
-
-    this.isFullScreen = !this.isFullScreen;
-    if (this.isFullScreen) {
-      this.router.navigate(['welcome']);
-    } else {
-      this.router.navigate(['']);
-    }
-  }
 
 
 
   clicki() {
-
-    if ('orientation' in screen) {
-      if (this.docelem.requestFullscreen) {
-        this.docelem.requestFullscreen();
-      } else
-      // @ts-ignore
-      if (this.docelem.mozRequestFullScreen) {
+    if (this.deviceService.isMobile()) {
+      if ('orientation' in screen) {
+        if (this.docelem.requestFullscreen) {
+          this.docelem.requestFullscreen();
+        } else
         // @ts-ignore
-        this.docelem.mozRequestFullScreen();
-      } else if (this.docelem.webkitRequestFullScreen) {
-        this.docelem.webkitRequestFullScreen();
-      } else
-      // @ts-ignore
-      if (this.docelem.msRequestFullscreen) {
+        if (this.docelem.mozRequestFullScreen) {
+          // @ts-ignore
+          this.docelem.mozRequestFullScreen();
+        } else if (this.docelem.webkitRequestFullScreen) {
+          this.docelem.webkitRequestFullScreen();
+        } else
         // @ts-ignore
-        this.docelem.msRequestFullscreen();
+        if (this.docelem.msRequestFullscreen) {
+          // @ts-ignore
+          this.docelem.msRequestFullscreen();
+        }
+        // @ts-ignore
+        screen.orientation.lock('landscape-primary');
+      } else {
+        console.log('no-soportado');
+        this.router.navigate(['']);
       }
-      // @ts-ignore
-      screen.orientation.lock('landscape-primary');
     } else {
-      console.log('no-soportado');
+      this.router.navigate(['welcome']);
     }
   }
 

@@ -3,6 +3,7 @@ import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 
 import {HomeResolver} from './home/home.resolver';
@@ -44,7 +45,8 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    DeviceDetectorModule.forRoot()
   ],
   providers: [{
     provide: APP_INITIALIZER,

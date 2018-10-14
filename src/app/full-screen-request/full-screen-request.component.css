@@ -1,5 +1,5 @@
 .divButoncitoFullScreen {
-  position: absolute;
+  position: relative;
   top: 85%;
   width: 100%;
   display: flex;

@@ -3,7 +3,6 @@ import {Observable} from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import {Subscription} from 'rxjs';
-import {first} from 'rxjs/operators';
 
 export interface ProjectList {
   nameOfProject: string;

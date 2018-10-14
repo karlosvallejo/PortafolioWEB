@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {EventsService} from '../services/events.service';
 import * as p5 from 'p5';
 import {interval, Subscription} from 'rxjs';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 
 
@@ -63,14 +64,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   moveBarState = 'rise';
   moveBarStateTwo = 'rise';
 
+  isMobile: boolean;
 
 
-  constructor(private router: Router, private service: EventsService) {
 
+  constructor(private router: Router, private service: EventsService, private deviceService: DeviceDetectorService) {
+    this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit() {
-    // TODO: limpiar intervalos e intentar implementar observables
     this.typeShowAndHideInterval = interval(500).subscribe(x => {
       if (!this.writing) {
         this.showCursor = !this.showCursor;
@@ -125,14 +127,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private sketch = (p: Ip5Functions) => {
     const nodes = [];
     const instanceNodes = [];
-    const nodeCount = 30;
     const maxDistance = 200;
+    const textLoading = 'LOADING.';
+    let nodeCount: number;
     let loading = false;
     let backgrounOpacity = 255;
     let textFillOpacity = 255;
-    let textLoading = 'LOADING.';
     let displayText =  '';
-    let intervalLoading = null;
+    let intervalLoading: Subscription;
     let instanceAboutNode = null;
     let instanceSkillsNode = null;
     let instanceProyectsNode = null;
@@ -149,6 +151,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.textAlign(p.CENTER, p.CENTER);
       p.textFont('VT323');
 
+      if (this.isMobile) {
+        nodeCount = 10;
+      } else {
+        nodeCount = 20;
+      }
 
       startLoading();
 
@@ -175,33 +182,60 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       nodes.push(instanceSkillsNode);
       nodes.push(instanceProyectsNode);
 
-
       for (let i = 1 ; i < 10; i++) {
         wavesArray.push(new Wave((p.height / 10) * i, p.height / 100));
       }
-
-
-
-
     };
 
     p.draw = () => {
-      p.clear();
+      p.background(0);
       // p.fill('rgba(255,255,255, 0.8)');
       // p.background(0);
+
       for (let i = 0; i < wavesArray.length; i++) {
         wavesArray[i].display();
       }
 
 
+
       for (let i = 0; i < nodes.length; i++) {
-        drawConnection(i);
+        if (!this.isMobile) {
+          drawConnection(i);
+        }
         nodes[i].display();
         nodes[i].movimiento();
         nodes[i].edgeCheck();
+        /*
+        for (let j = i + 1; j < nodes.length; j++) {
+          springTo(nodes[i], nodes[j]);
+        }
+        */
       }
 
 
+
+  /*
+      nodes.forEach((node: NavigationNode) => {
+        node.display();
+        node.movimiento();
+        node.edgeCheck();
+      });
+  */
+
+/*
+      for (let i = 0; i < nodes.length - 1; i++) {
+        for (let c = i + 1; c < nodes.length; c++) {
+
+          const d = p.sq(nodes[c].loc.x - nodes[i].loc.x) + p.sq(nodes[c].loc.y - nodes[i].loc.y);
+
+          if (d < p.pow(90, 2)) {
+            p.stroke(15, 155, 241, p.map(d, 0, p.pow(100, 2), 100, 0));
+            // p.strokeWeight(10 - (d / maxDistance) * 10);
+            p.line(nodes[c].loc.x, nodes[c].loc.y, nodes[i].loc.x, nodes[i].loc.y);
+          }
+        }
+      }
+*/
 
 
 /*
@@ -220,23 +254,32 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
    //   console.log(p.frameRate());
     };
 
+    function drawLoading() {
+      p.fill(0, 0, 0, backgrounOpacity);
+      p.rect(p.width / 2, p.height / 2, p.width, p.height);
+      p.textSize(p.width / 30);
+      p.fill(255, textFillOpacity);
+      p.text(displayText, p.width / 2, p.height / 2);
+    }
+
     function startLoading() {
       loading = true;
       displayText = textLoading;
-      intervalLoading = setInterval(() => {
+      intervalLoading = interval(500).subscribe(x => {
         displayText += '.';
         if (displayText.length === textLoading.length + 4) {
           displayText = textLoading;
         }
-      }, 500);
+      });
+
       // p.textAlign(p.LEFT);
     }
 
 
     p.endOfLoading = () => {
         const intervalino =  setInterval(() => {
-          backgrounOpacity -= 10;
-          textFillOpacity -= 30;
+          backgrounOpacity -= 17;
+          textFillOpacity -= 51;
           /*
           if (textFillOpacity <= 0) {
             // p.textAlign(p.CENTER);
@@ -245,26 +288,30 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           if (backgrounOpacity <= 0) {
             loading = false;
             clearInterval(intervalino);
-            clearInterval(intervalLoading);
+            intervalLoading.unsubscribe();
+            intervalLoading = null;
           }
         }, 200);
     };
 
 
 
-
-    function drawLoading() {
-      p.background(0, backgrounOpacity);
-      p.textSize(p.width / 30);
-      p.fill(255, textFillOpacity);
-      p.text(displayText, p.width / 2, p.height / 2);
-    }
-
-
-
     p.windowResized = () => {
       p.resizeCanvas(((p.windowWidth / 100) * 87.5), ((p.windowHeight / 100) * 45));
     };
+
+
+    function springTo(p1, p2) {
+      const dx = p2.loc.x - p1.loc.x;
+      const dy = p2.loc.y - p1.loc.y;
+      const dist = p.sqrt(dx * dx + dy * dy);
+
+      if (dist < 100) {
+        p.stroke(49, 149, 196);
+        p.line(p1.loc.x, p1.loc.y, p2.loc.x, p2.loc.y);
+      }
+    }
+
 
     function drawConnection(theNode) {
       const node1 = nodes[theNode];
@@ -293,11 +340,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       constructor(pos: p5.Vector , velo: p5.Vector) {
         this.loc = pos;
         this.vel = velo;
-        this.size = 30;
+        this.size = p.width / 40;
         this.color = p.color(20, 253, 114, 200);
       }
 
       display() {
+        this.size = p.width / 40;
         p.noStroke();
         p.fill(this.color);
         p.ellipse(this.loc.x, this.loc.y, this.size , this.size );
@@ -348,7 +396,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       circleTres: p5.Image;
 
       constructor(pos: p5.Vector , velo: p5.Vector, textito: string, shapeType: number) {
-        this.sizeTwo = 120;
+        this.sizeTwo = p.width / 12;
         this.size = this.sizeTwo * 0.8;
         this.loc = pos;
         this.vel = velo;
@@ -382,10 +430,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       display() {
         p.noStroke();
-
-
-
-
+        this.sizeTwo = p.width / 12;
 
           switch (this.shapeKind) {
             case 1:
@@ -579,21 +624,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       let total_length = this.typewriter_textOne.length;
       let current_length = this.typewriter_displayOne.length;
       this.writing = true;
-    const intervalito = setInterval(() => {
+      const intervalito = interval(60).subscribe(x => {
         total_length = this.typewriter_textOne.length;
         current_length = this.typewriter_displayOne.length;
         if (current_length < total_length) {
           this.typewriter_displayOne += this.typewriter_textOne[current_length];
         } else {
-         // this.typewriter_displayOne = '';
-
+          // this.typewriter_displayOne = '';
           this.showCursorOne = false;
           this.showCursorTwo = true;
           this.writing = false;
-          clearInterval(intervalito);
           this.typingTwo();
+          intervalito.unsubscribe();
         }
-      }, 50);
+      });
     }, 2000);
   }
 
@@ -602,7 +646,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       let total_length = this.typewriter_textTwo.length;
       let current_length = this.typewriter_displayTwo.length;
       this.writing = true;
-      const intervalito = setInterval(() => {
+
+      const intervalito = interval(60).subscribe(x => {
         total_length = this.typewriter_textTwo.length;
         current_length = this.typewriter_displayTwo.length;
         if (current_length < total_length) {
@@ -612,15 +657,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.showCursorTwo = false;
           this.showCursorThree = true;
           this.writing = false;
-          clearInterval(intervalito);
+          intervalito.unsubscribe();
           setTimeout(() => {
-
-              this.canvas.endOfLoading();
-
+            this.canvas.endOfLoading();
           }, 1000);
-
         }
-      }, 50);
+      });
     }, 1000);
   }
 
@@ -630,7 +672,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       let total_length = this.typewriter_textTres.length;
       let current_length = this.typewriter_displayTres.length;
       this.writing = true;
-      const intervalito = setInterval(() => {
+      const intervalito = interval(60).subscribe(x => {
         total_length = this.typewriter_textTres.length;
         current_length = this.typewriter_displayTres.length;
         if (current_length < total_length) {
@@ -638,7 +680,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           // this.typewriter_displayOne = '';
 
-          clearInterval(intervalito);
+          intervalito.unsubscribe();
           setTimeout(() => {
             this.showCursorFour = true;
             this.showCursorThree = false;
@@ -649,9 +691,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               this.router.navigate([route]);
             }, 6000);
           }, 200);
-
         }
-      }, 100);
+      });
     }, 100);
   }
 
