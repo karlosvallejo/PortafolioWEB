@@ -209,18 +209,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         // Create nodes
         for (let i = 0; i < nodeCount; i++) {
           const b = new Ball(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-2, 2),
-            p.random(-2, 2)));
+            p.random(-2, 2)), p);
           nodes.push(b);
         }
 
         instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHO\nARE\nYOU?', nodesImages, 1);
+          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHO\nARE\nYOU?', nodesImages, 1, p);
 
         instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', nodesImages, 2);
+          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', nodesImages, 2, p);
 
         instanceProjectsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', nodesImages, 3);
+          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', nodesImages, 3, p);
 
         instanceNodes.push(instanceAboutNode);
         instanceNodes.push(instanceSkillsNode);
@@ -230,7 +230,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         nodes.push(instanceProjectsNode);
 
         for (let i = 1; i < 10; i++) {
-          wavesArray.push(new Wave((p.height / 10) * i, p.height / 100));
+          wavesArray.push(new Wave((p.height / 10) * i, p.height / 100, p));
         }
       };
 
@@ -262,7 +262,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
         nodes.forEach((node: Ball) => {
-          if (isMobile) {
+          if (!isMobile) {
             drawConnection(node);
           }
           node.display();
@@ -347,7 +347,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.onResize = (widthR: number, heightR: number) => {
         p.resizeCanvas(widthR, heightR);
         wavesArray.forEach((wave: Wave, index: number) => {
-          wave.ypos = (p.height / 10) * (index + 1);
+          wave.yPos = (p.height / 10) * (index + 1);
           wave.A = p.random(1, p.height / 100);
         });
       };
@@ -379,263 +379,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               p.line(theNode.loc.x, theNode.loc.y, node2.loc.x, node2.loc.y);
             }
           }
-        }
-      }
-
-      class Ball {
-        loc: p5.Vector;
-        vel: p5.Vector;
-        size: number;
-        color: p5.Color;
-
-        // this.color = p.color(p.random(255), p.random(255), p.random(255));
-
-        constructor(pos: p5.Vector, velo: p5.Vector) {
-          this.loc = pos;
-          this.vel = velo;
-          this.size = p.width / 40;
-          this.color = p.color(20, 253, 114, 200);
-        }
-
-        display() {
-          this.size = p.width / 40;
-          p.noStroke();
-          p.fill(this.color);
-          p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
-        }
-
-        movimiento() {
-          this.loc.add(this.vel);
-        }
-
-        edgeCheck() {
-          if (this.loc.x < this.size / 2) {
-            this.loc.x = this.size / 2;
-            this.vel.x = -1 * this.vel.x;
-          }
-          if (this.loc.x > p.width - (this.size / 2)) {
-            this.loc.x = p.width - (this.size / 2);
-            this.vel.x = -1 * this.vel.x;
-          }
-          if (this.loc.y < this.size / 2) {
-            this.loc.y = this.size / 2;
-            this.vel.y = -1 * this.vel.y;
-          }
-          if (this.loc.y > p.height - (this.size / 2)) {
-            this.loc.y = p.height - (this.size / 2);
-            this.vel.y = -1 * this.vel.y;
-          }
-        }
-
-      }
-
-      class NavigationNode {
-        sizeTwo: number;
-        size: number;
-        loc: p5.Vector;
-        vel: p5.Vector;
-        shapeKind: number;
-        texti: string;
-        images: p5.Image[];
-        // this.color = p.color(p.random(255), p.random(255), p.random(255));
-        color: p5.Color;
-        colorTwo: p5.Color;
-        contadorFrames: number;
-
-
-        direction = 1;
-        hoverin = false;
-        circleOne: p5.Image;
-        shapeTwo: p5.Image;
-        circleTres: p5.Image;
-
-        constructor(pos: p5.Vector, velo: p5.Vector, textito: string, _images: p5.Image[], shapeType: number) {
-          this.sizeTwo = p.width / 12;
-          this.size = this.sizeTwo * 0.8;
-          this.loc = pos;
-          this.vel = velo;
-          this.shapeKind = shapeType;
-          this.texti = textito;
-          this.images = _images;
-          this.color = p.color(255, 255, 255, 255);
-          this.colorTwo = p.color(255, 255, 255, 100);
-          this.contadorFrames = p.frameCount;
-          this.loadShapeImages();
-        }
-
-
-        loadShapeImages() {
-          switch (this.shapeKind) {
-            case 1:
-              this.circleOne = this.images[0];
-
-              break;
-            case 2:
-              this.circleOne = this.images[1];
-              this.shapeTwo = this.images[2];
-              break;
-            case 3:
-              this.circleTres = this.images[3];
-              break;
-          }
-        }
-
-
-        display() {
-          p.noStroke();
-          this.sizeTwo = p.width / 12;
-
-          switch (this.shapeKind) {
-            case 1:
-              p.push();
-              p.translate(this.loc.x, this.loc.y);
-              p.rotate(p.radians((p.frameCount * this.direction) % 360));
-              p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
-              p.pop();
-              p.fill(this.color);
-
-              p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
-              p.fill(this.colorTwo);
-              p.ellipse(this.loc.x, this.loc.y, this.sizeTwo, this.sizeTwo);
-
-              break;
-
-            case 2:
-              p.push();
-              p.translate(this.loc.x, this.loc.y);
-              p.rotate(p.radians((p.frameCount * this.direction) % 360));
-              p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
-              p.pop();
-              p.push();
-              p.fill(this.color);
-              p.translate(this.loc.x, this.loc.y);
-              if (this.hoverin) {
-                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
-              } else {
-                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
-              }
-              p.image(this.shapeTwo, 0, 0, this.sizeTwo, this.sizeTwo);
-              p.pop();
-              p.fill(255, 255, 255, 250);
-              p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
-              break;
-
-            case 3:
-
-              p.push();
-              p.translate(this.loc.x, this.loc.y);
-              p.rotate(p.radians((p.frameCount * this.direction) % 360));
-              p.image(this.circleTres, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
-              p.pop();
-              p.push();
-              p.fill(this.color);
-              p.translate(this.loc.x, this.loc.y);
-              if (this.hoverin) {
-                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
-              } else {
-                p.rotate(p.radians((this.contadorFrames * this.direction * -1) % 360));
-              }
-              p.arc(0, 0, this.size, this.size, 0, p.TWO_PI - 1, p.PIE);
-              p.pop();
-              p.fill(this.colorTwo);
-              p.ellipse(this.loc.x, this.loc.y, this.sizeTwo, this.sizeTwo);
-              break;
-          }
-
-
-          p.fill(0);
-          p.textSize(this.size / 4);
-          p.textLeading(this.size / 4.5);
-          p.text(this.texti, this.loc.x, this.loc.y);
-        }
-
-        movimiento() {
-          this.loc.add(this.vel);
-          this.hoverCursor();
-        }
-
-        edgeCheck() {
-          if (this.loc.x < this.size / 2) {
-            this.loc.x = this.size / 2;
-            this.vel.x = -1 * this.vel.x;
-            if (this.shapeKind === 1) {
-              this.direction = this.direction * -1;
-            }
-          }
-          if (this.loc.x > p.width - (this.size / 2)) {
-            this.loc.x = p.width - (this.size / 2);
-            this.vel.x = -1 * this.vel.x;
-            if (this.shapeKind === 1) {
-              this.direction = this.direction * -1;
-            }
-          }
-          if (this.loc.y < this.size / 2) {
-            this.loc.y = this.size / 2;
-            this.vel.y = -1 * this.vel.y;
-            if (this.shapeKind === 1) {
-              this.direction = this.direction * -1;
-            }
-          }
-          if (this.loc.y > p.height - (this.size / 2)) {
-            this.loc.y = p.height - (this.size / 2);
-            this.vel.y = -1 * this.vel.y;
-            if (this.shapeKind === 1) {
-              this.direction = this.direction * -1;
-            }
-          }
-        }
-
-        hoverCursor() {
-          if (p.dist(this.loc.x, this.loc.y, p.mouseX, p.mouseY) < this.sizeTwo / 2) {
-            this.size = this.sizeTwo * 0.8;
-            this.hoverin = true;
-            this.contadorFrames++;
-
-          } else if (p.dist(this.loc.x, this.loc.y, p.mouseX, p.mouseY) > this.sizeTwo / 2) {
-            this.size = this.sizeTwo * 0.7;
-            this.hoverin = false;
-          }
-        }
-
-      }
-
-      class Wave {
-        A: number;   // wave amplitude
-        frequency: number;    // angular frequency
-        time: number;
-        diameter: number;
-        radius: number;
-        phase: number;
-        phi: number;
-        ypos: number;
-
-        constructor(ypos: number, ampMax: number) {
-          this.A = p.random(1, ampMax);   // wave amplitude
-          this.ypos = ypos;
-          this.frequency = p.random(0.0314, 0.1256);
-          this.time = 1.97;
-          this.diameter = 10;
-          this.radius = this.diameter / 2;
-          this.phase = p.random(0.1, 0.6);
-        }
-
-        display() {
-          p.noFill();
-          p.strokeWeight(p.width / 350);
-          p.stroke(255, 90);
-          p.push();
-          p.translate(0, this.ypos);
-          p.beginShape();
-
-          for (let x = 0; x <= p.width + this.radius; x += this.diameter * 1.5) {
-            this.phi = -x * this.phase;           // phase
-            // p.vertex(x, this.A * p.map((p.sin(this.frequency * this.time + this.phi) + p.map(p.noise(x), 0, 1, -1, 1)), -2, 2, -1, 1));
-            p.vertex(x, this.A * p.sin(this.frequency * this.time + this.phi));
-          }
-
-          p.endShape();
-          p.pop();
-          this.time += 1;
         }
       }
 
@@ -746,4 +489,267 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 100);
   }
 
+}
+
+class Ball {
+  loc: p5.Vector;
+  vel: p5.Vector;
+  size: number;
+  color: p5.Color;
+  p: Ip5Functions;
+
+  // this.color = p.color(p.random(255), p.random(255), p.random(255));
+
+  constructor(pos: p5.Vector, velo: p5.Vector, pInstance: Ip5Functions) {
+    this.p = pInstance;
+    this.loc = pos;
+    this.vel = velo;
+    this.size = this.p.width / 40;
+    this.color = this.p.color(20, 253, 114, 200);
+  }
+
+  display() {
+    this.size = this.p.width / 40;
+    this.p.noStroke();
+    this.p.fill(this.color);
+    this.p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
+  }
+
+  movimiento() {
+    this.loc.add(this.vel);
+  }
+
+  edgeCheck() {
+    if (this.loc.x < this.size / 2) {
+      this.loc.x = this.size / 2;
+      this.vel.x = -1 * this.vel.x;
+    }
+    if (this.loc.x > this.p.width - (this.size / 2)) {
+      this.loc.x = this.p.width - (this.size / 2);
+      this.vel.x = -1 * this.vel.x;
+    }
+    if (this.loc.y < this.size / 2) {
+      this.loc.y = this.size / 2;
+      this.vel.y = -1 * this.vel.y;
+    }
+    if (this.loc.y > this.p.height - (this.size / 2)) {
+      this.loc.y = this.p.height - (this.size / 2);
+      this.vel.y = -1 * this.vel.y;
+    }
+  }
+
+}
+
+class NavigationNode {
+  sizeTwo: number;
+  size: number;
+  loc: p5.Vector;
+  vel: p5.Vector;
+  shapeKind: number;
+  texti: string;
+  images: p5.Image[];
+  // this.color = p.color(p.random(255), p.random(255), p.random(255));
+  color: p5.Color;
+  colorTwo: p5.Color;
+  contadorFrames: number;
+
+
+  direction = 1;
+  hoverin = false;
+  circleOne: p5.Image;
+  shapeTwo: p5.Image;
+  circleTres: p5.Image;
+
+  p: Ip5Functions;
+
+  constructor(pos: p5.Vector, velo: p5.Vector, textito: string, _images: p5.Image[], shapeType: number, pInstance: Ip5Functions) {
+    this.p = pInstance;
+    this.sizeTwo = this.p.width / 12;
+    this.size = this.sizeTwo * 0.8;
+    this.loc = pos;
+    this.vel = velo;
+    this.shapeKind = shapeType;
+    this.texti = textito;
+    this.images = _images;
+    this.color = this.p.color(255, 255, 255, 255);
+    this.colorTwo = this.p.color(255, 255, 255, 100);
+    this.contadorFrames = this.p.frameCount;
+    this.loadShapeImages();
+  }
+
+
+  loadShapeImages() {
+    switch (this.shapeKind) {
+      case 1:
+        this.circleOne = this.images[0];
+
+        break;
+      case 2:
+        this.circleOne = this.images[1];
+        this.shapeTwo = this.images[2];
+        break;
+      case 3:
+        this.circleTres = this.images[3];
+        break;
+    }
+  }
+
+
+  display() {
+    this.p.noStroke();
+    this.sizeTwo = this.p.width / 12;
+
+    switch (this.shapeKind) {
+      case 1:
+        this.p.push();
+        this.p.translate(this.loc.x, this.loc.y);
+        this.p.rotate(this.p.radians((this.p.frameCount * this.direction) % 360));
+        this.p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+        this.p.pop();
+        this.p.fill(this.color);
+
+        this.p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
+        this.p.fill(this.colorTwo);
+        this.p.ellipse(this.loc.x, this.loc.y, this.sizeTwo, this.sizeTwo);
+
+        break;
+
+      case 2:
+        this.p.push();
+        this.p.translate(this.loc.x, this.loc.y);
+        this.p.rotate(this.p.radians((this.p.frameCount * this.direction) % 360));
+        this.p.image(this.circleOne, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+        this.p.pop();
+        this.p.push();
+        this.p.fill(this.color);
+        this.p.translate(this.loc.x, this.loc.y);
+        if (this.hoverin) {
+          this.p.rotate(this.p.radians((this.contadorFrames * this.direction * -1) % 360));
+        } else {
+          this.p.rotate(this.p.radians((this.contadorFrames * this.direction * -1) % 360));
+        }
+        this.p.image(this.shapeTwo, 0, 0, this.sizeTwo, this.sizeTwo);
+        this.p.pop();
+        this.p.fill(255, 255, 255, 250);
+        this.p.ellipse(this.loc.x, this.loc.y, this.size, this.size);
+        break;
+
+      case 3:
+        this.p.push();
+        this.p.translate(this.loc.x, this.loc.y);
+        this.p.rotate(this.p.radians((this.p.frameCount * this.direction) % 360));
+        this.p.image(this.circleTres, 0, 0, this.sizeTwo * 1.2, this.sizeTwo * 1.2);
+        this.p.pop();
+        this.p.push();
+        this.p.fill(this.color);
+        this.p.translate(this.loc.x, this.loc.y);
+        if (this.hoverin) {
+          this.p.rotate(this.p.radians((this.contadorFrames * this.direction * -1) % 360));
+        } else {
+          this.p.rotate(this.p.radians((this.contadorFrames * this.direction * -1) % 360));
+        }
+        this.p.arc(0, 0, this.size, this.size, 0, this.p.TWO_PI - 1, this.p.PIE);
+        this.p.pop();
+        this.p.fill(this.colorTwo);
+        this.p.ellipse(this.loc.x, this.loc.y, this.sizeTwo, this.sizeTwo);
+        break;
+    }
+
+
+    this.p.fill(0);
+    this.p.textSize(this.size / 4);
+    this.p.textLeading(this.size / 4.5);
+    this.p.text(this.texti, this.loc.x, this.loc.y);
+  }
+
+  movimiento() {
+    this.loc.add(this.vel);
+    this.hoverCursor();
+  }
+
+  edgeCheck() {
+    if (this.loc.x < this.size / 2) {
+      this.loc.x = this.size / 2;
+      this.vel.x = -1 * this.vel.x;
+      if (this.shapeKind === 1) {
+        this.direction = this.direction * -1;
+      }
+    }
+    if (this.loc.x > this.p.width - (this.size / 2)) {
+      this.loc.x = this.p.width - (this.size / 2);
+      this.vel.x = -1 * this.vel.x;
+      if (this.shapeKind === 1) {
+        this.direction = this.direction * -1;
+      }
+    }
+    if (this.loc.y < this.size / 2) {
+      this.loc.y = this.size / 2;
+      this.vel.y = -1 * this.vel.y;
+      if (this.shapeKind === 1) {
+        this.direction = this.direction * -1;
+      }
+    }
+    if (this.loc.y > this.p.height - (this.size / 2)) {
+      this.loc.y = this.p.height - (this.size / 2);
+      this.vel.y = -1 * this.vel.y;
+      if (this.shapeKind === 1) {
+        this.direction = this.direction * -1;
+      }
+    }
+  }
+
+  hoverCursor() {
+    if (this.p.dist(this.loc.x, this.loc.y, this.p.mouseX, this.p.mouseY) < this.sizeTwo / 2) {
+      this.size = this.sizeTwo * 0.8;
+      this.hoverin = true;
+      this.contadorFrames++;
+
+    } else if (this.p.dist(this.loc.x, this.loc.y, this.p.mouseX, this.p.mouseY) > this.sizeTwo / 2) {
+      this.size = this.sizeTwo * 0.7;
+      this.hoverin = false;
+    }
+  }
+
+}
+
+class Wave {
+  A: number;   // wave amplitude
+  frequency: number;    // angular frequency
+  time: number;
+  diameter: number;
+  radius: number;
+  phase: number;
+  phi: number;
+  yPos: number;
+  p: Ip5Functions;
+
+  constructor(ypos: number, ampMax: number, pInstance: Ip5Functions) {
+    this.p = pInstance;
+    this.A = this.p.random(1, ampMax);   // wave amplitude
+    this.yPos = ypos;
+    this.frequency = this.p.random(0.0314, 0.1256);
+    this.time = 1.97;
+    this.diameter = 10;
+    this.radius = this.diameter / 2;
+    this.phase = this.p.random(0.1, 0.6);
+  }
+
+  display() {
+    this.p.noFill();
+    this.p.strokeWeight(this.p.width / 350);
+    this.p.stroke(255, 90);
+    this.p.push();
+    this.p.translate(0, this.yPos);
+    this.p.beginShape();
+
+    for (let x = 0; x <= this.p.width + this.radius; x += this.diameter * 1.5) {
+      this.phi = -x * this.phase;           // phase
+      // p.vertex(x, this.A * p.map((p.sin(this.frequency * this.time + this.phi) + p.map(p.noise(x), 0, 1, -1, 1)), -2, 2, -1, 1));
+      this.p.vertex(x, this.A * this.p.sin(this.frequency * this.time + this.phi));
+    }
+
+    this.p.endShape();
+    this.p.pop();
+    this.time += 1;
+  }
 }
