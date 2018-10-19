@@ -26,7 +26,7 @@
     "ngx-device-detector": "^1.3.3",
     "p5": "^0.7.2",
     "rxjs": "^6.3.2",
-    "three": "^0.96.0",
+    "three": "^0.97.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -36,9 +36,10 @@
     "@angular/language-service": "^6.1.7",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~10.9.4",
-    "@types/three": "^0.92.21",
-    "codelyzer": "~4.4.4",
+    "@types/node": "~10.12.0",
+    "@types/three": "^0.93.3",
+    "@types/webvr-api": "^0.0.35",
+    "codelyzer": "~4.5.0",
     "imports-loader": "^0.8.0",
     "jasmine-core": "~3.2.1",
     "jasmine-spec-reporter": "~4.2.1",
@@ -50,6 +51,6 @@
     "protractor": "~5.4.1",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~2.7.2"
+    "typescript": "~2.8.1"
   }
 }
