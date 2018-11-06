@@ -86,6 +86,7 @@ ul li {
 
 #lastItemDiv:hover {
   background: rgba(255,255,255,1) url("/assets/generalImages/correin-negro.svg") no-repeat center;
+  box-shadow: 0 0 3px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.6), 0 0 8px rgba(255,255,252,0.1);
 }
 
 .barraBlanca {

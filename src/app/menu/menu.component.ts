@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-menu',
@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-  seccionActual: string;
-  descripcionSeccionActual: string;
+  @Input() seccionActual: string;
+  @Input() descripcionSeccionActual: string;
   constructor() {
-    this.seccionActual = 'START';
-    this.descripcionSeccionActual = 'INTRODUCTION TO THE SYSTEM';
+    this.seccionActual = '';
+    this.descripcionSeccionActual = '';
   }
 
   ngOnInit() {

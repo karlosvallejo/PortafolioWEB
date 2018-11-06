@@ -17,6 +17,8 @@ import {EventsService} from './services/events.service';
 export class AppComponent implements OnInit, AfterViewInit {
   title: string;
   isFullScreen: boolean;
+  actualRoute: string;
+  actualDescription: string;
 
 
 
@@ -33,7 +35,32 @@ export class AppComponent implements OnInit, AfterViewInit {
           break;
         }
 
-        case event instanceof NavigationEnd:
+        case event instanceof NavigationEnd: {
+          switch ((<NavigationEnd>event).url) {
+            case '/welcome':
+              this.actualRoute = 'START';
+              this.actualDescription = 'INTRODUCTION TO THE SYSTEM';
+              break;
+
+            case '/REstORinG/ABoUT':
+              this.actualRoute = 'WHO IS';
+              this.actualDescription = 'CARLOS GOMEZ';
+              break;
+
+            case '/REstORinG/SkIlLs':
+              this.actualRoute = 'KNOW';
+              this.actualDescription = 'THE POWERS';
+              break;
+
+            case '/REstORinG/ProJEcTs':
+              this.actualRoute = 'SEE';
+              this.actualDescription = 'THE ARSENAL';
+              break;
+          }
+          this.send('endLoading');
+          break;
+        }
+
         case event instanceof NavigationCancel:
         case event instanceof  NavigationError: {
          // setTimeout(() => { // here
