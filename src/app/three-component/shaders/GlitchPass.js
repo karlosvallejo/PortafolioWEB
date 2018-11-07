@@ -46,7 +46,7 @@ THREE.GlitchPass.prototype = Object.assign( Object.create( THREE.Pass.prototype 
 		this.uniforms[ 'seed' ].value = Math.random();//default seeding
 		this.uniforms[ 'byp' ].value = 0;
 
-		if ( this.curF % this.randX == 0 || this.goWild == true ) {
+		if ( this.curF % this.randX === 0 || this.goWild === true ) {
 
 			this.uniforms[ 'amount' ].value = Math.random() / 30;
 			this.uniforms[ 'angle' ].value = THREE.Math.randFloat( - Math.PI, Math.PI );
@@ -66,7 +66,7 @@ THREE.GlitchPass.prototype = Object.assign( Object.create( THREE.Pass.prototype 
 			this.uniforms[ 'seed_x' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
 			this.uniforms[ 'seed_y' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
 
-		} else if ( this.goWild == false ) {
+		} else if ( this.goWild === false ) {
 
 			this.uniforms[ 'byp' ].value = 1;
 
@@ -90,7 +90,7 @@ THREE.GlitchPass.prototype = Object.assign( Object.create( THREE.Pass.prototype 
 	generateTrigger: function() {
 
 		this.randX = THREE.Math.randInt( 960, 1920 );
-    this.ranDivide = THREE.Math.randInt( 5, 20 );
+    this.ranDivide = THREE.Math.randInt( 15, 20 );
 
 	},
 

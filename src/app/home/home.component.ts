@@ -482,7 +482,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               this.canvas.remove();
               this.canvas = null;
               this.router.navigate([route]);
-            }, 6000);
+            }, 2000);
           }, 200);
         }
       });

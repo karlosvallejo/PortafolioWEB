@@ -8,9 +8,9 @@ import {EventsService} from '../../services/events.service';
   styleUrls: ['./skills.component.css']
 })
 export class SkillsComponent implements OnInit, OnDestroy, AfterViewInit {
-  suscription: Subscription;
+  // suscription: Subscription;
   activeSkill: number;
-  skillsArray = [{title: 'JavaScript / Typescript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Sin ' +
+  skillsArray = [{title: 'JavaScript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Sin ' +
       'el, nada de esto fuera posible. Más allá de saber un framework en especifico, lo primero es aprender javascript; Por esto comence' +
       ' el desarrollo front end usando javascript vanilla apoyado con Jquery, una vez domino ES5, comienzo con ES6. Despues de dominar a ' +
       'un nivel suficiente este lenguaje, decido comenzar a aprender NodeJs y los demas frameworks tanto front end como' +
@@ -30,13 +30,17 @@ export class SkillsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    /*
     this.suscription.unsubscribe();
+    */
   }
 
   ngAfterViewInit(): void {
+    /*
     this.suscription = interval(20000).subscribe(x => {
         this.changeActiveSkill('next');
     });
+    */
   }
 
   changeActiveSkill(direction: string): void {

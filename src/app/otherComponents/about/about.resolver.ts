@@ -4,7 +4,7 @@ import { Resolve } from '@angular/router';
 import {delay} from 'rxjs/operators';
 import {convertBlobToBase64, GeneralServiceService} from '../../services/general-service.service';
 import {forkJoin} from 'rxjs/internal/observable/forkJoin';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {promise} from 'selenium-webdriver';
 
 
@@ -14,8 +14,14 @@ export class AboutResolver implements Resolve<string[]> {
 
   constructor(private general_service: GeneralServiceService) {  }
 
-  resolve(): Promise<string[]> {
+  resolve() {
+    return of([]).pipe(delay(5000));
+  }
 
+
+
+  /*
+  resolve(): Promise<string[]> {
 
 
   return new Promise<[string, string, string]>((resolve) => {
@@ -31,7 +37,6 @@ export class AboutResolver implements Resolve<string[]> {
        });
     });
   });
-
-
   }
+  */
 }

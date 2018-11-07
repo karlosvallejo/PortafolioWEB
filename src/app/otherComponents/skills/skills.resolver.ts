@@ -15,6 +15,6 @@ export class SkillsResolver implements Resolve<Observable<any>> {
   constructor() { }
 
   resolve() {
-    return of([]).pipe(delay(10000));
+    return of([]).pipe(delay(5000));
   }
 }
