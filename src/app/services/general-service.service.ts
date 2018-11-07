@@ -36,7 +36,7 @@ export class GeneralServiceService {
           resolve();
         }, 1000);
 
-        console.log('entro');
+       // console.log('entro');
       });
     });
   }

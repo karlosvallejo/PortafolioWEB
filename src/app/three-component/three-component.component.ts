@@ -1,7 +1,6 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {EventsService} from '../services/events.service';
 import * as THREE from 'three';
-import * as ThreeStats from '../../../node_modules/three/examples/js/libs/stats.min';
 import 'imports-loader?THREE=three!./shaders/StaticShader';
 import 'imports-loader?THREE=three!three/examples/js/loaders/GLTFLoader';
 import 'imports-loader?THREE=three!three/examples/js/controls/OrbitControls.js';
@@ -22,7 +21,7 @@ import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
   templateUrl: './three-component.component.html',
   styleUrls: ['./three-component.component.css']
 })
-export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges {
+export class ThreeComponentComponent implements OnInit, AfterViewInit {
 
   @ViewChild('rendererContainer')
   private rendererContainer: ElementRef;
@@ -39,7 +38,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
   lightHelperTwo: THREE.SpotLightHelper;
   pointHelper: THREE.PointLightHelper;
   shadowCameraHelper: THREE.CameraHelper;
-  stats: any;
+  // stats: any;
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
@@ -73,7 +72,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
   ngOnInit() {
     this.scene = new THREE.Scene();
     this.service.events$.subscribe((event: string) => {
-      console.log(event);
+      // console.log(event);
       switch (event) {
         case 'Wild':
           this.passFour.goWild = true;
@@ -137,8 +136,8 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     this.clock = new THREE.Clock;
     // @ts-ignore
     this.GLloader = new THREE.GLTFLoader();
-    this.stats = new ThreeStats();
-    this.threeHTMLcontainer.nativeElement.appendChild(this.stats.domElement);
+    // this.stats = new ThreeStats();
+    // this.threeHTMLcontainer.nativeElement.appendChild(this.stats.domElement);
   }
 
 
@@ -169,11 +168,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
         this.composer.render();
         */
         this.passThree.uniforms['time'].value = this.deltaClock;
-        this.stats.begin();
+        // this.stats.begin();
         this.composer.render(this.deltaClock);
 
         // this.renderer.render(this.scene, this.camera);
-        this.stats.end();
+        // this.stats.end();
         this.animateCube(this.deltaClock);
         this.deltaClock = this.deltaClock % this.interval;
       }
@@ -315,7 +314,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
       // called while loading is progressing
       function ( xhr ) {
 
-        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+       // console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
       },
       // called when loading has errors
@@ -381,10 +380,6 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit, OnChanges
     this.passFour.renderToScreen = true;
 
 
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 
 }
