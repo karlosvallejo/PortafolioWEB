@@ -13,6 +13,7 @@ import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/FilmShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/RGBShiftShader';
 import 'imports-loader?THREE=three!three/examples/js/shaders/DigitalGlitch';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 
 
@@ -66,7 +67,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.camera.updateProjectionMatrix();
   }
 
-  constructor(private service: EventsService) {
+  constructor(private service: EventsService,  private deviceService: DeviceDetectorService) {
   }
 
   ngOnInit() {
@@ -125,7 +126,11 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.renderContainer.clientWidth, this.renderContainer.clientHeight);
     this.renderer.physicallyCorrectLights = true;
-    this.renderer.shadowMap.enabled = true;
+    if (this.deviceService.isMobile()) {
+      this.renderer.shadowMap.enabled = false;
+    } else {
+      this.renderer.shadowMap.enabled = true;
+    }
     // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setClearColor(new THREE.Color('rgb(20,20,20)'), 1);
     // this.renderer.toneMapping = THREE.ReinhardToneMapping;
@@ -342,7 +347,6 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     this.renderPass = new THREE.RenderPass(this.scene, this.camera);
     this.composer.addPass(this.renderPass);
 
-
     this.passOne = new THREE.FilmPass(10, 1, 1500, true);
     this.composer.addPass(this.passOne);
 
@@ -360,7 +364,7 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     */
 
     this.passTwo =  new THREE.ShaderPass(THREE.RGBShiftShader);
-    this.passTwo.uniforms['amount'].value = 0.0015;
+    this.passTwo.uniforms['amount'].value = 0.0035;
     this.composer.addPass(this.passTwo);
 
 
@@ -373,9 +377,14 @@ export class ThreeComponentComponent implements OnInit, AfterViewInit {
     // @ts-ignore
     this.passFour = new THREE.GlitchPass();
     this.composer.addPass(this.passFour);
-    this.passOne.enabled = true;
+    if (this.deviceService.isMobile()) {
+      this.passOne.enabled = false;
+      this.passThree.enabled = false;
+    } else {
+      this.passOne.enabled = true;
+      this.passThree.enabled = true;
+    }
     this.passTwo.enabled = true;
-    this.passThree.enabled = true;
     this.passFour.enabled = true;
     this.passFour.renderToScreen = true;
 
