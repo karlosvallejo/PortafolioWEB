@@ -55,14 +55,14 @@ export class GeneralServiceService {
 }
 
 
-export const convertBlobToBase64 = (blob: Blob): Promise<string> => {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader;
-    reader.onerror = reject;
-    reader.onload = () => {
-      // console.log(reader.result);
-      resolve(reader.result);
-    };
+export const convertBlobToBase64 = function (blob: Blob): Promise<string> {
+  return new Promise<string>(function (resolve, reject) {
+    const reader: FileReader = new FileReader;
     reader.readAsDataURL(blob);
+    reader.onerror = reject;
+    reader.onloadend = function() {
+       // console.log(reader.result);
+       resolve(reader.result.toString());
+    };
   });
 };
