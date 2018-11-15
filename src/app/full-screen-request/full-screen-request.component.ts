@@ -27,6 +27,8 @@ export class FullScreenRequestComponent implements OnInit {
 
 
   clicki() {
+
+    /*
     if (this.deviceService.isMobile()) {
       if ('orientation' in screen) {
         if (this.docelem.requestFullscreen) {
@@ -53,6 +55,23 @@ export class FullScreenRequestComponent implements OnInit {
     } else {
       this.router.navigate(['welcome']);
     }
+    */
+
+    if (this.deviceService.isMobile()) {
+      if ('orientation' in screen) {
+        if (this.docelem.requestFullscreen) {
+          this.docelem.requestFullscreen();
+        }
+        // @ts-ignore
+        screen.orientation.lock('landscape-primary');
+      } else {
+        console.log('no-soportado');
+        this.router.navigate(['']);
+      }
+    } else {
+      this.router.navigate(['welcome']);
+    }
+
   }
 
 }

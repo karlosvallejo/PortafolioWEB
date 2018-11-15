@@ -96,7 +96,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.destroyCanvas();
       }
     });
-    this.createCanvas();
   }
 
   ngOnDestroy(): void {
@@ -106,6 +105,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.createCanvas();
     this.typingOne();
     this.canvas.getPromise().then((value: string[]) => {
       this.typingTres(value[0], value[1]);
@@ -168,7 +168,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       let instanceSkillsNode = null;
       let instanceProjectsNode = null;
 
-      const nodesImages: p5.Image[] = [];
+      let nodesImages: Array<p5.Image>;
 
       p.preload = function() {
 
@@ -176,10 +176,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           navigationResolve = resolve;
         });
 
-        nodesImages.push(p.loadImage('assets/generalImages/circleOne.svg'));
-        nodesImages.push(p.loadImage('assets/generalImages/circleTwoWhite.svg'));
-        nodesImages.push(p.loadImage('assets/generalImages/pathTwo.svg'));
-        nodesImages.push(p.loadImage('assets/generalImages/circleTres.svg'));
+        nodesImages = new Array<p5.Image>(4);
 
       };
 
@@ -191,12 +188,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.setup = () => {
         p.createCanvas(width, height);
         p.frameRate(25);
-        // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
-        // p.drawingContext.shadowBlur = 4;
+        /*
+        if (!isMobile) {
+          // @ts-ignore
+         // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
+          // @ts-ignore
+         // p.drawingContext.shadowBlur = 4;
+        }
+        */
         p.rectMode(p.CENTER);
         p.imageMode(p.CENTER);
         p.textAlign(p.CENTER, p.CENTER);
         p.textFont('VT323');
+
 
         if (isMobile) {
           nodeCount = 10;
@@ -204,35 +208,56 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           nodeCount = 20;
         }
 
+        // LOAD ALL IMAGES /// CALLBACK HELL
+
+        p.loadImage('assets/generalImages/circleOne.svg', function(img) {
+          nodesImages[0] = img;
+          p.loadImage('assets/generalImages/circleTwoWhite.svg', function(imgTwo) {
+            nodesImages[1] = imgTwo;
+            p.loadImage('assets/generalImages/pathTwo.svg', function(imgThree) {
+              nodesImages[2] = imgThree;
+              p.loadImage('assets/generalImages/circleTres.svg', function(imgFour) {
+                nodesImages[3] = imgFour;
+                createNodesAndWaves();
+              });
+            });
+          });
+        });
+
+
         startLoading();
 
-        // Create nodes
-        for (let i = 0; i < nodeCount; i++) {
-          const b = new Ball(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-2, 2),
-            p.random(-2, 2)), p);
-          nodes.push(b);
-        }
 
-        instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHO\nARE\nYOU?', nodesImages, 1, p);
-
-        instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', nodesImages, 2, p);
-
-        instanceProjectsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
-          p.createVector(p.random(-1, 1), p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', nodesImages, 3, p);
-
-        instanceNodes.push(instanceAboutNode);
-        instanceNodes.push(instanceSkillsNode);
-        instanceNodes.push(instanceProjectsNode);
-        nodes.push(instanceAboutNode);
-        nodes.push(instanceSkillsNode);
-        nodes.push(instanceProjectsNode);
-
-        for (let i = 1; i < 10; i++) {
-          wavesArray.push(new Wave((p.height / 10) * i, p.height / 100, p));
-        }
       };
+
+     function createNodesAndWaves() {
+       // Create nodes
+       for (let i = 0; i < nodeCount; i++) {
+         const b = new Ball(p.createVector(p.random(100, p.width), p.random(100, p.height)), p.createVector(p.random(-2, 2),
+           p.random(-2, 2)), p);
+         nodes.push(b);
+       }
+
+       instanceAboutNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+         p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHO\nARE\nYOU?', nodesImages, 1, p);
+
+       instanceSkillsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+         p.createVector(p.random(-1, 1), p.random(-1, 1)), 'WHAT\nCAN\nYOU DO?', nodesImages, 2, p);
+
+       instanceProjectsNode = new NavigationNode(p.createVector(p.random(100, p.width), p.random(100, p.height)),
+         p.createVector(p.random(-1, 1), p.random(-1, 1)), 'OPEN\nYOUR\nPROJECTS', nodesImages, 3, p);
+
+       instanceNodes.push(instanceAboutNode);
+       instanceNodes.push(instanceSkillsNode);
+       instanceNodes.push(instanceProjectsNode);
+       nodes.push(instanceAboutNode);
+       nodes.push(instanceSkillsNode);
+       nodes.push(instanceProjectsNode);
+
+       for (let i = 1; i < 10; i++) {
+         wavesArray.push(new Wave((p.height / 10) * i, p.height / 100, p));
+       }
+      }
 
       p.draw = () => {
         p.background(0);

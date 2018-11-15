@@ -27,7 +27,7 @@ export class ProjectsComponent implements OnInit {
 
 
 }
-
+/*
 class ProjectListNode implements ProjectList {
   nameOfProject: string;
   info: string;
@@ -44,5 +44,8 @@ class ProjectListNode implements ProjectList {
     this.projectImages = images;
   }
 
+  github: string;
+
 }
+*/
 
