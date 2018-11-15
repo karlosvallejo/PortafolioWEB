@@ -188,12 +188,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       p.setup = () => {
         p.createCanvas(width, height);
         p.frameRate(25);
+        /*
         if (!isMobile) {
           // @ts-ignore
-          p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
+         // p.drawingContext.shadowColor = 'rgba(220,255,220,0.8)';
           // @ts-ignore
-          p.drawingContext.shadowBlur = 4;
+         // p.drawingContext.shadowBlur = 4;
         }
+        */
         p.rectMode(p.CENTER);
         p.imageMode(p.CENTER);
         p.textAlign(p.CENTER, p.CENTER);

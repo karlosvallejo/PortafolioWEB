@@ -7,7 +7,9 @@ import {Subscription} from 'rxjs';
 export interface ProjectList {
   nameOfProject: string;
   info: string;
-  url: string;
+  url: string|null;
+  github: string|null;
+  behance: string|null;
   kind: string;
   projectImages: Array<string>;
   // node: Array<ProjectList>;
