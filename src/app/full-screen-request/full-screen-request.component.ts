@@ -9,7 +9,7 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 })
 export class FullScreenRequestComponent implements OnInit {
 
-  docelem: HTMLElement;
+  docelem: any;
 
 
   constructor(private router: Router,  private deviceService: DeviceDetectorService) {
@@ -27,26 +27,17 @@ export class FullScreenRequestComponent implements OnInit {
 
 
   clicki() {
-
-    /*
     if (this.deviceService.isMobile()) {
       if ('orientation' in screen) {
         if (this.docelem.requestFullscreen) {
           this.docelem.requestFullscreen();
-        } else
-        // @ts-ignore
-        if (this.docelem.mozRequestFullScreen) {
-          // @ts-ignore
+        } else if (this.docelem.mozRequestFullScreen) {
           this.docelem.mozRequestFullScreen();
         } else if (this.docelem.webkitRequestFullScreen) {
           this.docelem.webkitRequestFullScreen();
-        } else
-        // @ts-ignore
-        if (this.docelem.msRequestFullscreen) {
-          // @ts-ignore
+        } else if (this.docelem.msRequestFullscreen) {
           this.docelem.msRequestFullscreen();
         }
-        // @ts-ignore
         screen.orientation.lock('landscape-primary');
       } else {
         console.log('no-soportado');
@@ -55,23 +46,8 @@ export class FullScreenRequestComponent implements OnInit {
     } else {
       this.router.navigate(['welcome']);
     }
-    */
-
-    if (this.deviceService.isMobile()) {
-      if ('orientation' in screen) {
-        if (this.docelem.requestFullscreen) {
-          this.docelem.requestFullscreen();
-        }
-        // @ts-ignore
-        screen.orientation.lock('landscape-primary');
-      } else {
-        console.log('no-soportado');
-        this.router.navigate(['']);
-      }
-    } else {
-      this.router.navigate(['welcome']);
-    }
-
   }
+
+
 
 }
