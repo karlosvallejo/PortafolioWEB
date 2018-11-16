@@ -468,15 +468,20 @@
   dependencies:
     "@types/jasmine" "*"
 
-"@types/node@^10.12.8":
-  version "10.12.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.8.tgz#d0a3ab5a6e61458c492304e2776ac136b81db927"
-  integrity sha512-INamyRZG4rW3lDCUmwVd5Xho/bXvQm/v1yP8V0UN1RuInU7RoWoaO570b+yLX4Ia/0szsx1wa8VzcsVlsvbWLA==
+"@types/node@^10.12.9":
+  version "10.12.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.9.tgz#a07bfa74331471e1dc22a47eb72026843f7b95c8"
+  integrity sha512-eajkMXG812/w3w4a1OcBlaTwsFPO5F7fJ/amy+tieQxEMWBlbV1JGSjkFM+zkHNf81Cad+dfIRA+IBkvmvdAeA==
 
 "@types/node@^6.0.46":
   version "6.14.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.14.2.tgz#40b3dbb1221c7d66802cbcc32fe3b85e54569c77"
   integrity sha512-JWB3xaVfsfnFY8Ofc9rTB/op0fqqTSqy4vBcVk1LuRJvta7KTX+D//fCkiTMeLGhdr2EbFZzQjC97gvmPilk9Q==
+
+"@types/p5@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@types/p5/-/p5-0.7.1.tgz#6a5e7673076ff0c5f5fb47bdc3d03aabb9a68938"
+  integrity sha512-90IP0Qg4HCIfglzIUjaMGyOhjyxa7znv7jqRMvDQZ9mLmKpnRYCx7ofgqfuATNa2wb5vrKHXxutJeoW80CRMvg==
 
 "@types/q@^0.0.32":
   version "0.0.32"
