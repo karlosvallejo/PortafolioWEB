@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {trigger, style, transition, animate, state} from '@angular/animations';
-import {Event as RouterEvent, NavigationStart, Resolve, Router} from '@angular/router';
+import {Event as RouterEvent, NavigationStart, Router} from '@angular/router';
 import {EventsService} from '../services/events.service';
 import * as p5 from 'p5';
 import {interval, Subscription} from 'rxjs';
@@ -13,16 +13,6 @@ interface Ip5Functions extends p5 {
   onResize: (width: number, height: number) => void;
   getPromise: () => Promise<string[]>;
 }
-
-class NewP5 extends p5 implements Ip5Functions {
-  endOfLoading: () => void;
-  onResize: () => void;
-  getPromise: () => Promise<string[]>;
-  constructor(sketch: (...args: any[]) => any, container: HTMLElement) {
-    super(sketch, container);
-  }
-}
-
 
 @Component({
   selector: 'app-home',
@@ -136,8 +126,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private createCanvas () {
-    this.canvas = new NewP5(this.createSketch(this.containerSketch.nativeElement.clientWidth,
-      this.containerSketch.nativeElement.clientHeight, this.deviceService.isMobile()), this.containerSketch.nativeElement);
+    this.canvas = new p5(this.createSketch(this.containerSketch.nativeElement.clientWidth,
+      this.containerSketch.nativeElement.clientHeight, this.deviceService.isMobile()), this.containerSketch.nativeElement) as Ip5Functions;
   }
 
   private destroyCanvas () {
