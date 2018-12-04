@@ -20,11 +20,11 @@ export class AboutComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {
     this.textPersonalSkills = 'Soy estudiante de <strong>Diseño de Medios Interactivos</strong>, actualmente me encuentro en Cali, ' +
-      'Colombia. Tengo interés en participar con el diseño y programación full-stack de aplicaciones web, con la posibilidad de integrar ' +
-      '<strong>contenido interactivo</strong> 2D/3D tales como videojuegos o similares. Las facultades de la ' +
-      '<strong>responsabilidad</strong>, la capacidad de <strong>aprender</strong>, el buscar <strong>información adicional</strong>, el ' +
-      '<strong>pensamiento analítico</strong> y la orientación a <strong>resultados</strong> han marcado mi carrera universitaria ' +
-      'pudiendo obtener buenos resultados en los proyectos emprendidos.';
+      'Colombia. Me interesa el desarrollo Javascript en general, por ejemplo el diseño y programación full-stack de aplicaciones ' +
+      'web, con la posibilidad de integrar <strong>contenido interactivo</strong> 2D/3D tales como videojuegos o similares. ' +
+      'Las facultades de la <strong>responsabilidad</strong>, la capacidad de <strong>aprender</strong>, el buscar ' +
+      '<strong>información adicional</strong>, el <strong>pensamiento analítico</strong> y la orientación a ' +
+      '<strong>resultados</strong> han marcado mi carrera universitaria pudiendo obtener buenos resultados en los proyectos emprendidos.';
 
     this.text = 'Considero que esta es una una plataforma en la que se puede desarrollar casi sin ' +
       'límites y que cuenta por naturaleza con un alcance muy amplio. A lo largo de la carrera he adquirido diferentes conocimientos ' +

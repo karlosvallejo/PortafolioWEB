@@ -10,15 +10,34 @@ import {EventsService} from '../../services/events.service';
 export class SkillsComponent implements OnInit, OnDestroy, AfterViewInit {
   // suscription: Subscription;
   activeSkill: number;
-  skillsArray = [{title: 'JavaScript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Sin ' +
+  skillsArray = [
+    {
+      title: 'JavaScript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Sin ' +
       'el, nada de esto fuera posible. Más allá de saber un framework en especifico, lo primero es aprender javascript; Por esto comence' +
-      ' el desarrollo front end usando javascript vanilla apoyado con Jquery, una vez domino ES5, comienzo con ES6. Despues de dominar a ' +
+      ' el desarrollo front end usando javascript vanilla apoyado con Jquery, una vez domino ES5, comienzo con ES6, para ' +
+      'despues mantenerme actualizado con las posteriores implementaciones. Despues de dominar a ' +
       'un nivel suficiente este lenguaje, decido comenzar a aprender NodeJs y los demas frameworks tanto front end como' +
-      ' back end. Ahora mismo utilizo Typescript para programar las aplicaciones.'},
-    {title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'Angular es mi principal ' +
-      'framework de desarrollo front end, mi experiencia con Angular (Angular 4 en ese momento) comienza en el 2017 para un ' +
-      'proyecto universitario; Lo he continuado usando hasta hoy en dia como framework predilecto, pudiendo aprender y experimentar ' +
-      'ampliamente con una gran parte de sus posiblilidades'}];
+      ' back end. Ahora mismo utilizo Typescript para programar las aplicaciones.'
+    },
+    {
+      title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'Angular es mi principal ' +
+      'framework de desarrollo front end, mi experiencia con Angular comienza en el 2017 para un ' +
+      'proyecto universitario; Lo he continuado usando hasta hoy en dia como framework principal, pudiendo aprender y experimentar ' +
+      'ampliamente con una gran parte de sus posiblilidades'
+    },
+    {
+      title: 'React', image: '/assets/generalImages/react_logo_white.svg', description: 'He utilizado React para algunos proyectos ' +
+      'Universitarios, sin duda es una libreria (Framework (?)) muy divertida de utilizar. En mi experiencia usando React junto ' +
+      'con Mobx para el manejo de estados, he logrado desarrollar proyectos de una forma mas rapida y versatil, incluso mas de lo que ' +
+      'esperaba en un principio'
+    },
+    {
+      title: 'React Native', image: '/assets/generalImages/native_logo.svg', description: 'A pesar de no poseer mucha experiencia ' +
+        'con React Native y el desarrollo movil en general, he hecho un acercamiento a este framework en un proyecto y mis sensaciones ' +
+        'han sido bastante positivas, el poder desarrollar aplicaciones moviles usando Javascript, permite tener un workflow mas agil en ' +
+        'muchos casos.'
+    }
+  ];
 
   constructor(private eventManager: EventsService) {
     this.activeSkill = 0;
