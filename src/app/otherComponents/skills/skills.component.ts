@@ -19,22 +19,25 @@ export class SkillsComponent implements OnInit, OnDestroy, AfterViewInit {
       ' back end. Ahora mismo utilizo Typescript para programar las aplicaciones.'
     },
     {
-      title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'Angular es mi principal ' +
-      'framework de desarrollo front end, mi experiencia con Angular comienza en el 2017 para un ' +
-      'proyecto universitario; Lo he continuado usando hasta hoy en dia como framework principal, pudiendo aprender y experimentar ' +
-      'ampliamente con una gran parte de sus posibilidades'
+      title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'He utilizado Angular en varios ' +
+        'proyectos universitarios, incluyendo este portafolio. Aunque hace algún tiempo dejó de ser mi herramienta principal, sigo ' +
+        'reconociendo su poder para el desarrollo de aplicaciones web.'
     },
     {
-      title: 'React', image: '/assets/generalImages/react_logo_white.svg', description: 'He utilizado React para algunos proyectos ' +
-      'Universitarios, sin duda es una librería (Framework (?)) muy divertida de utilizar. En mi experiencia usando React junto ' +
-      'con Mobx para el manejo de estados, he logrado desarrollar proyectos de una forma mas rápida y versátil, incluso mas de lo que ' +
-      'esperaba en un principio.'
+      title: 'React', image: '/assets/generalImages/react_logo_white.svg', description: 'Actualmente es mi librería favorita para ' +
+        'incluir en mis aplicaciones web y móviles, su gran versatilidad, ecosistema y comunidad hace que recobre mi fe en la ' +
+        'humanidad (y en Facebook).'
     },
     {
-      title: 'React Native', image: '/assets/generalImages/native_logo.svg', description: 'A pesar de no poseer mucha experiencia ' +
-        'con React Native y el desarrollo móvil en general, he hecho un acercamiento a este framework en un proyecto y mis sensaciones ' +
-        'han sido bastante positivas, el poder desarrollar aplicaciones móviles usando Javascript, permite tener un workflow mas ágil en ' +
-        'muchos casos.'
+      title: 'React Native', image: '/assets/generalImages/native_logo.svg', description: 'React Native me parece la fantasia de la ' +
+        'década, ¿Poder desarrollar aplicaciones para numerosas plataformas con una misma base de código, que optimizando bien puede ' +
+        'dar un rendimiento nativo en muchos casos y que ademas es basada en javascript? Para mí esto es magia. Este es el framework ' +
+        'con el que mas experiencia tengo y lo utilizo para desarrollar todas mis aplicaciones móviles.'
+    },
+    {
+      title: 'Otras Tecnologías', image: '/assets/generalImages/redux-logo-black-and-white.png', description: 'Para concluir, tengo ' +
+        'experiencia en varias librerías y herramientas, tales como nodeJs, firebase, maps de google, google cloud, AWS, ' +
+        'styled components, redux, JWT, ReasonML y muchas otras tecnologías disponibles en el mundo de la web.'
     }
   ];
 
