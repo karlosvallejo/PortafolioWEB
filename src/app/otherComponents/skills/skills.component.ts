@@ -11,33 +11,32 @@ export class SkillsComponent implements OnInit, OnDestroy, AfterViewInit {
   activeSkill: number;
   skillsArray = [
     {
-      title: 'JavaScript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Sin ' +
-      'el, nada de esto fuera posible. Más allá de saber un framework en especifico, lo primero es aprender javascript; Por esto comencé ' +
-      'el desarrollo front end usando javascript vanilla apoyado con Jquery, una vez domino ES5, comienzo con ES6, para ' +
-      'despues mantenerme actualizado con las posteriores implementaciones. Después de dominar a ' +
-      'un nivel suficiente este lenguaje, decido comenzar a aprender NodeJs y los demás frameworks tanto front end como' +
-      ' back end. Ahora mismo utilizo Typescript para programar las aplicaciones.'
+      title: 'JavaScript', image: '/assets/generalImages/Unofficial_JavaScript_logo_2.svg', description: 'Without it, none of this would ' +
+        'be possible. Beyond mastering a specific framework, the first thing is to learn javascript; that is why I started with front ' +
+        'end development using vanilla javascript supported with Jquery, when I learned ES5, I start with ES6, and then I keep ' +
+        'updated with the later iterations. After learning at a good level this language, I decide to start learning NodeJs and the ' +
+        'other frameworks both frontend and backend. Right now I use Typescript and React/React Native to build frontend applications.'
     },
     {
-      title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'He utilizado Angular en varios ' +
-        'proyectos universitarios, incluyendo este portafolio. Aunque hace algún tiempo dejó de ser mi herramienta principal, sigo ' +
-        'reconociendo su poder para el desarrollo de aplicaciones web.'
+      title: 'Angular', image: '/assets/generalImages/angular_whiteTransparent.svg', description: 'I have used Angular in several ' +
+        'college projects, including this portfolio. Although it stopped being my main tool some time ago, I still recognize its ' +
+        'power for web application development.'
     },
     {
-      title: 'React', image: '/assets/generalImages/react_logo_white.svg', description: 'Actualmente es mi librería favorita para ' +
-        'incluir en mis aplicaciones web y móviles, su gran versatilidad, ecosistema y comunidad hace que recobre mi fe en la ' +
-        'humanidad (y en Facebook).'
+      title: 'React', image: '/assets/generalImages/react_logo_white.svg', description: 'It is currently my favorite and default ' +
+        'library to include in my web and mobile applications, its great versatility, ecosystem and community makes the development ' +
+        'on this library very comfortable and efficient.'
     },
     {
-      title: 'React Native', image: '/assets/generalImages/native_logo.svg', description: 'React Native me parece la fantasia de la ' +
-        'década, ¿Poder desarrollar aplicaciones para numerosas plataformas con una misma base de código, que optimizando bien puede ' +
-        'dar un rendimiento nativo en muchos casos y que ademas es basada en javascript? Para mí esto es magia. Este es el framework ' +
-        'con el que mas experiencia tengo y lo utilizo para desarrollar todas mis aplicaciones móviles.'
+      title: 'React Native', image: '/assets/generalImages/native_logo.svg', description: 'I think React Native is the fantasy of the ' +
+        'decade. Being able to develop apps for many platforms with the same code base, that by optimizing well can give you native ' +
+        'performance in many cases, and that is also javascript based? For me this is magic. This is the framework with which I have ' +
+        'more experience and I use it to develop all my mobile applications.'
     },
     {
-      title: 'Otras Tecnologías', image: '/assets/generalImages/redux-logo-black-and-white.png', description: 'Para concluir, tengo ' +
-        'experiencia en varias librerías y herramientas, tales como nodeJs, firebase, maps de google, google cloud, AWS, ' +
-        'styled components, redux, JWT, ReasonML y muchas otras tecnologías disponibles en el mundo de la web.'
+      title: 'Otras Tecnologías', image: '/assets/generalImages/redux-logo-black-and-white.png', description: 'Finally, I have ' +
+        'experience in several libraries and tools, such as nodeJs, firebase, google maps, google cloud, AWS, styled components, ' +
+        'redux, JWT, ReasonML and many other technologies available in the web ecosystem.'
     }
   ];
 
