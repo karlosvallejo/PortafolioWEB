@@ -19,17 +19,16 @@ export class AboutComponent implements OnInit {
   textPersonalSkills: string;
 
   constructor(private route: ActivatedRoute) {
-    this.textPersonalSkills = 'Soy Carlos, <strong>Diseñador de Medios Interactivos</strong> y fan de Overwatch. Actualmente ' +
-      'me encuentro en Cali, Colombia. Me interesa el desarrollo Javascript en general, el diseño y programación full-stack de ' +
-      'aplicaciones web y móviles con la posibilidad de integrar <strong>contenido interactivo</strong>. ' +
-      'Las facultades de la <strong>responsabilidad</strong>, la capacidad de <strong>aprender</strong>, el buscar ' +
-      '<strong>información adicional</strong>, el <strong>pensamiento analítico</strong> y la orientación a ' +
-      '<strong>resultados</strong> han marcado mi carrera pudiendo obtener buenos resultados en los proyectos emprendidos.';
+    this.textPersonalSkills = 'I am Carlos, <strong>Interactive Media Designer</strong> and Overwatch fan. I am currently ' +
+      'based in Cali, Colombia. I am interested in Javascript development in general, design and full-stack programming of ' +
+      'web and mobile applications with the possibility of integrating <strong>interactive content</strong>. ' +
+      'The skills of <strong>responsibility</strong>, the ability to <strong>learn</strong>, the ability to ' +
+      '<strong>seek information</strong>, <strong>analytical thinking</strong> and ' +
+      '<strong>results orientation</strong> have guided my career being able to obtain good results in the projects I have worked on.';
 
-    this.text = 'Considero que esta es una una plataforma en la que se puede desarrollar casi sin ' +
-      'límites y que cuenta por naturaleza con un alcance muy amplio. A lo largo de la carrera he adquirido diferentes conocimientos ' +
-      'como es el caso del diseño de interfaces, diseño de experiencia de usuario, diseño de videojuegos, entre otros, los cuales ' +
-      'procuro utilizar en los proyectos para brindar una experiencia más completa y enriquecida al usuario.';
+    this.text = 'I consider that this is a platform in which you can develop almost without limits and has by nature  a very great ' +
+      'potential. Throughout my career I have acquired different skills such as interface design, game design, programming skills, ' +
+      'and other related knowledge, which I try to use in projects to provide a more complete and enriched user experience.';
     /*
     this.drone = '';
     this.droneTwo = '';
